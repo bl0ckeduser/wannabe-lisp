@@ -8,3 +8,6 @@ To run it, do
 
 $ make
 $ ./lisp <test.txt
+
+
+There are some important things missing; see `TODO'
