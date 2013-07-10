@@ -3,6 +3,13 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
+/* 
+ * This could maybe done in a more 
+ * sophisticated way, but "oh well" 
+ *
+ *
+ */
+
 void install_primitives(env_t *env)
 {
 	env_add(env, "+", PRIM_OP, NULL);
@@ -27,10 +34,6 @@ void install_primitives(env_t *env)
 	env_add(env, "null?", PRIM_OP, NULL);
 }
 
-/* 
- * This could maybe done in a more 
- * sophisticated way, but "oh well" 
- */
 list_t* do_prim_op(char *name, list_t *args)
 {
 	int i = 0;
@@ -227,8 +230,9 @@ list_t* do_prim_op(char *name, list_t *args)
 
 	if (!strcmp(name, "null?")) {
 		return makebool(args->cc == 1 
-			&& args->c[0]->type == SYMBOL
-			&& !strcmp(args->c[0]->head, "NIL"));
+			&& (
+				(args->c[0]->type == SYMBOL && !strcmp(args->c[0]->head, "NIL")
+				|| (args->c[0]->type == CONS && args->c[0]->cc == 0))));
 	}
 
 	return NULL;
