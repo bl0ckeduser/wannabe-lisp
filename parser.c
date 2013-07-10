@@ -26,11 +26,13 @@ char* build(list_t* l, char *expr)
  	else if (*p == '(') {	/* list */
 		++p;
 		l->type = LIST;
-
+		l->cc = 0;
 		i = 0;
 		while (*p != ')' && *p) {
-			while (*p == ' ' || *p == '\t')
+			while (*p && *p == ' ' || *p == '\t')
 				++p;
+			if (!*p)
+				break;
 			child = new_list();
 			old = p;
 			p = build(child, p);

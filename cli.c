@@ -41,12 +41,18 @@ void do_read(char *buf)
 			fflush(stdout);
 		}
 
-		/* skip empty lines, parser hates them */
 		if (!fgets(tmp, 1024, stdin)) {
 			printf("\n");
-			exit(1);
+			if (interactive)
+				exit(1);
+			else
+				break;
 		}
 
+		if (*tmp == ';')
+			continue;
+
+		/* skip empty lines, parser hates them */
 		if (*tmp == '\n') {
 			if (interactive) {
 				if (i == 1) --i;
@@ -72,7 +78,7 @@ void do_read(char *buf)
 
 		/* eat newline */
 		for (p = tmp; *p; ++p) {
-			if (*p == '\n') {
+			if (*p == '\n' || *p == EOF) {
 				*p = 0;
 				break;
 			}

@@ -30,8 +30,9 @@ void install_primitives(env_t *env)
 	env_add(env, "car", PRIM_OP, NULL);
 	env_add(env, "cdr", PRIM_OP, NULL);
 	env_add(env, "cons", PRIM_OP, NULL);
-
 	env_add(env, "null?", PRIM_OP, NULL);
+
+	env_add(env, "display", PRIM_OP, NULL);
 }
 
 list_t* do_prim_op(char *name, list_t *args)
@@ -233,6 +234,12 @@ list_t* do_prim_op(char *name, list_t *args)
 			&& (
 				(args->c[0]->type == SYMBOL && !strcmp(args->c[0]->head, "NIL")
 				|| (args->c[0]->type == CONS && args->c[0]->cc == 0))));
+	}
+
+	if (!strcmp(name, "display")) {
+		printout(args->c[0]);
+		printf("\n");
+		return args->c[0];
 	}
 
 	return NULL;
