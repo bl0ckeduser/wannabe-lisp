@@ -83,7 +83,26 @@ list_t* eval(list_t *l, env_t *env)
 	/* quote */
 	if (l->type == LIST && l->cc == 2 && l->c[0]->type == SYMBOL
 		&& !strcmp(l->c[0]->head, "QUOTE")) {
-		return l->c[1];
+		if (l->c[1]->type == SYMBOL)
+			return l->c[1];
+		else if (l->c[1]->type == LIST) {
+			/* cons-ify list */
+			nw3 = nw = new_list();
+			nw->type = CONS;
+			for (i = 0; i < l->c[1]->cc; ++i) {
+				add_child(nw, l->c[1]->c[i]);
+				if ((i + 1) < l->c[1]->cc) {
+					nw2 = new_list();
+					nw2->type = CONS;
+					add_child(nw, nw2);
+					nw = nw2;
+				} else {
+					/* put in a nil */
+					add_child(nw, mksym("NIL"));
+				}
+			}
+			return nw3;
+		}
 	}
 
 	/* 

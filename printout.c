@@ -32,6 +32,28 @@ void printout_iter(list_t* l, int d)
 			printf("#t");
 		else
 			printf("#f");
+	} else if (l->type == CONS) {
+		if (l->cc == 2 && l->c[1]->cc == 0 && 
+			!(l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL"))) {
+			printf("(");
+			printout_iter(l->c[0], d + 1);
+			printf(" . ");
+			printout_iter(l->c[1], d + 1);
+			printf(")");
+		} else if (l->cc) {
+			printf("(");
+			while (1) {
+				printout_iter(l->c[0], d + 1);
+				if (l->cc == 2 && l->c[1]->cc) {
+					printf(" ");
+					l = l->c[1];
+				} else
+					break;
+			}
+			printf(")");
+		} else {
+			printf("()");
+		}
 	}
 }
 

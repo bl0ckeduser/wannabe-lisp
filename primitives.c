@@ -22,6 +22,8 @@ void install_primitives(env_t *env)
 	env_add(env, "car", PRIM_OP, NULL);
 	env_add(env, "cdr", PRIM_OP, NULL);
 	env_add(env, "cons", PRIM_OP, NULL);
+
+	env_add(env, "null?", PRIM_OP, NULL);
 }
 
 /* 
@@ -50,18 +52,26 @@ list_t* do_prim_op(char *name, list_t *args)
 	}
 
 	if (!strcmp(name, "-")) {
-		for (i = 0; i < args->cc; ++i) {
-			if (args->c[i]->type != NUMBER) {
+		if (args->cc == 1) {
+			if (args->c[0]->type != NUMBER) {
 				printf("Error: - expects numbers\n");
 				exit(1);
 			}
-			if (i == 0)
-				val = args->c[i]->val;
-			else
-				val -= args->c[i]->val;
+			val = -args->c[0]->val;
+		} else {
+			for (i = 0; i < args->cc; ++i) {
+				if (args->c[i]->type != NUMBER) {
+					printf("Error: - expects numbers\n");
+					exit(1);
+				}
+				if (i == 0)
+					val = args->c[i]->val;
+				else
+					val -= args->c[i]->val;
+			}
 		}
-		nl->type = NUMBER;
 		nl->val = val;
+		nl->type = NUMBER;
 		return nl;
 	}
 
@@ -160,12 +170,18 @@ list_t* do_prim_op(char *name, list_t *args)
 			exit(1);
 		}
 		/* just return the list as-is for now */
-		return args;
+		memcpy(nl, args, sizeof(list_t));
+		nl->type = CONS;
+		return nl;
 	}
 
 	if (!strcmp(name, "car")) {
 		if (args->cc != 1) {
 			printf("Error: `car' expects 1 argument\n");
+			exit(1);
+		}
+		if (args->c[0]->type != CONS) {
+			printf("Error: `car' expects a linked-list\n");
 			exit(1);
 		}
 		if (args->c[0]->cc < 1) {
@@ -180,11 +196,21 @@ list_t* do_prim_op(char *name, list_t *args)
 			printf("Error: `cdr' expects 1 argument\n");
 			exit(1);
 		}
+		if (args->c[0]->type != CONS) {
+			printf("Error: `cdr' expects a linked-list\n");
+			exit(1);
+		}
 		if (args->c[0]->cc < 2) {
 			printf("Error: `cdr' has failed\n");
 			exit(1);
 		}
 		return args->c[0]->c[1];
+	}
+
+	if (!strcmp(name, "null?")) {
+		return makebool(args->cc == 1 
+			&& args->c[0]->type == SYMBOL
+			&& !strcmp(args->c[0]->head, "NIL"));
 	}
 
 	return NULL;

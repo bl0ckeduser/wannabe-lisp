@@ -44,11 +44,11 @@ void do_read(char *buf)
 		if (*tmp == '\n') {
 			if (i == 1) --i;
 			/* 
-			 * two return keys in a row
+			 * blank line
 			 * => autocomplete parentheses
 			 *
 			 */
-			if (++bl > 1 && bal > 0) {
+			if (++bl > 0 && bal > 0) {
 				printf ("... ");
 				for (ind = 0; ind < bal; ++ind) {
 					printf(")");

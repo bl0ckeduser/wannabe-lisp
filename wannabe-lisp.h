@@ -5,6 +5,7 @@ enum {
 	SYMBOL = 0,
 	NUMBER,
 	LIST,
+	CONS,
 	CLOSURE,
 	BOOL
 };
