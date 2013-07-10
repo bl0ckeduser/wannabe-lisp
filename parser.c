@@ -46,7 +46,7 @@ char* build(list_t* l, char *expr)
 			exit(1);
 		}
 	}
-	else if (isnum(*p) || *p == '-') {	/* number */
+	else if (isnum(*p) || (*p == '-' && isalnum(*(p+1)))) {	/* number */
 		q = tok;
 		if (*p == '-') {
 			sgn = -1;
