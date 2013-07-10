@@ -25,6 +25,10 @@ int main(int argc, char **argv)
 		/* read a (syntactic) line */
 		do_read(buf);
 
+		if (!*buf) {
+			break;
+		}
+
 		/* parse input into a tree */
 		build(expr, buf);
 
