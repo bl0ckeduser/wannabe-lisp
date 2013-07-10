@@ -10,6 +10,7 @@ char* build(list_t* l, char *expr)
 	int i;
 	int lambda = 0;
 	char tok[16];
+	int sgn;
 	list_t* child;
 	list_t* child2;
 
@@ -43,14 +44,21 @@ char* build(list_t* l, char *expr)
 			exit(1);
 		}
 	}
-	else if (isnum(*p)) {	/* number */
+	else if (isnum(*p) || *p == '-') {	/* number */
 		q = tok;
+		if (*p == '-') {
+			sgn = -1;
+			++p;
+		} else {
+			sgn = 1;
+		}
 		while (*p && isnum(*p))
 			*q++ = *p++;
 		*q = 0;
 		child = new_list();
 		child->type = NUMBER;
 		sscanf(tok, "%d", &(child->val));
+		child->val *= sgn;
 		memcpy(l, child, sizeof(list_t));
 	} else {	/* symbol */
 		while (*p == ' ' || *p == '\t')
