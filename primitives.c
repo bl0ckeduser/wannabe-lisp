@@ -18,6 +18,7 @@ void install_primitives(env_t *env)
 	env_add(env, "<=", PRIM_OP, NULL);
 	env_add(env, "and", PRIM_OP, NULL);
 	env_add(env, "or", PRIM_OP, NULL);
+	env_add(env, "not", PRIM_OP, NULL);
 
 	env_add(env, "car", PRIM_OP, NULL);
 	env_add(env, "cdr", PRIM_OP, NULL);
@@ -163,6 +164,23 @@ list_t* do_prim_op(char *name, list_t *args)
 		}
 		return makebool(val);
 	}
+
+	if (!strcmp(name, "not")) {
+		val = 0;
+		if (args->cc != 1) {
+				printf("Error: `not' expects one argument\n");
+				exit(1);
+		}
+		for (i = 0; i < args->cc; ++i) {
+			if (args->c[i]->type != BOOL) {
+				printf("Error: `not' expects boolean arguments\n");
+				exit(1);
+			}
+			val = !(args->c[i]->val);
+		}
+		return makebool(val);
+	}
+
 
 	if (!strcmp(name, "cons")) {
 		if (args->cc != 2) {
