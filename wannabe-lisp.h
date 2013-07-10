@@ -1,6 +1,8 @@
 #ifndef WBLISP_H
 #define WBLISP_H
 
+extern int interactive;
+
 enum {
 	SYMBOL = 0,
 	NUMBER,

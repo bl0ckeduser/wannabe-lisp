@@ -8,6 +8,10 @@
  * (gives new lines to add missing parentheses,
  * autocompletes parentheses if desired, etc)
  *  -- Quick & dirty ugly code, however.
+ *
+ * Note that this is also required for reading
+ * from files, and at the moment only stdin
+ * is supported.
  */
 void do_read(char *buf)
 {
@@ -21,19 +25,21 @@ void do_read(char *buf)
 	/* Loop as long as there 
 	 * are unclosed parentheses */
 	while (bal) {
-		/* Print prompt */
-		if (!i++)
-			printf("]=> ");
-		else {
-			/* new user line, missing parentheses */
-			printf("... ");
-			/* auto-indent */
-			if (bal > 0 && bal < 5) {
-				for (ind = 0; ind < bal; ++ind)
-					printf("   ");
+		if (interactive) {
+			/* Print prompt */
+			if (!i++)
+				printf("]=> ");
+			else {
+				/* new user line, missing parentheses */
+				printf("... ");
+				/* auto-indent */
+				if (bal > 0 && bal < 5) {
+					for (ind = 0; ind < bal; ++ind)
+						printf("   ");
+				}
 			}
+			fflush(stdout);
 		}
-		fflush(stdout);
 
 		/* skip empty lines, parser hates them */
 		if (!fgets(tmp, 1024, stdin)) {
@@ -42,21 +48,23 @@ void do_read(char *buf)
 		}
 
 		if (*tmp == '\n') {
-			if (i == 1) --i;
-			/* 
-			 * blank line
-			 * => autocomplete parentheses
-			 *
-			 */
-			if (++bl > 0 && bal > 0) {
-				printf ("... ");
-				for (ind = 0; ind < bal; ++ind) {
-					printf(")");
-					strcat(buf, ")");
+			if (interactive) {
+				if (i == 1) --i;
+				/* 
+				 * blank line
+				 * => autocomplete parentheses
+				 *
+				 */
+				if (++bl > 0 && bal > 0) {
+					printf ("... ");
+					for (ind = 0; ind < bal; ++ind) {
+						printf(")");
+						strcat(buf, ")");
+					}
+					fflush(stdout);
+					printf("\n");				
+					break;
 				}
-				fflush(stdout);
-				printf("\n");				
-				break;
 			}
 			continue;
 		} else
