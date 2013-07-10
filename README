@@ -1,0 +1,10 @@
+Babby's first toy lisp (scheme) interpreter
+
+Based on the examples given in the SICP videos
+(http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/)
+
+See test.txt for example code
+To run it, do
+
+$ make
+$ ./lisp <test.txt

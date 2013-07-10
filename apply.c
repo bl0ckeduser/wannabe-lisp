@@ -3,6 +3,8 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
+/* Based on SICP's metacircular eval/apply tutorial */
+
 list_t* apply(list_t *proc, list_t *args)
 {
 	env_t *ne;

@@ -3,6 +3,8 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
+/* Based on SICP's metacircular eval/apply tutorial */
+
 list_t* eval(list_t *l, env_t *env)
 {
 	extern list_t *new_list();
