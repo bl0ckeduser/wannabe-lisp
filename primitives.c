@@ -31,7 +31,6 @@ void install_primitives(env_t *env)
 	/* TODO: more arithmetic ops */
 
 	add_primop(env, "=");
-	add_primop(env, "=");
 	add_primop(env, ">");
 	add_primop(env, "<");
 	add_primop(env, ">=");
