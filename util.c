@@ -3,6 +3,17 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
+void strip_nl(char *s)
+{
+	while (*s) {
+		if (*s == '\n') {
+			*s = 0;
+			break;
+		}
+		++s;
+	}
+}
+
 void *c_malloc(long size)
 {
 	void *ptr = malloc(size);

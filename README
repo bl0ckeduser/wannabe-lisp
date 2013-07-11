@@ -3,11 +3,15 @@ Babby's first toy lisp (scheme) interpreter
 Based on the examples given in the SICP videos
 (http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/)
 
-See test.txt for example code
-To run it, do
+See test.txt, closure.txt for example code
+To build and run the code, do
 
 $ make
 $ ./lisp <test.txt
+
+Optionally, composite car/cdr primitives (like caddr) can be built thusly:
+
+$ python gen-cadr.py >prefix.txt 
 
 
 There are some important things missing; see `TODO'
