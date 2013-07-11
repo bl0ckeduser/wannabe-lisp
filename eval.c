@@ -82,6 +82,39 @@ list_t* eval(list_t *l, env_t *env)
 		}
 	}
 
+	/* cond special form --
+	 * (cond (p1 e1) (p2 e2) ... (pN eN)) 
+	 * the special predicate-symbol `else' always matches
+	 */
+	if (l->type == LIST & l->cc >= 2 && l->c[0]->type == SYMBOL
+		&& !strcmp(l->c[0]->head, "cond")) {
+
+		for (i = 1; i < l->cc; ++i) {
+			if (l->c[i]->cc != 2) {
+				printf("Error: arguments to `cond' should be"
+					   " two-element lists...\n");
+				exit(1);
+			}
+			/* deal with `else' special case */
+			if (l->c[i]->c[0]->type == SYMBOL
+				&& !strcmp(l->c[i]->c[0]->head, "else")) {
+				return eval(l->c[i]->c[1], env);
+			}
+			/* general case */
+			pred = eval(l->c[i]->c[0], env);
+			if (pred->type != BOOL) {
+				printf("Error: boolean expected in `cond'\n");
+				exit(1);
+			}
+			if (pred->val)
+				return eval(l->c[i]->c[1], env);
+		}
+
+		/* not sure what to return when nothing matches,
+		 * I guess `nil' is reasonable ... */
+		return mksym("NIL");
+	}
+
 	/* quote */
 	if (l->type == LIST && l->cc == 2 && l->c[0]->type == SYMBOL
 		&& !strcmp(l->c[0]->head, "QUOTE")) {
