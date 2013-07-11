@@ -50,6 +50,8 @@ void install_primitives(env_t *env)
 	add_primop(env, "symbol?");
 	add_primop(env, "eq?");
 	add_primop(env, "number?");
+
+	add_primop(env, "debug");
 }
 
 list_t* do_prim_op(char *name, list_t *args)

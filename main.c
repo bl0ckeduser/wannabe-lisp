@@ -4,16 +4,19 @@
 #include "wannabe-lisp.h"
 
 int interactive;
+env_t *global;
 
 int main(int argc, char **argv)
 {
 	char *buf = malloc(1024 * 1024 * 2);
 	char *p;
 	list_t *expr = new_list();
-	env_t *global = new_env();
 	int i, c;
 	char *ptr, *old;
 	FILE *prefix;
+
+	/* Create global environment */
+	global = new_env();
 
 	/* Set up the built-in procedure symbols 
 	 * for arithmetic, comparisons, etc. */
@@ -27,8 +30,11 @@ int main(int argc, char **argv)
 			if (*buf && *buf != ';') {
 				build(expr, buf);
 				eval(expr, global);
+
+				/* clean up for the next iteration */
+				gc();
 				sprintf(buf, "");
-				expr->cc = 0;
+				expr = new_list();
 			}
 		}
 		fclose(prefix);
@@ -61,8 +67,9 @@ int main(int argc, char **argv)
 		}
 
 		/* clean up for the next iteration */
+		gc();
 		sprintf(buf, "");
-		expr->cc = 0;
+		expr = new_list();
 	}
 
 	return 0;

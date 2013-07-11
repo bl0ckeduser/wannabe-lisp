@@ -40,6 +40,8 @@ typedef struct list {
 	struct list **c;
 } list_t;
 
+extern env_t *global;
+
 extern list_t* eval(list_t *l, env_t *env);
 extern void add_child(list_t *parent, list_t* child);
 extern void printout(list_t *l);
@@ -61,5 +63,8 @@ extern void *c_malloc(long size);
 extern void *c_realloc(void *ptr, long size);
 extern void strip_nl(char *s);
 extern list_t* makelist(list_t* argl);
+extern void marksweep(env_t *e);
+extern void add_ptr(void *p);
+extern void gc();
 
 #endif

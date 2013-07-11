@@ -42,6 +42,7 @@ list_t* eval(list_t *l, env_t *env)
 			&& l->c[1]->cc && l->c[1]->c[0]->type == SYMBOL) {
 			proc = l->c[1]->c[0];
 			argl = new_list();
+			argl->type = LIST;
 			for (i = 1; i < l->c[1]->cc; ++i)
 				add_child(argl, l->c[1]->c[i]);
 			nw = new_list();

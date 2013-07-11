@@ -21,16 +21,21 @@ void *c_malloc(long size)
 		printf("Error: malloc(%ld) has failed\n", size);
 		exit(1);
 	}
+	add_ptr(ptr);
 	return ptr;
 }
 
 void *c_realloc(void *ptr, long size)
 {
-	void *new = realloc(ptr, size);
+	void *new;
+	if (ptr)
+		do_mark(ptr, 2);
+	new = realloc(ptr, size);
 	if (!new) {
 		printf("Error: realloc(%p, %ld) has failed\n", ptr, size);
 		exit(1);
 	}
+	add_ptr(new);
 	return new;
 }
 
