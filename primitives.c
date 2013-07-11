@@ -110,7 +110,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "=")) {
 		if (args->cc != 2
 		|| args->c[0]->type != NUMBER
-		|| args->c[0]->type != NUMBER) {
+		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
 			exit(1);
 		}
@@ -120,7 +120,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, ">")) {
 		if (args->cc != 2
 		|| args->c[0]->type != NUMBER
-		|| args->c[0]->type != NUMBER) {
+		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
 			exit(1);
 		}
@@ -130,7 +130,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "<")) {
 		if (args->cc != 2
 		|| args->c[0]->type != NUMBER
-		|| args->c[0]->type != NUMBER) {
+		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
 			exit(1);
 		}
@@ -140,7 +140,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "<=")) {
 		if (args->cc != 2
 		|| args->c[0]->type != NUMBER
-		|| args->c[0]->type != NUMBER) {
+		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
 			exit(1);
 		}
@@ -150,7 +150,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, ">=")) {
 		if (args->cc != 2
 		|| args->c[0]->type != NUMBER
-		|| args->c[0]->type != NUMBER) {
+		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
 			exit(1);
 		}
