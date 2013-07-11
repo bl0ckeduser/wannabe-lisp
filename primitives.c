@@ -57,7 +57,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	int i = 0;
 	int j;
 	int val;
-	list_t* nl = malloc(sizeof(list_t));
+	list_t* nl = c_malloc(sizeof(list_t));
 
 	if (!strcmp(name, "+")) {
 		val = 0;

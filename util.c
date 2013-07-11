@@ -3,6 +3,26 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
+void *c_malloc(long size)
+{
+	void *ptr = malloc(size);
+	if (!ptr) {
+		printf("Error: malloc(%ld) has failed\n", size);
+		exit(1);
+	}
+	return ptr;
+}
+
+void *c_realloc(void *ptr, long size)
+{
+	void *new = realloc(ptr, size);
+	if (!new) {
+		printf("Error: realloc(%p, %ld) has failed\n", ptr, size);
+		exit(1);
+	}
+	return new;
+}
+
 list_t* mksym(char *s)
 {
 	list_t *sl = new_list();

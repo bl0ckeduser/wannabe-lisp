@@ -4,7 +4,7 @@
 
 list_t *new_list(void)
 {
-	list_t* nl = malloc(sizeof(list_t));
+	list_t* nl = c_malloc(sizeof(list_t));
 	nl->type = SYMBOL;
 	nl->val = 0;
 	nl->ca = 0;
@@ -17,7 +17,7 @@ void add_child(list_t *parent, list_t* child)
 {
 	if (++(parent->cc) > parent->ca) {
 		parent->ca += 16;
-		parent->c = realloc(parent->c,
+		parent->c = c_realloc(parent->c,
 			parent->ca * sizeof(list_t *));
 	}
 

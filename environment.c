@@ -8,13 +8,13 @@
  */
 env_t* new_env(void)
 {
-	env_t *e = malloc(sizeof(env_t));
+	env_t *e = c_malloc(sizeof(env_t));
 
 	e->count = 0;
 	e->alloc = 8;
-	e->sym = malloc(e->alloc * sizeof(char *));
-	e->ty = malloc(e->alloc * sizeof(char));
-	e->ptr = malloc(e->alloc * sizeof(void *));
+	e->sym = c_malloc(e->alloc * sizeof(char *));
+	e->ty = c_malloc(e->alloc * sizeof(char));
+	e->ptr = c_malloc(e->alloc * sizeof(void *));
 	e->father = NULL;
 
 	return e;
@@ -62,20 +62,15 @@ int env_add(env_t *e, char *sym, int ty, void *p)
 
 	if (++(e->count) >= e->alloc) {
 		e->alloc += 16;
-		e->sym = realloc(e->sym,
+		e->sym = c_realloc(e->sym,
 			e->alloc * sizeof(char *));
-		e->ty = realloc(e->ty,
+		e->ty = c_realloc(e->ty,
 			e->alloc * sizeof(char));
-		e->ptr = realloc(e->ptr,
+		e->ptr = c_realloc(e->ptr,
 			e->alloc * sizeof(void *));
-
-		if (!(e->sym) || !(e->ty) || !(e->ptr)) {
-			printf("Error: environment table expansion failed\n");
-			exit(1);
-		}
 	}
 
-	e->sym[c] = malloc(strlen(sym) + 1);
+	e->sym[c] = c_malloc(strlen(sym) + 1);
 	strcpy(e->sym[c], sym);
 
 	e->ty[c] = ty;
