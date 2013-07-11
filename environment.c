@@ -59,15 +59,26 @@ env_ref_t lookup(env_t *e, char *sym)
 int env_add(env_t *e, char *sym, int ty, void *p)
 {
 	int c = e->count;
+	char **nsym;
+	char *nty;
+	void **nptr;
+	int i;
 
 	if (++(e->count) >= e->alloc) {
 		e->alloc += 16;
-		e->sym = c_realloc(e->sym,
-			e->alloc * sizeof(char *));
-		e->ty = c_realloc(e->ty,
-			e->alloc * sizeof(char));
-		e->ptr = c_realloc(e->ptr,
-			e->alloc * sizeof(void *));
+		nsym = c_malloc(e->alloc * sizeof(char *));
+		nty = c_malloc(e->alloc);
+		nptr = c_malloc(e->alloc * sizeof(void *));
+		
+		for (i = 0; i < e->alloc - 16; ++i) {
+			nsym[i] = e->sym[i];
+			nty[i] = e->ty[i];
+			nptr[i] = e->ptr[i];
+		}
+
+		e->sym = nsym;
+		e->ty = nty;
+		e->ptr = nptr;
 	}
 
 	e->sym[c] = c_malloc(strlen(sym) + 1);

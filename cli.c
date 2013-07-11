@@ -13,7 +13,7 @@
  * from files, and at the moment only stdin
  * is supported.
  */
-void do_read(char *buf)
+int do_read(char *buf)
 {
 	int bal = -1;
 	char tmp[1024];
@@ -43,8 +43,9 @@ void do_read(char *buf)
 
 		if (!fgets(tmp, 1024, stdin)) {
 			printf("\n");
-			if (interactive)
-				exit(1);
+			if (interactive) {
+				return 0;
+			}
 			else
 				break;
 		}
@@ -97,6 +98,8 @@ void do_read(char *buf)
 				--bal;
 		}
 	}
+
+	return 1;
 }
 
 

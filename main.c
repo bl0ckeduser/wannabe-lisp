@@ -6,6 +6,12 @@
 int interactive;
 env_t *global;
 
+void final_clean_up()
+{
+	gc();
+	gc_selfdestroy();
+}
+
 int main(int argc, char **argv)
 {
 	char *buf = malloc(1024 * 1024 * 2);
@@ -45,11 +51,11 @@ int main(int argc, char **argv)
 
 	while (1) {		
 		/* read a (syntactic) line */
-		do_read(buf);
-
-		if (!*buf) {
+		if (!do_read(buf))
 			break;
-		}
+
+		if (!*buf)
+			break;
 
 		/* parse input into a tree */
 		build(expr, buf);
@@ -71,6 +77,9 @@ int main(int argc, char **argv)
 		sprintf(buf, "");
 		expr = new_list();
 	}
+
+	final_clean_up();
+	free(buf);
 
 	return 0;
 }

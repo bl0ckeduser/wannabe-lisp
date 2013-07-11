@@ -16,10 +16,18 @@ list_t *new_list(void)
 
 void add_child(list_t *parent, list_t* child)
 {
+	list_t **new;
+	int i;
+
 	if (++(parent->cc) >= parent->ca) {
 		parent->ca += 16;
-		parent->c = c_realloc(parent->c,
-			parent->ca * sizeof(list_t *));
+	
+		new = c_malloc(parent->ca * sizeof(list_t *));
+
+		for (i = 0; i < parent->ca - 16; ++i)
+			new[i] = parent->c[i];
+		
+		parent->c = new;
 	}
 
 	parent->c[parent->cc - 1] = child;

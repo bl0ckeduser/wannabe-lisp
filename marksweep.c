@@ -8,11 +8,21 @@ char* mark;
 int len = 0;
 int alloc = 0;
 
+void gc_selfdestroy()
+{
+	int i = 0;
+	for (i = 0; i < len; ++i)
+		free(ptrs[i]);
+	free(mark);
+	free(ptrs);
+}
+
 void add_ptr(void *p)
 {
 	int i;
 	for (i = 0; i < len; ++i)
 		if (ptrs[i] == p) {
+			mark[i] = 0;
 			return;
 		}
 	
@@ -38,17 +48,22 @@ void do_mark(void* p, int m)
 
 	for (i = 0; i < len; ++i) {
 		if (ptrs[i] == p) {
-			if (mark[i] == 0)
-				mark[i] = m;
+			mark[i] = m;
 			return;
 		}
 	}
+
+	add_ptr(p);
+	do_mark(p, m);
 }
 
 void gc()
 {
 	int i;
-	int j = 0;
+	int orig;
+
+	void **copy_ptr;
+	char *copy_mark;
 
 	/* mark */
 	marksweep(global);
@@ -59,8 +74,27 @@ void gc()
 			if (mark[i] == 0)
 				free(ptrs[i]);
 
-	/* empty list of garbage candidates */
+	/* make a copy of the object list */
+	copy_ptr = malloc(len * sizeof(void *));
+	if (!copy_ptr) {
+		printf("marksweep: malloc failed\n");
+		exit(1);
+	}
+	memcpy(copy_ptr, ptrs, len * sizeof(void *));
+
+	copy_mark = malloc(len);
+	memcpy(copy_mark, mark, len);
+
+	/* make a new list with the nonfreed stuff */
+	orig = len;
 	len = 0;
+	for (i = 0; i < orig; ++i) 
+		if (copy_mark[i] != 0)
+			add_ptr(copy_ptr[i]);
+
+	/* erase temporary copies */
+	free(copy_ptr);
+	free(copy_mark);
 }
 
 void marksweep_list(list_t *l)
