@@ -15,6 +15,7 @@ void install_primitives(env_t *env)
 	env_add(env, "+", PRIM_OP, NULL);
 	env_add(env, "-", PRIM_OP, NULL);
 	env_add(env, "*", PRIM_OP, NULL);
+	env_add(env, "remainder", PRIM_OP, NULL);
 	/* TODO: more arithmetic ops */
 
 	env_add(env, "=", PRIM_OP, NULL);
@@ -80,7 +81,6 @@ list_t* do_prim_op(char *name, list_t *args)
 		return nl;
 	}
 
-
 	if (!strcmp(name, "*")) {
 		val = 1;
 		for (i = 0; i < args->cc; ++i) {
@@ -92,6 +92,18 @@ list_t* do_prim_op(char *name, list_t *args)
 		}
 		nl->type = NUMBER;
 		nl->val = val;
+		return nl;
+	}
+
+	if (!strcmp(name, "remainder")) {
+		if (args->cc != 2
+		|| args->c[0]->type != NUMBER
+		|| args->c[1]->type != NUMBER) {
+			printf("Error: `remainder' expects two numbers\n");
+			exit(1);
+		}
+		nl->type = NUMBER;
+		nl->val = args->c[0]->val % args->c[1]->val;
 		return nl;
 	}
 
