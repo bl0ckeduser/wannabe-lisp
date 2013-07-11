@@ -53,9 +53,13 @@ int main(int argc, char **argv)
 	interactive = argc == 2 && !strcmp(argv[1], "-i");
 
 	while (1) {		
+#ifdef GC_STRESS_TEST
+		sprintf(buf, "((lambda (x) x) (+ 1 2 3))");
+#else
 		/* read a (syntactic) line */
 		if (!do_read(buf))
 			break;
+#endif
 
 		if (!*buf)
 			break;
