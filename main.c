@@ -21,6 +21,9 @@ int main(int argc, char **argv)
 	char *ptr, *old;
 	FILE *prefix;
 
+	/* safety herp derp */
+	sprintf(buf, "");
+
 	/* Create global environment */
 	global = new_env();
 
