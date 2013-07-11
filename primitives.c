@@ -49,6 +49,7 @@ void install_primitives(env_t *env)
 
 	add_primop(env, "pair?");
 	add_primop(env, "symbol?");
+	add_primop(env, "eq?");
 }
 
 list_t* do_prim_op(char *name, list_t *args)
@@ -272,6 +273,21 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "pair?")) {
 		return makebool(args->cc == 1 
 			&& args->c[0]->type == CONS);
+	}
+
+	/* the following bit deals with (eq? A B) --
+	 * apparently, eq? checks if two things evaluate
+	 * to the same memory pointer. but further hackery
+	 * is sufficient to deal with the case (eq? 'foo 'foo) */
+	if (!strcmp(name, "eq?")) {
+		if (args->cc != 2) {
+			printf("`eq?' expects two arguments\n");
+			exit(1);
+		}
+		return makebool(args->c[0] == args->c[1]
+			|| (args->c[0]->type == SYMBOL 
+				&& args->c[1]->type == SYMBOL
+				&& !strcmp(args->c[0]->head, args->c[1]->head)));
 	}
 
 	if (!strcmp(name, "symbol?")) {
