@@ -77,3 +77,4 @@ int env_add(env_t *e, char *sym, int ty, void *p)
 
 	e->ptr[c] = p;
 }
+

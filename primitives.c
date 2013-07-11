@@ -10,30 +10,42 @@
  *
  */
 
+/*
+ * Add primitive operator name to environment
+ */
+void add_primop(env_t *e, char *sym)
+{
+	list_t *l = new_list();
+	l->type = LIST;
+	add_child(l, mksym("PRIM-OP"));
+	add_child(l, mksym(sym));
+	env_add(e, sym, REF, l);
+}
+
 void install_primitives(env_t *env)
 {
-	env_add(env, "+", PRIM_OP, NULL);
-	env_add(env, "-", PRIM_OP, NULL);
-	env_add(env, "*", PRIM_OP, NULL);
-	env_add(env, "remainder", PRIM_OP, NULL);
+	add_primop(env, "+");
+	add_primop(env, "-");
+	add_primop(env, "*");
+	add_primop(env, "remainder");
 	/* TODO: more arithmetic ops */
 
-	env_add(env, "=", PRIM_OP, NULL);
-	env_add(env, "=", PRIM_OP, NULL);
-	env_add(env, ">", PRIM_OP, NULL);
-	env_add(env, "<", PRIM_OP, NULL);
-	env_add(env, ">=", PRIM_OP, NULL);
-	env_add(env, "<=", PRIM_OP, NULL);
-	env_add(env, "and", PRIM_OP, NULL);
-	env_add(env, "or", PRIM_OP, NULL);
-	env_add(env, "not", PRIM_OP, NULL);
+	add_primop(env, "=");
+	add_primop(env, "=");
+	add_primop(env, ">");
+	add_primop(env, "<");
+	add_primop(env, ">=");
+	add_primop(env, "<=");
+	add_primop(env, "and");
+	add_primop(env, "or");
+	add_primop(env, "not");
 
-	env_add(env, "car", PRIM_OP, NULL);
-	env_add(env, "cdr", PRIM_OP, NULL);
-	env_add(env, "cons", PRIM_OP, NULL);
-	env_add(env, "null?", PRIM_OP, NULL);
+	add_primop(env, "car");
+	add_primop(env, "cdr");
+	add_primop(env, "cons");
+	add_primop(env, "null?");
 
-	env_add(env, "display", PRIM_OP, NULL);
+	add_primop(env, "display");
 }
 
 list_t* do_prim_op(char *name, list_t *args)

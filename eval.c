@@ -16,7 +16,7 @@ list_t* eval(list_t *l, env_t *env)
 	int i;
 
 	/* Deal with special forms (lambda, define, ...) first */
-	/* TODO: cond, maybe other stuff ? */
+	/* TODO: other stuff ? */
 
 	/* (lambda (arg-1 arg-2 ... arg-n) exp) */
 	if (l->type == LIST && !strcmp(l->c[0]->head, "lambda")) {
@@ -170,19 +170,8 @@ list_t* eval(list_t *l, env_t *env)
 			printf("Error: unbound variable `%s'\n", l->head);
 			exit(1);
 		}
-		/* it's a primitive operator */
-		if (er.e->ty[er.i] == PRIM_OP) {
-			nw = new_list();
-			nw->type = LIST;
-			add_child(nw, mksym("PRIM-OP"));
-			nw2 = new_list();
-			strcpy(nw2->head, l->head);
-			add_child(nw, nw2);
-			return nw;
-		}
-		/* general case */
-		else if (er.e->ty[er.i] == REF)
-			return er.e->ptr[er.i];
+		
+		return er.e->ptr[er.i];
 	}
 
 	return l;

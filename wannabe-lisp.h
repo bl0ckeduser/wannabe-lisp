@@ -13,8 +13,7 @@ enum {
 };
 
 enum {
-	PRIM_OP = 0,
-	REF
+	REF = 0
 };
 
 typedef struct env_ref {
