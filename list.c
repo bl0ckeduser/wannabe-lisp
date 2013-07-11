@@ -10,12 +10,13 @@ list_t *new_list(void)
 	nl->ca = 0;
 	nl->cc = 0;
 	nl->head[0] = 0;
+	nl->c = NULL;
 	return nl;
 }
 
 void add_child(list_t *parent, list_t* child)
 {
-	if (++(parent->cc) > parent->ca) {
+	if (++(parent->cc) >= parent->ca) {
 		parent->ca += 16;
 		parent->c = c_realloc(parent->c,
 			parent->ca * sizeof(list_t *));

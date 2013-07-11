@@ -7,7 +7,7 @@ int interactive;
 
 int main(int argc, char **argv)
 {
-	char buf[1024 * 1024 * 2];
+	char *buf = malloc(1024 * 1024 * 2);
 	char *p;
 	list_t *expr = new_list();
 	env_t *global = new_env();
