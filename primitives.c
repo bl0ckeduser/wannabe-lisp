@@ -50,6 +50,7 @@ void install_primitives(env_t *env)
 	add_primop(env, "pair?");
 	add_primop(env, "symbol?");
 	add_primop(env, "eq?");
+	add_primop(env, "number?");
 }
 
 list_t* do_prim_op(char *name, list_t *args)
@@ -293,6 +294,11 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "symbol?")) {
 		return makebool(args->cc == 1 
 			&& args->c[0]->type == SYMBOL);
+	}
+
+	if (!strcmp(name, "number?")) {
+		return makebool(args->cc == 1 
+			&& args->c[0]->type == NUMBER);
 	}
 
 	return NULL;
