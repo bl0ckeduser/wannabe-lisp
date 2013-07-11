@@ -115,28 +115,26 @@ list_t* eval(list_t *l, env_t *env)
 		return mksym("NIL");
 	}
 
+	/* (list X Y Z ... ) */
+	/* note that unlike for quoted lists, this involves evaluating
+	 * the arguments before building the list */
+	if (l->type == LIST && l->cc > 1 && l->c[0]->type == SYMBOL
+		&& !strcmp(l->c[0]->head, "list")) {
+		ev = new_list();
+		for (i = 1; i < l->cc; ++i)
+			add_child(ev, l->c[i]);
+		evlist(ev, env);
+		return makelist(ev);	/* cons-ify */
+	}
+
 	/* quote */
 	if (l->type == LIST && l->cc == 2 && l->c[0]->type == SYMBOL
 		&& !strcmp(l->c[0]->head, "QUOTE")) {
 		if (l->c[1]->type == SYMBOL)
 			return l->c[1];
 		else if (l->c[1]->type == LIST) {
-			/* cons-ify list */
-			nw3 = nw = new_list();
-			nw->type = CONS;
-			for (i = 0; i < l->c[1]->cc; ++i) {
-				add_child(nw, l->c[1]->c[i]);
-				if ((i + 1) < l->c[1]->cc) {
-					nw2 = new_list();
-					nw2->type = CONS;
-					add_child(nw, nw2);
-					nw = nw2;
-				} else {
-					/* put in a nil */
-					add_child(nw, mksym("NIL"));
-				}
-			}
-			return nw3;
+			/* cons-ify */
+			return makelist(l->c[1]);
 		}
 	}
 
@@ -186,5 +184,41 @@ void evlist(list_t* l, env_t *env)
 	int i = 0;
 	for (i = 0; i < l->cc; ++i)
 		l->c[i] = eval(l->c[i], env);
+}
+
+/* 
+ * (1 2 3 4)
+ * => (1 . (2 . (3 . (4 . NIL))))
+ */
+list_t* makelist(list_t* argl)
+{
+	list_t *nw, *nw2, *nw3;
+	list_t *cons;
+	int i;
+	
+	nw3 = nw = new_list();
+	nw->type = CONS;
+	for (i = 0; i < argl->cc; ++i) {
+		/* recursive application is necessary 
+	 	 * so as to make possible cases like:
+		 * 		]=> (caadr '(1 (1 2)))
+		 * 		1	
+		 */
+		if (argl->c[i]->type == LIST) {
+			cons = makelist(argl->c[i]);
+			add_child(nw, cons);
+		} else
+			add_child(nw, argl->c[i]);
+		if ((i + 1) < argl->cc) {
+			nw2 = new_list();
+			nw2->type = CONS;
+			add_child(nw, nw2);
+			nw = nw2;
+		} else {
+			/* put in a nil */
+			add_child(nw, mksym("NIL"));
+		}
+	}
+	return nw3;
 }
 

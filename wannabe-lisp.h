@@ -60,5 +60,6 @@ extern list_t* mksym(char *s);
 extern void *c_malloc(long size);
 extern void *c_realloc(void *ptr, long size);
 extern void strip_nl(char *s);
+extern list_t* makelist(list_t* argl);
 
 #endif
