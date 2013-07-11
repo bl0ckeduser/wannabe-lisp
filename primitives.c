@@ -46,6 +46,9 @@ void install_primitives(env_t *env)
 	add_primop(env, "null?");
 
 	add_primop(env, "display");
+
+	add_primop(env, "pair?");
+	add_primop(env, "symbol?");
 }
 
 list_t* do_prim_op(char *name, list_t *args)
@@ -264,6 +267,16 @@ list_t* do_prim_op(char *name, list_t *args)
 		printout(args->c[0]);
 		printf("\n");
 		return args->c[0];
+	}
+
+	if (!strcmp(name, "pair?")) {
+		return makebool(args->cc == 1 
+			&& args->c[0]->type == CONS);
+	}
+
+	if (!strcmp(name, "symbol?")) {
+		return makebool(args->cc == 1 
+			&& args->c[0]->type == SYMBOL);
 	}
 
 	return NULL;
