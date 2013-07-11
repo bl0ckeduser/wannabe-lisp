@@ -58,11 +58,9 @@ char* build(list_t* l, char *expr)
 		while (*p && isnum(*p))
 			*q++ = *p++;
 		*q = 0;
-		child = new_list();
-		child->type = NUMBER;
-		sscanf(tok, "%d", &(child->val));
-		child->val *= sgn;
-		memcpy(l, child, sizeof(list_t));
+		l->type = NUMBER;
+		sscanf(tok, "%d", &(l->val));
+		l->val *= sgn;
 	} else {	/* symbol */
 		while (*p == ' ' || *p == '\t')
 			++p;
