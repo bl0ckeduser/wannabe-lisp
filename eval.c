@@ -19,7 +19,7 @@ list_t* eval(list_t *l, env_t *env)
 	/* Deal with special forms (lambda, define, ...) first */
 	/* TODO: other stuff ? */
 
-	/* (lambda (arg-1 arg-2 ... arg-n) exp) */
+	/* (lambda (arg-1 arg-2 ... arg-n) exp1 exp2 ... expN) */
 	if (l->type == LIST && !strcmp(l->c[0]->head, "lambda")) {
 		nw = new_list();
 		nw->type = CLOSURE;
@@ -29,12 +29,12 @@ list_t* eval(list_t *l, env_t *env)
 		return nw;
 	}
 
-	/* (let ((v1 e1) (v2 e2) ... (vN eN)) exp) */
+	/* (let ((v1 e1) (v2 e2) ... (vN eN)) exp1 exp2 ... expN) */
 	if (l->type == LIST && !strcmp(l->c[0]->head, "let")) {
 		/* (quite similar to a lambda application,
 		 *  as in apply.c) */
 
-		if (l->cc != 3 || !(l->c[1]->cc))
+		if (l->cc < 3 || !(l->c[1]->cc))
 			goto bad_let;
 
 		/* Build a new environment */
@@ -51,8 +51,13 @@ list_t* eval(list_t *l, env_t *env)
 				eval(l->c[1]->c[i]->c[1], env));
 		}
 	
-		/* Evaluate body in new environment */
-		return eval(l->c[2], ne);
+		/* Evaluate bodies in new environment;
+		 * return the result of evaluating the
+		 * last one */
+		for (i = 2; i < l->cc; ++i)
+			ev = eval(l->c[i], ne);
+
+		return ev;
 
 bad_let:
 		printf("Error: improper use of `let' special form\n");

@@ -8,6 +8,7 @@
 list_t* apply(list_t *proc, list_t *args)
 {
 	env_t *ne;
+	list_t *last;
 	int i;
 
 	/* Primitive operation */
@@ -32,10 +33,14 @@ list_t* apply(list_t *proc, list_t *args)
 			env_add(ne, proc->c[0]->c[i]->head,
 				REF, args->c[i]);
 	
-		/* Evaluate the body of the closure
+		/* Evaluate the bodies of the closure
 		 * in the new environment which includes
 		 * the bound parameters	*/
-		return eval(proc->c[1], ne);
+		for (i = 1; i < proc->cc; ++i)
+			last = eval(proc->c[i], ne);
+
+		/* Return the evaluation of the last body */
+		return last;
 	}
 
 afail:
