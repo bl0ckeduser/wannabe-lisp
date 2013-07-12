@@ -13,6 +13,7 @@ list_t* eval(list_t *l, env_t *env)
 	list_t *ev;
 	list_t *nw, *nw2, *nw3;
 	list_t *pred;
+	env_t *ne;
 	int i;
 
 	/* Deal with special forms (lambda, define, ...) first */
@@ -26,6 +27,36 @@ list_t* eval(list_t *l, env_t *env)
 		for (i = 1; i < l->cc; ++i)
 			add_child(nw, l->c[i]);
 		return nw;
+	}
+
+	/* (let ((v1 e1) (v2 e2) ... (vN eN)) exp) */
+	if (l->type == LIST && !strcmp(l->c[0]->head, "let")) {
+		/* (quite similar to a lambda application,
+		 *  as in apply.c) */
+
+		if (l->cc != 3 || !(l->c[1]->cc))
+			goto bad_let;
+
+		/* Build a new environment */
+		ne = new_env();
+		ne->father = env;
+
+		/* Bind symbols to *evaluated* expressions */
+		for (i = 0; i < l->c[1]->cc; ++i) {
+			if (l->c[1]->c[i]->cc != 2)
+				goto bad_let;
+			env_add(ne, 
+				l->c[1]->c[i]->c[0]->head,
+				REF, 
+				eval(l->c[1]->c[i]->c[1], env));
+		}
+	
+		/* Evaluate body in new environment */
+		return eval(l->c[2], ne);
+
+bad_let:
+		printf("Error: improper use of `let' special form\n");
+		exit(1);
 	}
 
 	/* (define ...) family of special-forms */

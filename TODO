@@ -3,7 +3,9 @@
 
 - full range of arithmetic ops
 
-- let, set!
+- set!
 - '23 should evaluate to 23 (r6rs.pdf, section 1.10, page 8)
+
+- bug: repeated `define's don't seem to work properly
 
 - vectors
