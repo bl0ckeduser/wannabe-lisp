@@ -90,6 +90,20 @@ bad_let:
 		}
 	}
 
+	/* (set! var val) */
+	if (l->type == LIST && !strcmp(l->c[0]->head, "set!")) {
+		/* check arg count */
+		if (l->cc != 3) {
+			printf("Error: improper use of `set!' special form\n");
+			exit(1);
+		}
+
+		env_set(env, l->c[1]->head, REF,
+			(ev = eval(l->c[2], env)));
+	
+		return ev;
+	}
+
 	/* if special form -- (if BOOL A B) */
 	if (l->type == LIST && !strcmp(l->c[0]->head, "if")) {
 		/* check arg count */

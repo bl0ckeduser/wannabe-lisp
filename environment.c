@@ -88,3 +88,23 @@ int env_add(env_t *e, char *sym, int ty, void *p)
 
 	e->ptr[c] = p;
 }
+
+/*
+ * Modify a symbol's value, as in set!
+ */
+void env_set(env_t *e, char *sym, int ty, void *p)
+{
+	env_ref_t ref = lookup(e, sym);
+
+	if (ref.e == NULL) {
+		printf("Error: unbound variable `%s'\n", sym);
+		exit(1);
+	}
+
+	(ref.e)->sym[ref.i] = c_malloc(strlen(sym) + 1);
+	strcpy((ref.e)->sym[ref.i], sym);
+
+	(ref.e)->ty[ref.i] = ty;
+
+	(ref.e)->ptr[ref.i] = p;
+}
