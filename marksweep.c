@@ -53,8 +53,10 @@ void do_mark(void* p, int m)
 		}
 	}
 
-	add_ptr(p);
-	do_mark(p, m);
+	/* 
+	 * add_ptr(p);
+	 * do_mark(p, m);
+	 */
 }
 
 void gc()
