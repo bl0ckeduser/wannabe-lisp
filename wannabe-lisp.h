@@ -68,6 +68,6 @@ extern void add_ptr(void *p);
 extern void gc();
 extern void do_mark(void* p, int m);
 extern void gc_selfdestroy();
-
+extern void env_set(env_t *e, char *sym, int ty, void *p);
 
 #endif
