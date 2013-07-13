@@ -29,6 +29,13 @@ list_t* eval(list_t *l, env_t *env)
 		return nw;
 	}
 
+	/* (begin exp1 exp2 ... expN) */
+	if (l->type == LIST && !strcmp(l->c[0]->head, "begin")) {
+		for (i = 1; i < l->cc; ++i)
+			ev = eval(l->c[i], env);
+		return ev;
+	}
+
 	/* (let ((v1 e1) (v2 e2) ... (vN eN)) exp1 exp2 ... expN) */
 	if (l->type == LIST && !strcmp(l->c[0]->head, "let")) {
 		/* (quite similar to a lambda application,
