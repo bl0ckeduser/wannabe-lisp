@@ -95,7 +95,7 @@ list_t* eval_apply_tco(
 	list_t *nw, *nw2, *nw3;
 	list_t *pred;
 	env_t *ne;
-	int i;
+	int i, j;
 	
 	list_t *l = a_l;
 	env_t *env = a_env;
@@ -305,16 +305,16 @@ tco_iter:
 		}
 
 		/* cond special form --
-		 * (cond (p1 e1) (p2 e2) ... (pN eN)) 
+		 * (cond (p1 e11 ... e1N) (p2 e21 ... e2N) ... (pN eN1 .. eNN)) 
 		 * the special predicate-symbol `else' always matches
 		 */
 		if (l->type == LIST & l->cc >= 2 && l->c[0]->type == SYMBOL
 			&& !strcmp(l->c[0]->head, "cond")) {
 
 			for (i = 1; i < l->cc; ++i) {
-				if (l->c[i]->cc != 2) {
+				if (l->c[i]->cc < 2) {
 					printf("Error: arguments to `cond' should be"
-						   " two-element lists...\n");
+						   " lists of at least two elements\n");
 					exit(1);
 				}
 				/* deal with `else' special case */
@@ -328,8 +328,11 @@ tco_iter:
 					printf("Error: boolean expected in `cond'\n");
 					exit(1);
 				}
-				if (pred->val)
-					TCO_eval(l->c[i]->c[1], env);
+				if (pred->val) {
+					for (j = 1; j < l->c[i]->cc - 1; ++j)
+						call_eval(l->c[i]->c[j], env);
+					TCO_eval(l->c[i]->c[j], env);
+				}
 			}
 
 			/* not sure what to return when nothing matches,
