@@ -13,7 +13,7 @@ print ""
 
 print ";; Streams"
 print ";; See mitpress.mit.edu/sicp/full-text/book/book-Z-H-24.html"
-print "(define force (lambda (u) (u)))"
+print "(define force (lambda (list) (if (null? list) list ((car list)))))"
 print "(define stream-car car)"
 print "(define (stream-cdr s) (force (cdr s)))"
 print "(define stream-null? null?)"

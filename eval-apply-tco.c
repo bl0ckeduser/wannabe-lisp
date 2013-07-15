@@ -152,6 +152,7 @@ tco_iter:
 			add_child(nw2, nw3);
 			add_child(nw2, copy_list(l->c[2]));
 
+			add_child(nw, nw2);
 			ev = makelist(nw);
 
 			close_frame();
