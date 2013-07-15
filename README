@@ -1,4 +1,5 @@
 Babby's first toy lisp (scheme) interpreter
+===========================================
 
 Based on the examples given in the SICP videos
 (http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/)
@@ -6,15 +7,16 @@ Based on the examples given in the SICP videos
 and also on the SICP text's examples
 (http://mitpress.mit.edu/sicp/)
 
-See test.txt, closure.txt for example code
-To build and run the code, do
+See test.txt, closure.txt for general example code.
 
+To build the code, do:
 $ make
-$ ./lisp <test.txt
 
-Interactive REPL mode is accessed thusly:
-$ lisp -i
-]=> 
+To run interactive REPL mode, do:
+$ ./lisp -i
+
+To run a code file, do:
+$ ./lisp <test.txt
 
 There are some important things missing; see `TODO'
 
@@ -32,7 +34,7 @@ I. Special functions
   indicating the peak number of stack frames used in the evaluation.
   See tco-test.txt for example code. TCO'd iterative processes will 
   return a constant space count; recursive ones will return a growing
-  space count.
+  space count. max-space cannot be used recursively.
 
 II. Parenthesis autocomplete:
 
