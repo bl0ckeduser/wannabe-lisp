@@ -6,8 +6,21 @@ n = 0
 
 QTY = 5
 
-print ";; Composite primitives"
+print ";; Boolean literals "
+print "(define true (= 1 1))"
+print "(define false (= 1 0))"
 print ""
+
+print ";; Streams"
+print ";; See mitpress.mit.edu/sicp/full-text/book/book-Z-H-24.html"
+print "(define force (lambda (u) (u)))"
+print "(define stream-car car)"
+print "(define (stream-cdr s) (force (cdr s)))"
+print "(define stream-null? null?)")
+print "(define the-empty-stream '())")
+print ""
+
+print ";; Composite car/cdr primitives"
 
 tab = []
 for i in range(QTY):

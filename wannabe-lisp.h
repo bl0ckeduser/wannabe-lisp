@@ -74,4 +74,6 @@ extern list_t* eval_apply_tco(int oper, list_t *a_l, env_t *a_env, list_t *a_pro
 #define call_eval(l, e) eval_apply_tco(0, l, e, NULL, NULL)
 #define call_apply(p, a) eval_apply_tco(1, NULL, NULL, p, a)
 
+extern list_t *copy_list(list_t *l);
+
 #endif

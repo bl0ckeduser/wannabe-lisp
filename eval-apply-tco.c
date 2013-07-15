@@ -138,6 +138,39 @@ tco_iter:
 			}
 		}
 
+		/* (cons-stream a b) => (cons a (delay b)) */
+		if (l->type == LIST && !strcmp(l->c[0]->head, "cons-stream")) {
+			nw = new_list();
+			nw->type = LIST;
+			add_child(nw, call_eval(l->c[1], env));
+
+			nw2 = new_list();
+			nw2->type = CLOSURE;
+			nw2->closure = env;
+			nw3 = new_list();
+			nw3->type = LIST;
+			add_child(nw2, nw3);
+			add_child(nw2, copy_list(l->c[2]));
+
+			ev = makelist(nw);
+
+			close_frame();
+			return ev;
+		}
+
+		/* (delay exp) => (lambda () exp) */
+		if (l->type == LIST && !strcmp(l->c[0]->head, "delay")) {
+			nw = new_list();
+			nw->type = CLOSURE;
+			nw->closure = env;
+			nw2 = new_list();
+			nw2->type = LIST;
+			add_child(nw, nw2);
+			add_child(nw, l->c[1]);
+			close_frame();
+			return nw;
+		}
+
 		/* (lambda (arg-1 arg-2 ... arg-n) exp1 exp2 ... expN) */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "lambda")) {
 			nw = new_list();
@@ -305,6 +338,7 @@ tco_iter:
 		if (l->type == LIST && l->cc > 1 && l->c[0]->type == SYMBOL
 			&& !strcmp(l->c[0]->head, "list")) {
 			ev = new_list();
+			ev->type = LIST;
 			for (i = 1; i < l->cc; ++i)
 				add_child(ev, l->c[i]);
 			eatco_evlist(ev, env);

@@ -3,6 +3,9 @@ Babby's first toy lisp (scheme) interpreter
 Based on the examples given in the SICP videos
 (http://groups.csail.mit.edu/mac/classes/6.001/abelson-sussman-lectures/)
 
+and also on the SICP text's examples
+(http://mitpress.mit.edu/sicp/)
+
 See test.txt, closure.txt for example code
 To build and run the code, do
 
@@ -13,9 +16,11 @@ Interactive REPL mode is accessed thusly:
 $ lisp -i
 ]=> 
 
-Optionally, composite car/cdr primitives (like caddr) can be built thusly:
+Optionally, composite car/cdr primitives (like caddr), as well
+as other stuff like `true', `false', stream routines, ..., etc. 
+can be built thusly:
 
-$ python gen-cadr.py >prefix.txt 
+$ python gen-prefix.py >prefix.txt 
 
 
 There are some important things missing; see `TODO'

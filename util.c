@@ -3,6 +3,13 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
+list_t *copy_list(list_t *l)
+{
+	list_t *new = c_malloc(sizeof(list_t));
+	memcpy(new, l, sizeof(list_t));
+	return new;
+}
+
 void strip_nl(char *s)
 {
 	while (*s) {
