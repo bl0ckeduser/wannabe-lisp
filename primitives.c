@@ -66,7 +66,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		for (i = 0; i < args->cc; ++i) {
 			if (args->c[i]->type != NUMBER) {
 				printf("Error: + expects numbers\n");
-				exit(1);
+				code_error();
 			}
 			val += args->c[i]->val;
 		}
@@ -79,14 +79,14 @@ list_t* do_prim_op(char *name, list_t *args)
 		if (args->cc == 1) {
 			if (args->c[0]->type != NUMBER) {
 				printf("Error: - expects numbers\n");
-				exit(1);
+				code_error();
 			}
 			val = -args->c[0]->val;
 		} else {
 			for (i = 0; i < args->cc; ++i) {
 				if (args->c[i]->type != NUMBER) {
 					printf("Error: - expects numbers\n");
-					exit(1);
+					code_error();
 				}
 				if (i == 0)
 					val = args->c[i]->val;
@@ -104,7 +104,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		for (i = 0; i < args->cc; ++i) {
 			if (args->c[i]->type != NUMBER) {
 				printf("Error: * expects numbers\n");
-				exit(1);
+				code_error();
 			}
 			val *= args->c[i]->val;
 		}
@@ -118,7 +118,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
 			printf("Error: `remainder' expects two numbers\n");
-			exit(1);
+			code_error();
 		}
 		nl->type = NUMBER;
 		nl->val = args->c[0]->val % args->c[1]->val;
@@ -130,7 +130,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
-			exit(1);
+			code_error();
 		}
 		return makebool(args->c[0]->val == args->c[1]->val);
 	}
@@ -140,7 +140,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
-			exit(1);
+			code_error();
 		}
 		return makebool(args->c[0]->val > args->c[1]->val);
 	}
@@ -150,7 +150,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
-			exit(1);
+			code_error();
 		}
 		return makebool(args->c[0]->val < args->c[1]->val);
 	}
@@ -160,7 +160,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
-			exit(1);
+			code_error();
 		}
 		return makebool(args->c[0]->val <= args->c[1]->val);
 	}
@@ -170,7 +170,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
 			printf("Error: = expects two numbers\n");
-			exit(1);
+			code_error();
 		}
 		return makebool(args->c[0]->val >= args->c[1]->val);
 	}
@@ -180,7 +180,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		for (i = 0; i < args->cc; ++i) {
 			if (args->c[i]->type != BOOL) {
 				printf("Error: and expects boolean arguments\n");
-				exit(1);
+				code_error();
 			}
 			val &= args->c[i]->val;
 		}
@@ -192,7 +192,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		for (i = 0; i < args->cc; ++i) {
 			if (args->c[i]->type != BOOL) {
 				printf("Error: or expects boolean arguments\n");
-				exit(1);
+				code_error();
 			}
 			val |= args->c[i]->val;
 		}
@@ -203,12 +203,12 @@ list_t* do_prim_op(char *name, list_t *args)
 		val = 0;
 		if (args->cc != 1) {
 				printf("Error: `not' expects one argument\n");
-				exit(1);
+				code_error();
 		}
 		for (i = 0; i < args->cc; ++i) {
 			if (args->c[i]->type != BOOL) {
 				printf("Error: `not' expects boolean arguments\n");
-				exit(1);
+				code_error();
 			}
 			val = !(args->c[i]->val);
 		}
@@ -219,7 +219,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "cons")) {
 		if (args->cc != 2) {
 			printf("Error: `cons' expects 2 arguments\n");
-			exit(1);
+			code_error();
 		}
 		/* just return the list as-is for now */
 		memcpy(nl, args, sizeof(list_t));
@@ -230,15 +230,15 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "car")) {
 		if (args->cc != 1) {
 			printf("Error: `car' expects 1 argument\n");
-			exit(1);
+			code_error();
 		}
 		if (args->c[0]->type != CONS) {
 			printf("Error: `car' expects a linked-list\n");
-			exit(1);
+			code_error();
 		}
 		if (args->c[0]->cc < 1) {
 			printf("Error: `car' has failed\n");
-			exit(1);
+			code_error();
 		}
 		return args->c[0]->c[0];
 	}
@@ -246,15 +246,15 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "cdr")) {
 		if (args->cc != 1) {
 			printf("Error: `cdr' expects 1 argument\n");
-			exit(1);
+			code_error();
 		}
 		if (args->c[0]->type != CONS) {
 			printf("Error: `cdr' expects a linked-list\n");
-			exit(1);
+			code_error();
 		}
 		if (args->c[0]->cc < 2) {
 			printf("Error: `cdr' has failed\n");
-			exit(1);
+			code_error();
 		}
 		return args->c[0]->c[1];
 	}
@@ -284,7 +284,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "eq?")) {
 		if (args->cc != 2) {
 			printf("`eq?' expects two arguments\n");
-			exit(1);
+			code_error();
 		}
 		return makebool(args->c[0] == args->c[1]
 			|| (args->c[0]->type == SYMBOL 

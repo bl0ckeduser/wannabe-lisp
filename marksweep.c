@@ -31,7 +31,7 @@ void add_ptr(void *p)
 		ptrs = realloc(ptrs, alloc * sizeof(void *));
 		mark = realloc(mark, alloc);
 		if (!ptrs || !mark) {
-			printf("Error: marksweep: realloc has failed\n");
+			printf("Fatal error: marksweep: realloc has failed\n");
 			exit(1);
 		}
 	}
@@ -79,7 +79,7 @@ void gc()
 	/* make a copy of the object list */
 	copy_ptr = malloc(len * sizeof(void *));
 	if (!copy_ptr) {
-		printf("marksweep: malloc failed\n");
+		printf("Fatal error: marksweep: malloc failed\n");
 		exit(1);
 	}
 	memcpy(copy_ptr, ptrs, len * sizeof(void *));

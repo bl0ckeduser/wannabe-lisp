@@ -224,7 +224,7 @@ tco_iter:
 
 	bad_let:
 			printf("Error: improper use of `let' special form\n");
-			exit(1);
+			code_error();
 		}
 
 		/* (define ...) family of special-forms */
@@ -256,7 +256,7 @@ tco_iter:
 				return nw;
 			} else {
 				printf("Error: improper use of `define' special form\n");
-				exit(1);
+				code_error();
 			}
 		}
 
@@ -265,7 +265,7 @@ tco_iter:
 			/* check arg count */
 			if (l->cc != 3) {
 				printf("Error: improper use of `set!' special form\n");
-				exit(1);
+				code_error();
 			}
 
 			env_set(env, l->c[1]->head, REF,
@@ -280,7 +280,7 @@ tco_iter:
 			/* check arg count */
 			if (l->cc < 3) {
 				printf("Error: improper use of `if' special form\n");
-				exit(1);
+				code_error();
 			}
 		
 			/* evaluate the predicate,
@@ -288,7 +288,7 @@ tco_iter:
 			pred = call_eval(l->c[1], env);
 			if (pred->type != BOOL) {
 				printf("Error: boolean expected as 1st argument of `if'\n");
-				exit(1);
+				code_error();
 			}
 
 			/* return A or B depending upon predicate */
@@ -315,7 +315,7 @@ tco_iter:
 				if (l->c[i]->cc < 2) {
 					printf("Error: arguments to `cond' should be"
 						   " lists of at least two elements\n");
-					exit(1);
+					code_error();
 				}
 				/* deal with `else' special case */
 				if (l->c[i]->c[0]->type == SYMBOL
@@ -326,7 +326,7 @@ tco_iter:
 				pred = call_eval(l->c[i]->c[0], env);
 				if (pred->type != BOOL) {
 					printf("Error: boolean expected in `cond'\n");
-					exit(1);
+					code_error();
 				}
 				if (pred->val) {
 					for (j = 1; j < l->c[i]->cc - 1; ++j)
@@ -396,7 +396,7 @@ tco_iter:
 			er = lookup(env, l->head);
 			if (er.e == NULL) {
 				printf("Error: unbound variable `%s'\n", l->head);
-				exit(1);
+				code_error();
 			}
 		
 			close_frame();
@@ -454,7 +454,7 @@ tco_iter:
 		printf("\n");
 		printout(args);
 		printf("\n");
-		exit(1);
+		code_error();
 	}
 
 	close_frame();

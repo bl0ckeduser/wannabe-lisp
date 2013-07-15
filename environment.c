@@ -98,7 +98,7 @@ void env_set(env_t *e, char *sym, int ty, void *p)
 
 	if (ref.e == NULL) {
 		printf("Error: unbound variable `%s'\n", sym);
-		exit(1);
+		code_error();
 	}
 
 	(ref.e)->sym[ref.i] = c_malloc(strlen(sym) + 1);

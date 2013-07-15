@@ -1,7 +1,10 @@
 #ifndef WBLISP_H
 #define WBLISP_H
 
+#include <setjmp.h>
+
 extern int interactive;
+extern jmp_buf repl_jmp;
 
 enum {
 	SYMBOL = 0,
@@ -75,5 +78,6 @@ extern list_t* eval_apply_tco(int oper, list_t *a_l, env_t *a_env, list_t *a_pro
 #define call_apply(p, a) eval_apply_tco(1, NULL, NULL, p, a)
 
 extern list_t *copy_list(list_t *l);
+extern int code_error();
 
 #endif

@@ -1,7 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <setjmp.h>
 #include "wannabe-lisp.h"
+
+int code_error()
+{
+	if (interactive)
+		longjmp(repl_jmp, 1);
+	else {
+		printf("Shutting down.\n");
+		exit(1);
+	}
+}
 
 list_t *copy_list(list_t *l)
 {
@@ -25,7 +36,7 @@ void *c_malloc(long size)
 {
 	void *ptr = malloc(size);
 	if (!ptr) {
-		printf("Error: malloc(%ld) has failed\n", size);
+		printf("Fatal error: malloc(%ld) has failed\n", size);
 		exit(1);
 	}
 	add_ptr(ptr);

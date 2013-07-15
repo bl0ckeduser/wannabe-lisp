@@ -44,7 +44,7 @@ char* build(list_t* l, char *expr)
 
 		if (*p++ != ')') {
 			printf("\nError: ) expected\n");
-			exit(1);
+			code_error();
 		}
 	}
 	else if (isnum(*p) || (*p == '-' && isalnum(*(p+1)))) {	/* number */

@@ -97,6 +97,12 @@ int do_read(char *buf)
 			else if (*p == ')')
 				--bal;
 		}
+
+		/* no use going further on this kind of case */
+		if (bal < 0) {
+			printf("Error: terrible syntax\n");
+			code_error();
+		}
 	}
 
 	return 1;

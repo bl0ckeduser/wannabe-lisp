@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <setjmp.h>
 #include "wannabe-lisp.h"
 
 int interactive;
 env_t *global;
+jmp_buf repl_jmp;
 
 void final_clean_up()
 {
@@ -53,6 +55,10 @@ int main(int argc, char **argv)
 
 	/* check for "./lisp -i" invocation -- interactive mode */
 	interactive = argc == 2 && !strcmp(argv[1], "-i");
+
+	/* in interactive mode, code errors jump to here */
+	if (setjmp(repl_jmp))
+		sprintf(buf, "");
 
 	while (1) {		
 #ifdef GC_STRESS_TEST
