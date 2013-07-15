@@ -278,7 +278,7 @@ tco_iter:
 		/* if special form -- (if BOOL A B) */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "if")) {
 			/* check arg count */
-			if (l->cc != 4) {
+			if (l->cc < 3) {
 				printf("Error: improper use of `if' special form\n");
 				exit(1);
 			}
@@ -295,7 +295,12 @@ tco_iter:
 			if (pred->val) {
 				TCO_eval(l->c[2], env);
 			} else {
-				TCO_eval(l->c[3], env);
+				if (l->cc == 4) {
+					TCO_eval(l->c[3], env);
+				} else {
+					close_frame();
+					return mksym("NIL");
+				}
 			}
 		}
 
