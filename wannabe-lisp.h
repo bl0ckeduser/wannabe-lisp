@@ -69,5 +69,9 @@ extern void gc();
 extern void do_mark(void* p, int m);
 extern void gc_selfdestroy();
 extern void env_set(env_t *e, char *sym, int ty, void *p);
+extern list_t* eval_apply_tco(int oper, list_t *a_l, env_t *a_env, list_t *a_proc, list_t *a_args);
+
+#define call_eval(l, e) eval_apply_tco(0, l, e, NULL, NULL)
+#define call_apply(p, a) eval_apply_tco(1, NULL, NULL, p, a)
 
 #endif

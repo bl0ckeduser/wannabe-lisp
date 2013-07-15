@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 			strip_nl(buf);
 			if (*buf && *buf != ';') {
 				build(expr, buf);
-				eval(expr, global);
+				call_eval(expr, global);
 
 				/* clean up for the next iteration */
 				gc();
@@ -73,10 +73,10 @@ int main(int argc, char **argv)
 
 		/* eval and print */
 		if (interactive) {
-			printout(eval(expr, global));
+			printout(call_eval(expr, global));
 			printf("\n");
 		} else {
-			eval(expr, global);
+			call_eval(expr, global);
 		}
 
 		/* clean up for the next iteration */
