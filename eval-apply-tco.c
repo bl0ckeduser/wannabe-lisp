@@ -196,7 +196,7 @@ tco_iter:
 			/* (quite similar to a lambda application,
 			 *  as in apply.c) */
 
-			if (l->cc < 3 || !(l->c[1]->cc))
+			if (l->cc < 3)
 				goto bad_let;
 
 			/* Build a new environment */
