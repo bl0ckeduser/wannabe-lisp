@@ -7,7 +7,14 @@ Based on the examples given in the SICP videos
 and also on the SICP text's examples
 (http://mitpress.mit.edu/sicp/)
 
-See test.txt, closure.txt for general example code.
+Currently supported Scheme procedures and special forms are:
+<, <=, =, >, >=, -, *, +, and, begin, car, cdr, caar, cdar, ..., caaaaar,
+cond, cons, cons-stream, define, delay, display, eq?, force, if, lambda,
+let, list, newline, not, null?, number?, or, pair?, remainder, set!,
+stream-car, stream-cdr, stream-null?, symbol?, the-empty-stream.
+
+Features include: tail-recursion optimization, noobish mark-sweep garbage 
+collection, support for quotation.
 
 To build the code, do:
 $ make
@@ -18,7 +25,8 @@ $ ./lisp -i
 To run a code file, do:
 $ ./lisp <test.txt
 
-There are some important things missing; see `TODO'
+The file `TODO' lists features that I might eventually add.
+Example code files are test.txt, closure.txt, tco-test.txt.
 
 -----------------------------------
 
@@ -36,6 +44,8 @@ I. Special functions
   return a constant space count; recursive ones will return a growing
   space count. max-space cannot be used recursively.
 
+				~~~~~~~~
+
 II. Parenthesis autocomplete:
 
 you type a big expression in the REPL, then hit return with 
@@ -48,8 +58,10 @@ added
 ...             
 ... ))))
 
-		~~~~~~~~
+				~~~~~~~~
 
 III. Auto-indent
 
 The REPL auto-indents
+
+
