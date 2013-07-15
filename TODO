@@ -1,6 +1,4 @@
-- TCO ?!
-
-- full range of arithmetic ops
+- strings, floats ?
 
 - '23 should evaluate to 23 (r6rs.pdf, section 1.10, page 8)
 
