@@ -33,9 +33,12 @@ int do_read(char *buf)
 				/* new user line, missing parentheses */
 				printf("... ");
 				/* auto-indent */
-				if (bal > 0 && bal < 5) {
-					for (ind = 0; ind < bal; ++ind)
+				if (bal > 0) {
+					for (ind = 0; ind < bal; ++ind) {
 						printf("   ");
+						if (save_mode)
+							fprintf(save_file, "   ");
+					}
 				}
 			}
 			fflush(stdout);
@@ -48,6 +51,11 @@ int do_read(char *buf)
 			}
 			else
 				break;
+		}
+
+		if (save_mode && *tmp != '\n') {
+			fflush(save_file);
+			fprintf(save_file, "%s", tmp);
 		}
 
 		if (*tmp == ';')
@@ -67,6 +75,12 @@ int do_read(char *buf)
 					for (ind = 0; ind < bal; ++ind) {
 						printf(")");
 						strcat(buf, ")");
+						if (save_file)
+							fprintf(save_file, ")", tmp);
+					}
+					if (save_file) {
+						fflush(save_file);
+						fprintf(save_file, "\n");
 					}
 					fflush(stdout);
 					printf("\n");				

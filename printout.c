@@ -3,57 +3,74 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
-void printout(list_t *l)
+char buf[128];
+
+void printout(list_t *l, char *s)
 {
-	extern void printout_iter(list_t* l, int d);
-	printout_iter(l, 0);
+	extern void printout_iter(list_t* l, int d, char* s);
+	printout_iter(l, 0, s);
 }
 
-void printout_iter(list_t* l, int d)
+void printout_iter(list_t* l, int d, char *out)
 {
 	int i;
 
 	/* switch based on type */
 	if (l->type == NUMBER) {
-		printf("%d", l->val);
+		sprintf(buf, "%d", l->val);
+		strcat(out, buf);
 	} else if(l->type == SYMBOL) {
-		printf("%s", l->head);
+		sprintf(buf, "%s", l->head);
+		strcat(out, buf);
 	} else if (l->type == LIST) { 
-		printf("(%s", l->head);
+		sprintf(buf, "(%s", l->head);
+		strcat(out, buf);
 		for (i = 0; i < l->cc; ++i) {
-			if (i > 0)
-				printf(" ");
-			printout_iter(l->c[i], d + 1);
+			if (i > 0) {
+				sprintf(buf, " ");
+				strcat(out, buf);
+			}
+			printout_iter(l->c[i], d + 1, out);
 		}
-		printf(")");
+		sprintf(buf, ")");
+		strcat(out, buf);
 	} else if (l->type == CLOSURE) {
-		printf("#<CLOSURE:%p>", l->closure);
+		sprintf(buf, "#<CLOSURE:%p>", l->closure);
+		strcat(out, buf);
 	} else if (l->type == BOOL) {
 		if (l->val)
-			printf("#t");
+			sprintf(buf, "#t");
 		else
-			printf("#f");
+			sprintf(buf, "#f");
+		strcat(out, buf);
 	} else if (l->type == CONS) {
 		if (l->cc == 2 && l->c[1]->cc == 0 && 
 			!(l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL"))) {
-			printf("(");
-			printout_iter(l->c[0], d + 1);
-			printf(" . ");
-			printout_iter(l->c[1], d + 1);
-			printf(")");
+			sprintf(buf, "(");
+			strcat(out, buf);
+			printout_iter(l->c[0], d + 1, out);
+			sprintf(buf, " . ");
+			strcat(out, buf);
+			printout_iter(l->c[1], d + 1, out);
+			sprintf(buf, ")");
+			strcat(out, buf);
 		} else if (l->cc) {
-			printf("(");
+			sprintf(buf, "(");
+			strcat(out, buf);
 			while (1) {
-				printout_iter(l->c[0], d + 1);
+				printout_iter(l->c[0], d + 1, out);
 				if (l->cc == 2 && l->c[1]->cc) {
-					printf(" ");
+					sprintf(buf, " ");
+					strcat(out, buf);
 					l = l->c[1];
 				} else
 					break;
 			}
-			printf(")");
+			sprintf(buf, ")");
+			strcat(out, buf);
 		} else {
-			printf("()");
+			sprintf(buf, "()");
+			strcat(out, buf);
 		}
 	}
 }

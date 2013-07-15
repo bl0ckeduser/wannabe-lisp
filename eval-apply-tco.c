@@ -21,6 +21,8 @@
 		goto tco_iter;			\
 	}					\
 
+char buf[128];
+
 /*
  * Evalute each member of a list, in-place
  */
@@ -454,9 +456,12 @@ tco_iter:
 
 	afail:
 		printf("Error: `apply' has failed\n");
-		printout(proc);
-		printf("\n");
-		printout(args);
+		*buf = 0;
+		printout(proc, buf);
+		puts(buf);
+		*buf = 0;
+		printout(args, buf);
+		puts(buf);
 		printf("\n");
 		code_error();
 	}

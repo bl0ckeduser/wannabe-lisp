@@ -7,6 +7,8 @@
 int interactive;
 env_t *global;
 jmp_buf repl_jmp;
+int save_mode = 0;
+FILE *save_file;
 
 void final_clean_up()
 {
@@ -17,6 +19,7 @@ void final_clean_up()
 int main(int argc, char **argv)
 {
 	char *buf = malloc(1024 * 1024 * 2);
+	char out[1024];
 	char *p;
 	list_t *expr = new_list();
 	int i, c;
@@ -65,6 +68,9 @@ int main(int argc, char **argv)
 		sprintf(buf, "((lambda (x) x) (+ 1 2 3))");
 #else
 		/* read a (syntactic) line */
+		if (save_mode)
+			fprintf(save_file, "\n");
+
 		if (!do_read(buf))
 			break;
 #endif
@@ -81,8 +87,16 @@ int main(int argc, char **argv)
 
 		/* eval and print */
 		if (interactive) {
-			printout(call_eval(expr, global));
-			printf("\n");
+			*out = 0;
+			printout(call_eval(expr, global), out);
+			puts(out);
+
+			if (save_mode) {
+				fprintf(save_file, ";; ");
+				fflush(save_file);
+				fputs(out, save_file);
+				fprintf(save_file, "\n");
+			}
 		} else {
 			call_eval(expr, global);
 		}
@@ -93,6 +107,8 @@ int main(int argc, char **argv)
 		expr = new_list();
 	}
 
+	if (save_mode)
+		fclose(save_file);
 	final_clean_up();
 	free(buf);
 

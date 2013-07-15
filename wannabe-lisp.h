@@ -5,6 +5,8 @@
 
 extern int interactive;
 extern jmp_buf repl_jmp;
+extern int save_mode;
+extern FILE *save_file;
 
 enum {
 	SYMBOL = 0,
@@ -47,7 +49,7 @@ extern env_t *global;
 
 extern list_t* eval(list_t *l, env_t *env);
 extern void add_child(list_t *parent, list_t* child);
-extern void printout(list_t *l);
+extern void printout(list_t *l, char *s);
 extern list_t *new_list(void);
 extern list_t* do_prim_op(char *name, list_t *args);
 extern env_t* new_env(void);

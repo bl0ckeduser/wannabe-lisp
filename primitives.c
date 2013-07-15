@@ -52,6 +52,8 @@ void install_primitives(env_t *env)
 	add_primop(env, "number?");
 
 	add_primop(env, "newline");
+	
+	add_primop(env, "save-to");
 }
 
 list_t* do_prim_op(char *name, list_t *args)
@@ -60,6 +62,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	int j;
 	int val;
 	list_t* nl = c_malloc(sizeof(list_t));
+	char buf[128];
 
 	if (!strcmp(name, "+")) {
 		val = 0;
@@ -267,8 +270,9 @@ list_t* do_prim_op(char *name, list_t *args)
 	}
 
 	if (!strcmp(name, "display")) {
-		printout(args->c[0]);
-		printf("\n");
+		*buf = 0;
+		printout(args->c[0], buf);
+		puts(buf);
 		return args->c[0];
 	}
 
@@ -305,6 +309,18 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "newline")) {
 		puts("");
 		return mksym("NIL");
+	}
+
+	if (!strcmp(name, "save-to")) {
+		if (save_mode) {
+			return mksym("NIL");
+		}
+		save_file = fopen(args->c[0]->head, "w");
+		if (!save_file) {
+			printf("Error: failed to open file for writing\n");
+		}
+		save_mode = 1;
+		return mksym("savefile-ok");
 	}
 
 	return NULL;
