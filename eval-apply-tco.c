@@ -123,6 +123,21 @@ tco_iter:
 			return nw;
 		}
 
+		/* hook to eval(..., env) */
+		if (l->type == LIST && !strcmp(l->c[0]->head, "leval")) {
+			if (l->c[1]->type == LIST && l->c[1]->c[0]->type == SYMBOL
+				&& !strcmp(l->c[1]->c[0]->head, "QUOTE")) {
+				TCO_eval(l->c[1]->c[1], env);
+			} else {
+				ev = call_eval(l->c[1], env);
+				if (ev->type == SYMBOL) {
+					TCO_eval(ev, env);
+				} else {
+					printf("Error: `geval' expects a symbol\n");
+				}
+			}
+		}
+
 		/* (lambda (arg-1 arg-2 ... arg-n) exp1 exp2 ... expN) */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "lambda")) {
 			nw = new_list();
@@ -392,6 +407,10 @@ tco_iter:
 
 	afail:
 		printf("Error: `apply' has failed\n");
+		printout(proc);
+		printf("\n");
+		printout(args);
+		printf("\n");
 		exit(1);
 	}
 

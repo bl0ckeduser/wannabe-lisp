@@ -25,7 +25,18 @@ There are some important things missing; see `TODO'
 Some notes on special features
 ==============================
 
-I. Parenthesis autocomplete:
+I. Special functions
+
+- (leval quoted-exp) de-quotes and evaluates quoted-exp in the local scope.
+  For example, (leval '(+ 1 2 3)) => 6.
+
+- (max-space exp) evaluates exp in the local scope, returning a number
+  indicating the peak number of stack frames used in the evaluation.
+  See tco-test.txt for example code. TCO'd iterative processes will 
+  return a constant space count; recursive ones will return a growing
+  space count.
+
+II. Parenthesis autocomplete:
 
 you type a big expression in the REPL, then hit return with 
 an empty line and the missing parentheses will be automatically
@@ -39,6 +50,6 @@ added
 
 		~~~~~~~~
 
-II. Auto-indent
+III. Auto-indent
 
 The REPL auto-indents
