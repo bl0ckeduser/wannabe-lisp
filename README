@@ -44,6 +44,10 @@ I. Special functions
   return a constant space count; recursive ones will return a growing
   space count. max-space cannot be used recursively.
 
+- (save-to 'file-name.txt) logs to a file.
+
+- (load 'file.txt) loads code from a file.
+
 				~~~~~~~~
 
 II. Parenthesis autocomplete:

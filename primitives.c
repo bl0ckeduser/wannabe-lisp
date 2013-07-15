@@ -54,6 +54,7 @@ void install_primitives(env_t *env)
 	add_primop(env, "newline");
 	
 	add_primop(env, "save-to");
+	add_primop(env, "load");
 }
 
 list_t* do_prim_op(char *name, list_t *args)
@@ -62,7 +63,9 @@ list_t* do_prim_op(char *name, list_t *args)
 	int j;
 	int val;
 	list_t* nl = c_malloc(sizeof(list_t));
-	char buf[128];
+	char *buf;
+	FILE *prefix;
+	list_t *expr;
 
 	if (!strcmp(name, "+")) {
 		val = 0;
@@ -270,9 +273,11 @@ list_t* do_prim_op(char *name, list_t *args)
 	}
 
 	if (!strcmp(name, "display")) {
+		buf = malloc(1024);
 		*buf = 0;
 		printout(args->c[0], buf);
 		puts(buf);
+		free(buf);
 		return args->c[0];
 	}
 
@@ -321,6 +326,36 @@ list_t* do_prim_op(char *name, list_t *args)
 		}
 		save_mode = 1;
 		return mksym("savefile-ok");
+	}
+
+	if (!strcmp(name, "load")) {
+		if ((prefix = fopen(args->c[0]->head, "r"))) {
+			buf = malloc(1024 * 1024 * 2);
+			if (!buf) {
+				printf("Error: load: malloc failed\n");
+				code_error();
+			}
+			while (1) {
+				*buf = 0;	
+				do_read_file(buf, prefix, 1);
+				if (!*buf || feof(prefix))
+					break;
+				if (*buf && *buf != ';') {
+					expr = new_list();
+					build(expr, buf);
+					call_eval(expr, global);
+
+					/* clean up for the next iteration */
+					gc();
+					sprintf(buf, "");
+				}
+			}
+			fclose(prefix);
+			free(buf);
+		} else {
+			printf("Note: couldn't load `%s'\n", args->c[0]->head);
+		}
+		return mksym("load-ok");
 	}
 
 	return NULL;

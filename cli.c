@@ -10,10 +10,14 @@
  *  -- Quick & dirty ugly code, however.
  *
  * Note that this is also required for reading
- * from files, and at the moment only stdin
- * is supported.
+ * from files
  */
 int do_read(char *buf)
+{
+	return do_read_file(buf, stdin, 0);
+}
+
+int do_read_file(char *buf, FILE *f, int silent)
 {
 	int bal = -1;
 	char tmp[1024];
@@ -25,7 +29,7 @@ int do_read(char *buf)
 	/* Loop as long as there 
 	 * are unclosed parentheses */
 	while (bal) {
-		if (interactive) {
+		if (interactive && !silent) {
 			/* Print prompt */
 			if (!i++)
 				printf("]=> ");
@@ -44,9 +48,9 @@ int do_read(char *buf)
 			fflush(stdout);
 		}
 
-		if (!fgets(tmp, 1024, stdin)) {
+		if (!fgets(tmp, 1024, f)) {
 			printf("\n");
-			if (interactive) {
+			if (interactive && !silent) {
 				return 0;
 			}
 			else
