@@ -16,8 +16,8 @@ print ";; See mitpress.mit.edu/sicp/full-text/book/book-Z-H-24.html"
 print "(define force (lambda (u) (u)))"
 print "(define stream-car car)"
 print "(define (stream-cdr s) (force (cdr s)))"
-print "(define stream-null? null?)")
-print "(define the-empty-stream '())")
+print "(define stream-null? null?)"
+print "(define the-empty-stream '())"
 print ""
 
 print ";; Composite car/cdr primitives"

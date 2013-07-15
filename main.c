@@ -47,6 +47,8 @@ int main(int argc, char **argv)
 			}
 		}
 		fclose(prefix);
+	} else {
+		printf("Note: couldn't load `prefix.txt'\n");
 	}
 
 	/* check for "./lisp -i" invocation -- interactive mode */

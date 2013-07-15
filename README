@@ -16,13 +16,6 @@ Interactive REPL mode is accessed thusly:
 $ lisp -i
 ]=> 
 
-Optionally, composite car/cdr primitives (like caddr), as well
-as other stuff like `true', `false', stream routines, ..., etc. 
-can be built thusly:
-
-$ python gen-prefix.py >prefix.txt 
-
-
 There are some important things missing; see `TODO'
 
 -----------------------------------
