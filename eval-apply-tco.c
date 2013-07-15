@@ -111,6 +111,10 @@ tco_iter:
 		/* Deal with special forms (lambda, define, ...) first */
 		/* TODO: other stuff ? */
 
+		/* Don't ask why, but () => () */
+		if (l->type == LIST && l->cc == 0)
+			return l;
+
 		if (l->type == LIST && !strcmp(l->c[0]->head, "max-space")) {
 			frames_usage_max = 0;
 			frames = 0;
