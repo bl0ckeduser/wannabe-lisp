@@ -1,0 +1,51 @@
+;; Display the maximum space used by the call
+;;	(proc n)
+;; for 1 <= n <= count
+(define (do-test proc-name count)
+	(begin
+		(display proc-name)
+		(define proc (leval proc-name))
+		(define (do-loop n max)
+			(if (>= n max)
+				'nil
+				(begin
+					(display (max-space (proc n)))
+					(do-loop (+ n 1) max))))
+		(do-loop 1 count)))
+
+;; Now, let's check the space usage of 
+;; a few little procedures
+
+;; recursive factorial
+(define (r-fact n)
+	(if (= n 0)
+		1
+		(* n (r-fact (- n 1)))))
+
+;; iterative factorial
+(define (i-fact n)
+	(begin
+		(define (loop p c)
+			(if (= c 0)
+				p
+				(loop (* p c) (- c 1))))
+		(loop 1 n)))
+
+;; useless loop
+(define (dumbloop n)
+	(if (= n 0)
+		'haha
+		(dumbloop (- n 1))))
+
+;; run the tests...
+(define (foldr list func id)
+	(if (null? list)
+		id
+		(func (car list) (foldr (cdr list) func id))))
+
+(foldr
+	'(r-fact i-fact dumbloop)
+	(lambda (a b)
+		(do-test a 10)
+		(newline))
+	'())
