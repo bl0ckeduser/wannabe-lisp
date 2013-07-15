@@ -5,21 +5,21 @@
 
 /* Based on SICP's metacircular eval/apply tutorial */
 
-#define TCO_eval(l_arg, e_arg)	\
-	{							\
-		l = l_arg;				\
+#define TCO_eval(l_arg, e_arg)			\
+	{					\
+		l = l_arg;			\
 		env = e_arg; 			\
-		oper = 0;				\
+		oper = 0;			\
 		goto tco_iter;			\
-	}							\
+	}					\
 
-#define TCO_apply(p_arg, a_arg)	\
-	{							\
+#define TCO_apply(p_arg, a_arg)			\
+	{					\
 		proc = p_arg;			\
 		args = a_arg; 			\
-		oper = 1;				\
+		oper = 1;			\
 		goto tco_iter;			\
-	}							\
+	}					\
 
 /*
  * Evalute each member of a list, in-place
@@ -84,9 +84,9 @@ void close_frame()
 }
 
 list_t* eval_apply_tco(
-	int oper, 						/* 0: eval, otherwise, apply */
+	int oper, 				/* 0: eval, otherwise, apply */
 	list_t *a_l, env_t *a_env, 		/* eval */
-	list_t *a_proc, list_t *a_args)	/* apply */
+	list_t *a_proc, list_t *a_args)		/* apply */
 {
 	extern list_t *new_list();
 	env_ref_t er;
