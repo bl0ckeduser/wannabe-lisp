@@ -1,5 +1,7 @@
 - strings, floats ?
 
+- syntax modification macros !!11!
+
 - '23 should evaluate to 23 (r6rs.pdf, section 1.10, page 8)
 
 - bug: repeated `define's don't seem to work properly
