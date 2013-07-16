@@ -49,9 +49,14 @@ void printout_iter(list_t* l, int d, char *out)
 			sprintf(buf, "(");
 			strcat(out, buf);
 			printout_iter(l->c[0], d + 1, out);
-			sprintf(buf, " . ");
-			strcat(out, buf);
-			printout_iter(l->c[1], d + 1, out);
+			/* (cons 'a '()) => (a)
+			 * r6rs.pdf, section 11.9, page 48
+			 */
+			if (!(l->c[1]->type == CONS && l->c[1]->cc == 0)) {
+				sprintf(buf, " . ");
+				strcat(out, buf);
+				printout_iter(l->c[1], d + 1, out);
+			}
 			sprintf(buf, ")");
 			strcat(out, buf);
 		} else if (l->cc) {
