@@ -145,6 +145,10 @@ tco_iter:
 
 		/* Deal with special forms (lambda, define, ...) first */
 
+		/* Don't ask why, but () => () */
+		if (l->type == LIST && l->cc == 0)
+			return l;
+
 		/* (and ... ) with short-circuit */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "and")) {
 			val = 1;
@@ -176,10 +180,6 @@ tco_iter:
 			}
 			return makebool(val);
 		}
-
-		/* Don't ask why, but () => () */
-		if (l->type == LIST && l->cc == 0)
-			return l;
 
 		/* (max-space EXP) gives the maximum number of 
 		 * eval/apply stack frames used in the evaluation of EXP */
