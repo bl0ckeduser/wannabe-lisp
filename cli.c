@@ -57,7 +57,7 @@ int do_read_file(char *buf, FILE *f, int silent)
 				break;
 		}
 
-		if (save_mode && *tmp != '\n') {
+		if (save_mode && !silent && *tmp != '\n') {
 			fflush(save_file);
 			fprintf(save_file, "%s", tmp);
 		}
