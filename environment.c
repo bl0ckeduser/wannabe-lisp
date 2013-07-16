@@ -56,13 +56,21 @@ env_ref_t lookup(env_t *e, char *sym)
 /*
  * Add a symbol to an environment
  */
-int env_add(env_t *e, char *sym, int ty, void *p)
+void env_add(env_t *e, char *sym, int ty, void *p)
 {
 	int c = e->count;
 	char **nsym;
 	char *nty;
 	void **nptr;
 	int i;
+	env_ref_t ref;
+
+	/* check if it's already there */
+	if ((lookup(e, sym)).e == e) {
+		/* yes; call env_set() instead */
+		env_set(e, sym, ty, p);
+		return;
+	}
 
 	if (++(e->count) >= e->alloc) {
 		e->alloc += 16;

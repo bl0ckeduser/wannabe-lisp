@@ -57,7 +57,7 @@ extern list_t* apply(list_t *proc, list_t *args);
 extern env_ref_t lookup(env_t *e, char *sym);
 extern void evlist(list_t* l, env_t *env);
 extern list_t* makebool(int cbool);
-extern int env_add(env_t *e, char *sym, int ty, void *p);
+extern void env_add(env_t *e, char *sym, int ty, void *p);
 extern void install_primitives(env_t *env);
 extern int do_read(char *buf);
 extern char* build(list_t* l, char *expr);
