@@ -257,10 +257,9 @@ tco_iter:
 
 		/* (begin exp1 exp2 ... expN) */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "begin")) {
-			for (i = 1; i < l->cc; ++i)
-				ev = call_eval(l->c[i], env);
-			close_frame();
-			return ev;
+			for (i = 1; i < l->cc - 1; ++i)
+				call_eval(l->c[i], env);
+			TCO_eval(l->c[i], env);
 		}
 
 		/* (let ((v1 e1) (v2 e2) ... (vN eN)) exp1 exp2 ... expN) */

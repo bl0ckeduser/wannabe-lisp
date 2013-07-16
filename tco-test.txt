@@ -37,6 +37,20 @@
 		'haha
 		(dumbloop (- n 1))))
 
+;; (begin ...) tail-recursion
+(define (begin-test n)
+	(begin
+		(+ 1 2 3)
+		(* 4 5 6)
+		(if (= n 0)
+			'hahaha
+			(begin-test (- n 1)))))
+
+;; cond tail-recursion
+(define (cond-test n)
+	(cond ((= n 0) 'haha)
+	      (else (cond-test (- n 1)))))
+
 ;; run the tests...
 (define (foldr list func id)
 	(if (null? list)
@@ -44,7 +58,8 @@
 		(func (car list) (foldr (cdr list) func id))))
 
 (foldr
-	'(r-fact i-fact dumbloop)
+	'(r-fact i-fact dumbloop begin-test cond-test)
+
 	(lambda (a b)
 		(do-test a 10)
 		(newline))
