@@ -82,5 +82,6 @@ extern list_t* eval_apply_tco(int oper, list_t *a_l, env_t *a_env, list_t *a_pro
 extern list_t *copy_list(list_t *l);
 extern int code_error();
 extern int do_read_file(char *buf, FILE *f, int silent);
+extern int check_comment(char *s);
 
 #endif

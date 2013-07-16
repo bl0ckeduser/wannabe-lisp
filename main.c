@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	if ((prefix = fopen("prefix.txt", "r"))) {
 		while ((fgets(buf, 1024, prefix))) {
 			strip_nl(buf);
-			if (*buf && *buf != ';') {
+			if (*buf && !check_comment(buf)) {
 				build(expr, buf);
 				call_eval(expr, global);
 

@@ -341,7 +341,7 @@ list_t* do_prim_op(char *name, list_t *args)
 				do_read_file(buf, prefix, 1);
 				if (!*buf || feof(prefix))
 					break;
-				if (*buf && *buf != ';') {
+				if (*buf && !check_comment(buf)) {
 					expr = new_list();
 					build(expr, buf);
 					call_eval(expr, global);

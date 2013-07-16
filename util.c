@@ -4,6 +4,13 @@
 #include <setjmp.h>
 #include "wannabe-lisp.h"
 
+int check_comment(char *s)
+{
+	while (*s && (*s == ' ' || *s == '\t' || *s == '\n'))
+		++s;
+	return *s == ';';
+}
+
 int code_error()
 {
 	if (interactive)

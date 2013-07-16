@@ -62,8 +62,10 @@ int do_read_file(char *buf, FILE *f, int silent)
 			fprintf(save_file, "%s", tmp);
 		}
 
-		if (*tmp == ';')
+		if (check_comment(tmp)) {
+			i = 0;
 			continue;
+		}
 
 		/* skip empty lines, parser hates them */
 		if (*tmp == '\n') {
