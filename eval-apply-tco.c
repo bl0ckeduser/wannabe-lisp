@@ -213,7 +213,7 @@ tco_iter:
 		/* (cons-stream a b) => (cons a (delay b)) */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "cons-stream")) {
 			nw = new_list();
-			nw->type = LIST;
+			nw->type = CONS;
 			add_child(nw, call_eval(l->c[1], env));
 
 			nw2 = new_list();
@@ -222,13 +222,12 @@ tco_iter:
 			nw3 = new_list();
 			nw3->type = LIST;
 			add_child(nw2, nw3);
-			add_child(nw2, copy_list(l->c[2]));
+			add_child(nw2, l->c[2]);
 
 			add_child(nw, nw2);
-			ev = makelist(nw);
 
 			close_frame();
-			return ev;
+			return nw;
 		}
 
 		/* (delay exp) => (lambda () exp) */
