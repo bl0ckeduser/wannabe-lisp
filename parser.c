@@ -10,10 +10,11 @@ char* build(list_t* l, char *expr)
 	char *old;
 	int i;
 	int lambda = 0;
-	char tok[16];
+	char tok[32];
 	int sgn;
 	list_t* child;
 	list_t* child2;
+	int len;
 
 	p = expr;
 
@@ -55,8 +56,14 @@ char* build(list_t* l, char *expr)
 		} else {
 			sgn = 1;
 		}
-		while (*p && isnum(*p))
+		len = 0;
+		while (*p && isnum(*p)) {
 			*q++ = *p++;
+			if (++len >= 32) {
+				printf("Error: numeral too long\n");
+				code_error();
+			}
+		}
 		*q = 0;
 		l->type = NUMBER;
 		sscanf(tok, "%d", &(l->val));
@@ -65,8 +72,14 @@ char* build(list_t* l, char *expr)
 		while (*p == ' ' || *p == '\t')
 			++p;
 		q = tok;
-		while (*p != '(' && *p != ')' && validname(*p))
+		len = 0;
+		while (*p != '(' && *p != ')' && validname(*p)) {
 			*q++ = *p++;
+			if (++len >= 32) {
+				printf("Error: symbol name too long\n");
+				code_error();
+			}
+		}
 		*q = 0;
 		l->type = SYMBOL;
 		strcpy(l->head, tok);
