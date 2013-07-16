@@ -26,7 +26,8 @@ To run a code file, do:
 $ ./lisp <test.txt
 
 The file `TODO' lists features that I might eventually add.
-Example code files are test.txt, closure.txt, tco-test.txt.
+Example code files are test.txt, closure.txt, tco-test.txt,
+                       pattern-matcher.txt.
 
 -----------------------------------
 

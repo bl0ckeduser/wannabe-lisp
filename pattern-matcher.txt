@@ -1,0 +1,110 @@
+;; Summary
+;; 1. Dictionary
+;; 2. Pattern matcher
+;; 3. Tests
+
+;; ====================================================================
+
+;; 1. Dictionary
+
+(define dict '())
+
+(define (add key val)
+   (set!
+      dict
+      (cons (cons key val) dict)))
+
+(define (lookup key)
+   (begin
+      (define (iter key list)
+         (cond
+            ((null? list) '())
+            ((eq? (caar list) key) (cdar list))
+            (else
+               (iter key (cdr list)))))
+      (iter key dict)))
+
+(define (empty-dict)
+	(set! dict '()))
+
+;; ====================================================================
+
+;; 2. Pattern matcher
+
+;; Main interface to the matcher
+(define (match skel tree)
+	(begin
+		;; Clean dictionary
+		(empty-dict)
+		;; 'a => '(a) to simplify matcher's work
+		(if (not (pair? tree))
+			(set! tree (list tree)))
+		;; If it matches, give the dict, else give nothing
+		(if (match-iter skel tree)
+			dict
+			'())))
+
+(define (match-iter skel tree)
+   (cond
+      ;; If one is nil, other must also be
+      ((null? skel) (null? tree))
+      ((null? tree) (null? skel)) 
+
+      ;; Variable matching -- '(? VAR)
+      ((and (pair? skel) (pair? (car skel)) (eq? (caar skel) '?))
+         (let 
+	       ((val (cadar skel))
+		(key (car tree)))
+
+               ;; Check if variable already set
+               (if (not (null? (lookup val)))
+                  ;; Yes -- check if tree is same as earlier match
+                  (and
+                     (match-iter (lookup val) key)
+                     (match-iter (cdr skel) (cdr tree)))
+                  ;; No -- happily store match and carry on
+                  (begin
+                     (add val key)
+                     (match-iter (cdr skel) (cdr tree))))))
+
+      ;; General list case
+      ((and (pair? skel) (pair? tree))
+         (and (pair? tree)
+              (match-iter (car skel) (car tree))
+              (match-iter (cdr skel) (cdr tree))))
+
+      ;; Literal symbol matching
+      ((symbol? skel)
+         (and (symbol? tree) (eq? skel tree)))
+
+      ;; Literal number matching
+      ((number? skel)
+         (and (number? tree) (= skel tree)))
+
+      ;; #f is a sane default
+      (else 
+	false)))
+
+;; ====================================================================
+
+;; 3. Tests
+
+(define (iterate func list)
+	(if (null? list)
+		'()
+		(begin
+			(func (car list))
+			(iterate func (cdr list)))))
+
+(iterate 
+	display
+	(list
+		(match '((? x)) 'a)
+		(match '((? x) (? y)) '(a b))
+		(match '((? x) (? y)) '(a a))
+		(match '((? x) (? x)) '(a a))
+		(match '((? x) (? x)) '(a b))
+		(match '((? x) (? x) foo) '(a a foo))
+		(match '((? x) foo (? x)) '(a foo a))
+	)
+)
