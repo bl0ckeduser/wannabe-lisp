@@ -416,7 +416,7 @@ tco_iter:
 		/* (list X Y Z ... ) */
 		/* note that unlike for quoted lists, this involves evaluating
 		 * the arguments before building the list */
-		if (l->type == LIST && l->cc > 1 && l->c[0]->type == SYMBOL
+		if (l->type == LIST && l->c[0]->type == SYMBOL
 			&& !strcmp(l->c[0]->head, "list")) {
 			ev = new_list();
 			ev->type = LIST;
