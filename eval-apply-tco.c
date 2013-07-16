@@ -41,8 +41,8 @@ list_t* makelist(list_t* argl)
 {
 	list_t *nw, *nw2, *nw3;
 	list_t *cons;
-	int i;
-	
+	int i;	
+
 	nw3 = nw = new_list();
 	nw->type = CONS;
 	for (i = 0; i < argl->cc; ++i) {
@@ -98,6 +98,7 @@ list_t* eval_apply_tco(
 	list_t *pred;
 	env_t *ne;
 	int i, j;
+	int val;
 	
 	list_t *l = a_l;
 	env_t *env = a_env;

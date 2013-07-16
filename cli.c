@@ -63,13 +63,13 @@ int do_read_file(char *buf, FILE *f, int silent)
 		}
 
 		if (check_comment(tmp)) {
-			i = 0;
+			if (i == 1) i = 0;
 			continue;
 		}
 
 		/* skip empty lines, parser hates them */
 		if (*tmp == '\n') {
-			if (interactive) {
+			if (interactive && !silent) {
 				if (i == 1) --i;
 				/* 
 				 * blank line
