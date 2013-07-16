@@ -44,8 +44,17 @@ void printout_iter(list_t* l, int d, char *out)
 			sprintf(buf, "#f");
 		strcat(out, buf);
 	} else if (l->type == CONS) {
-		if (l->cc == 2 && l->c[1]->cc == 0 && 
-			!(l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL"))) {
+		if (l->cc == 2
+			&& (l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL")
+				|| (l->c[1]->type == CONS && l->c[1]->cc == 0))) {
+			sprintf(buf, "(");
+			strcat(out, buf);
+			printout_iter(l->c[0], d + 1, out);
+			sprintf(buf, ")");
+			strcat(out, buf);
+		}
+		else
+		if (l->cc == 2 && (l->c[1]->cc != 2 || l->c[1]->type != CONS)) {
 			sprintf(buf, "(");
 			strcat(out, buf);
 			printout_iter(l->c[0], d + 1, out);
@@ -63,13 +72,21 @@ void printout_iter(list_t* l, int d, char *out)
 			sprintf(buf, "(");
 			strcat(out, buf);
 			while (1) {
-				printout_iter(l->c[0], d + 1, out);
 				if (l->cc == 2 && l->c[1]->cc) {
+					printout_iter(l->c[0], d + 1, out);
 					sprintf(buf, " ");
 					strcat(out, buf);
 					l = l->c[1];
-				} else
+				} else {
+					if (l->cc == 2
+						&& (l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL")
+						|| (l->c[1]->type == CONS && l->c[1]->cc == 0))) {
+						printout_iter(l->c[0], d + 1, out);
+					} else { 
+						printout_iter(l, d + 1, out);
+					}
 					break;
+				}
 			}
 			sprintf(buf, ")");
 			strcat(out, buf);
