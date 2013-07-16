@@ -191,13 +191,8 @@ list_t* do_prim_op(char *name, list_t *args)
 				printf("Error: `not' expects one argument\n");
 				code_error();
 		}
-		for (i = 0; i < args->cc; ++i) {
-			if (args->c[i]->type != BOOL) {
-				printf("Error: `not' expects boolean arguments\n");
-				code_error();
-			}
-			val = !(args->c[i]->val);
-		}
+		/* r6rs.pdf section 11.8, page 47 */
+		val = args->c[0]->type == BOOL && !args->c[i]->val;
 		return makebool(val);
 	}
 
