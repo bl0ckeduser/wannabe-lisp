@@ -323,6 +323,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		save_file = fopen(args->c[0]->head, "w");
 		if (!save_file) {
 			printf("Error: failed to open file for writing\n");
+			code_error();
 		}
 		save_mode = 1;
 		return mksym("savefile-ok");
@@ -354,6 +355,7 @@ list_t* do_prim_op(char *name, list_t *args)
 			free(buf);
 		} else {
 			printf("Note: couldn't load `%s'\n", args->c[0]->head);
+			code_error();
 		}
 		return mksym("load-ok");
 	}
