@@ -5,7 +5,7 @@
 list_t *new_list(void)
 {
 	list_t* nl = c_malloc(sizeof(list_t));
-	nl->type = SYMBOL;
+	nl->type = SYMBOL;	/* default, see others in `wannabe-lisp.h' */
 	nl->val = 0;
 	nl->ca = 0;
 	nl->cc = 0;

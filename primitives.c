@@ -55,6 +55,12 @@ void install_primitives(env_t *env)
 	add_primop(env, "load");
 }
 
+/* 
+ * FIXME: apparently the proper Scheme behaviour
+ * for interpretering booleans is #f => false,
+ * anything else => true
+ */
+
 list_t* do_prim_op(char *name, list_t *args)
 {
 	int i = 0;

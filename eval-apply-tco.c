@@ -5,22 +5,6 @@
 
 /* Based on SICP's metacircular eval/apply tutorial */
 
-#define TCO_eval(l_arg, e_arg)			\
-	{					\
-		l = l_arg;			\
-		env = e_arg; 			\
-		oper = 0;			\
-		goto tco_iter;			\
-	}					\
-
-#define TCO_apply(p_arg, a_arg)			\
-	{					\
-		proc = p_arg;			\
-		args = a_arg; 			\
-		oper = 1;			\
-		goto tco_iter;			\
-	}					\
-
 char buf[128];
 
 /*
@@ -36,6 +20,16 @@ void eatco_evlist(list_t* l, env_t *env)
 /* 
  * (1 2 3 4)
  * => (1 . (2 . (3 . (4 . NIL))))
+ * 
+ * The former form is strictly an
+ * internal representation, which
+ * is easier to build and to 
+ * parse to. 
+ *
+ * Lisp is supposed to use the
+ * latter "car/cdr" form. So, 
+ * before any list is actually used,
+ * it gets transformed thusly.
  */
 list_t* makelist(list_t* argl)
 {
@@ -46,8 +40,8 @@ list_t* makelist(list_t* argl)
 	nw3 = nw = new_list();
 	nw->type = CONS;
 	for (i = 0; i < argl->cc; ++i) {
-		/* recursive application is necessary 
-	 	 * so as to make possible cases like:
+		/* Recursive application is necessary 
+	 	 * so as to ensure cases like:
 		 * 		]=> (caadr '(1 (1 2)))
 		 * 		1	
 		 */
@@ -62,12 +56,20 @@ list_t* makelist(list_t* argl)
 			add_child(nw, nw2);
 			nw = nw2;
 		} else {
-			/* put in a nil */
+			/* put in a nil at the end;
+			 * it is understood as end-of-list
+			 * marker */
 			add_child(nw, mksym("NIL"));
 		}
 	}
 	return nw3;
 }
+
+/* 
+ * The frames stuff here is for use by the 
+ * special procedure `max-space'; see
+ * in the evaluator below 
+ */
 
 int frames = 0;
 int frames_usage_max = 0;
@@ -84,6 +86,30 @@ void close_frame()
 {
 	--frames;
 }
+
+/*
+ * The following are macros that emulate
+ * the syntax of function calls but that
+ * merely jump back to the beggining of the
+ * eval/apply hybrid procedure below.
+ * This make TCO easily possible.
+ */
+
+#define TCO_eval(l_arg, e_arg)			\
+	{					\
+		l = l_arg;			\
+		env = e_arg; 			\
+		oper = 0;			\
+		goto tco_iter;			\
+	}					\
+
+#define TCO_apply(p_arg, a_arg)			\
+	{					\
+		proc = p_arg;			\
+		args = a_arg; 			\
+		oper = 1;			\
+		goto tco_iter;			\
+	}					\
 
 list_t* eval_apply_tco(
 	int oper, 				/* 0: eval, otherwise, apply */
@@ -105,6 +131,12 @@ list_t* eval_apply_tco(
 	list_t *proc = a_proc;
 	list_t *args = a_args;
 
+	/* 
+	 * FIXME: apparently the proper Scheme behaviour
+	 * for interpretering booleans is #f => false,
+	 * anything else => true
+	 */
+
 	new_frame();
 
 tco_iter:
@@ -112,15 +144,14 @@ tco_iter:
 	if (oper == 0) {
 
 		/* Deal with special forms (lambda, define, ...) first */
-		/* TODO: other stuff ? */
 
-		/* (and ... ) */
+		/* (and ... ) with short-circuit */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "and")) {
 			val = 1;
 			for (i = 1; i < l->cc; ++i) {
 				ev = call_eval(l->c[i], env);
 				if (ev->type != BOOL) {
-					printf("Error: and expects boolean arguments\n");
+					printf("Error: `and' expects boolean arguments\n");
 					code_error();
 				}
 				val &= ev->val;
@@ -130,13 +161,13 @@ tco_iter:
 			return makebool(val);
 		}
 
-		/* (or ... ) */
+		/* (or ... ) with short-circuit */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "or")) {
 			val = 0;
 			for (i = 1; i < l->cc; ++i) {
 				ev = call_eval(l->c[i], env);
 				if (ev->type != BOOL) {
-					printf("Error: and expects boolean arguments\n");
+					printf("Error: `or' expects boolean arguments\n");
 					code_error();
 				}
 				val |= ev->val;
@@ -150,6 +181,8 @@ tco_iter:
 		if (l->type == LIST && l->cc == 0)
 			return l;
 
+		/* (max-space EXP) gives the maximum number of 
+		 * eval/apply stack frames used in the evaluation of EXP */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "max-space")) {
 			frames_usage_max = 0;
 			frames = 0;
@@ -162,7 +195,7 @@ tco_iter:
 			return nw;
 		}
 
-		/* hook to eval(..., env) */
+		/* (leval ...) => hook to eval(..., env) */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "leval")) {
 			if (l->c[1]->type == LIST && l->c[1]->c[0]->type == SYMBOL
 				&& !strcmp(l->c[1]->c[0]->head, "QUOTE")) {
@@ -172,7 +205,7 @@ tco_iter:
 				if (ev->type == SYMBOL) {
 					TCO_eval(ev, env);
 				} else {
-					printf("Error: `geval' expects a symbol\n");
+					printf("Error: `leval' expects a symbol\n");
 				}
 			}
 		}
@@ -489,13 +522,15 @@ tco_iter:
 
 	afail:
 		printf("Error: `apply' has failed\n");
+
 		*buf = 0;
 		printout(proc, buf);
 		puts(buf);
+
 		*buf = 0;
 		printout(args, buf);
 		puts(buf);
-		printf("\n");
+
 		code_error();
 	}
 

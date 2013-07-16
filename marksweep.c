@@ -20,12 +20,14 @@ void gc_selfdestroy()
 void add_ptr(void *p)
 {
 	int i;
+	/* prevent adding things twice */
 	for (i = 0; i < len; ++i)
 		if (ptrs[i] == p) {
 			mark[i] = 0;
 			return;
 		}
 	
+	/* expand list if needed */
 	if (++len >= alloc) {
 		alloc += 16;
 		ptrs = realloc(ptrs, alloc * sizeof(void *));
@@ -35,6 +37,8 @@ void add_ptr(void *p)
 			exit(1);
 		}
 	}
+
+	/* add pointer to list and set initial zero-mark */
 	mark[len - 1] = 0;
 	ptrs[len - 1] = p;
 }
@@ -46,6 +50,8 @@ void do_mark(void* p, int m)
 	if (!p)
 		return;
 
+	/* Look for the pointer in the
+	 * list and mark it */
 	for (i = 0; i < len; ++i) {
 		if (ptrs[i] == p) {
 			mark[i] = m;
@@ -99,6 +105,12 @@ void gc()
 	free(copy_mark);
 }
 
+/*
+ * Mark the struct fields of a list object,
+ * (as well as the object itself),
+ * and recurse onto its list and environment
+ * (if it's a closure) children.
+ */
 void marksweep_list(list_t *l)
 {
 	int i;
@@ -114,6 +126,11 @@ void marksweep_list(list_t *l)
 		marksweep(l->closure);
 }
 
+/*
+ * Mark an environment object as well as 
+ * as its struct-fields. Recurse onto its list
+ * and environment relations, if any.
+ */
 void marksweep(env_t *e)
 {
 	int i;
