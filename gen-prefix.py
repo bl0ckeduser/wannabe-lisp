@@ -28,6 +28,9 @@ tab = []
 for i in range(QTY):
 	tab.append(0)
 
+# skip car, cdr
+tab[0] = 2
+
 while tab[QTY - 1] == 0:
 	# bump and carry
 	tab[0] += 1
