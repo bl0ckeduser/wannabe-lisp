@@ -278,7 +278,10 @@ list_t* do_prim_op(char *name, list_t *args)
 		return makebool(args->c[0] == args->c[1]
 			|| (args->c[0]->type == SYMBOL 
 				&& args->c[1]->type == SYMBOL
-				&& !strcmp(args->c[0]->head, args->c[1]->head)));
+				&& !strcmp(args->c[0]->head, args->c[1]->head))
+			/* (eq? '() '()) => #t */
+			|| (args->c[0]->type == CONS && args->c[0]->cc == 0
+			    && args->c[1]->type == CONS && args->c[1]->cc == 0));
 	}
 
 	if (!strcmp(name, "symbol?")) {
