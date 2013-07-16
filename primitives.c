@@ -35,8 +35,6 @@ void install_primitives(env_t *env)
 	add_primop(env, "<");
 	add_primop(env, ">=");
 	add_primop(env, "<=");
-	add_primop(env, "and");
-	add_primop(env, "or");
 	add_primop(env, "not");
 
 	add_primop(env, "car");
@@ -179,30 +177,6 @@ list_t* do_prim_op(char *name, list_t *args)
 			code_error();
 		}
 		return makebool(args->c[0]->val >= args->c[1]->val);
-	}
-
-	if (!strcmp(name, "and")) {
-		val = 1;
-		for (i = 0; i < args->cc; ++i) {
-			if (args->c[i]->type != BOOL) {
-				printf("Error: and expects boolean arguments\n");
-				code_error();
-			}
-			val &= args->c[i]->val;
-		}
-		return makebool(val);
-	}
-
-	if (!strcmp(name, "or")) {
-		val = 0;
-		for (i = 0; i < args->cc; ++i) {
-			if (args->c[i]->type != BOOL) {
-				printf("Error: or expects boolean arguments\n");
-				code_error();
-			}
-			val |= args->c[i]->val;
-		}
-		return makebool(val);
 	}
 
 	if (!strcmp(name, "not")) {

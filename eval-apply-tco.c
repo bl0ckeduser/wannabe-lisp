@@ -113,6 +113,38 @@ tco_iter:
 		/* Deal with special forms (lambda, define, ...) first */
 		/* TODO: other stuff ? */
 
+		/* (and ... ) */
+		if (l->type == LIST && !strcmp(l->c[0]->head, "and")) {
+			val = 1;
+			for (i = 1; i < l->cc; ++i) {
+				ev = call_eval(l->c[i], env);
+				if (ev->type != BOOL) {
+					printf("Error: and expects boolean arguments\n");
+					code_error();
+				}
+				val &= ev->val;
+				if (!ev->val)
+					break;
+			}
+			return makebool(val);
+		}
+
+		/* (or ... ) */
+		if (l->type == LIST && !strcmp(l->c[0]->head, "or")) {
+			val = 0;
+			for (i = 1; i < l->cc; ++i) {
+				ev = call_eval(l->c[i], env);
+				if (ev->type != BOOL) {
+					printf("Error: and expects boolean arguments\n");
+					code_error();
+				}
+				val |= ev->val;
+				if (ev->val)
+					break;
+			}
+			return makebool(val);
+		}
+
 		/* Don't ask why, but () => () */
 		if (l->type == LIST && l->cc == 0)
 			return l;
