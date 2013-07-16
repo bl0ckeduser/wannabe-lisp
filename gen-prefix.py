@@ -9,6 +9,8 @@ QTY = 5
 print ";; Boolean literals "
 print "(define true (= 1 1))"
 print "(define false (= 1 0))"
+print "(define #t true)"
+print "(define #f false)"
 print ""
 
 print ";; Streams"
