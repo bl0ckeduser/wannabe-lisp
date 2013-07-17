@@ -75,7 +75,7 @@ int handle_gui_line(char *lin)
 		do_setup(0);
 
 	/* ignore empty lines, comments */
-	if (!*lin || check_comment(buf)) {
+	if (!*lin || check_comment(lin)) {
 		if (iter == 1)
 			--iter;
 	}
