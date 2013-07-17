@@ -140,7 +140,7 @@ int handle_gui_line(char *lin)
 
 int do_setup(int waste)
 {
-	c_writeback_nl("wannbe-lisp GUI mode has been started");
+	c_writeback_nl("wannabe-lisp GUI mode has been started");
 
 	c_writeback_nl("allocating buffers...");
 	buf = malloc(1024 * 1024 * 2);
