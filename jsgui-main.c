@@ -54,11 +54,11 @@ int jsgui_error_handler(int derp)
 	buf = malloc(1024 * 1024 * 2);
 	sprintf(buf, "");
 
-	iter = 0;
 	bal = -1;
 	gc();
 		
 	c_writeback("]=> ");
+	iter = 1;
 
 	return 0;
 }
