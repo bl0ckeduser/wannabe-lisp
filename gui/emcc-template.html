@@ -103,6 +103,7 @@
 		/* hook to the C code */
 		handle_gui_line = Module.cwrap('handle_gui_line', 'number', ['string']);
 		do_setup = Module.cwrap('do_setup', 'number', ['number']);
+		jsgui_error_handler = Module.cwrap('jsgui_error_handler', 'number', ['number']);
 
 		/* initialization */
 		var state = new Array(1000);
@@ -118,12 +119,11 @@
 
 		function process_line(lin)
 		{
+			console.log(lin);
 			try {
 				handle_gui_line(lin);
 			} catch(err) {
-				// the C code exited. it knows what it's doing,
-				// thank you very much for not interfering,
-				// Mr. Javascript.
+				jsgui_error_handler();
 			}
 		}
 

@@ -45,7 +45,7 @@ void c_writeback_nl(char *str)
 	free(buf);
 }
 
-void jsgui_error_handler()
+int jsgui_error_handler(int derp)
 {
 	/* I have to do this reallocation thing
 	 * for some reason,
@@ -60,7 +60,7 @@ void jsgui_error_handler()
 		
 	c_writeback("]=> ");
 
-	exit(0);
+	return 0;
 }
 
 int handle_gui_line(char *lin)

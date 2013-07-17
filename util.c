@@ -35,8 +35,7 @@ int code_error()
 {
 
 #ifdef JS_GUI
-	extern void jsgui_error_handler();
-	jsgui_error_handler();
+	exit(0);
 #endif
 
 	if (interactive)
