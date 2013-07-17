@@ -4,4 +4,16 @@ I'll probably going to make it into a xulrunner app.
 Note: the file gui/emcc-template.html is based on the file 
 "emscripten/src/shell.html" of the emscripten tree.
 
+To build, do this:
 
+$ ./build-gui.sh
+
+If all goes well, the folder `final' will contain a XUL app.
+
+If you have `xulrunner' (the XUL runtime) installed, you can do:
+
+$ ./run-gui.sh
+
+Once the GUI is compiled it is fairly easy to make a distributable
+"standalone" package by packaging in the XUL runtime and writing a tiny
+script. XUL supports various platforms, etc.
