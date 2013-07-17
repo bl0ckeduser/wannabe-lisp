@@ -1,6 +1,9 @@
 There's a new GUI. It uses JS and HTML. You need emscripten to build it.
 I'll probably going to make it into a xulrunner app.
 
+THERE ARE STILL SOME BIG-ENOUGH-THAT-I-CAN-SPOT-THEM BUGS,
+for example it seems to crash on `sorted' in `test.txt'.
+
 Note: the file gui/emcc-template.html is based on the file 
 "emscripten/src/shell.html" of the emscripten tree.
 
