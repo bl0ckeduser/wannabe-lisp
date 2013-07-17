@@ -36,7 +36,7 @@ typedef struct env {
 } env_t;
 
 typedef struct list {
-	char head[32];
+	char* head;
 	int type;
 	int val;
 	int cc;

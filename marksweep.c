@@ -117,6 +117,7 @@ void marksweep_list(list_t *l)
 
 	do_mark(l, 1);
 	do_mark(l->c, 1);
+	do_mark(l->head, 1);
 
 	if (l->type == LIST || l->type == CLOSURE || l->type == CONS)
 		for (i = 0; i < l->cc; ++i)

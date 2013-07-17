@@ -10,12 +10,13 @@ char* build(list_t* l, char *expr)
 	char *old;
 	int i;
 	int lambda = 0;
-	char tok[32];
+	char* tok;
 	int sgn;
 	list_t* child;
 	list_t* child2;
 	int len;
 
+	tok = malloc(32);
 	p = expr;
 
 	if (*p == '\'') {	/* quoting */
@@ -85,6 +86,7 @@ char* build(list_t* l, char *expr)
 		strcpy(l->head, tok);
 	}
 
+	free(tok);
 	return p;
 }
 

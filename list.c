@@ -9,6 +9,7 @@ list_t *new_list(void)
 	nl->val = 0;
 	nl->ca = 0;
 	nl->cc = 0;
+	nl->head = c_malloc(32);
 	nl->head[0] = 0;
 	nl->c = NULL;
 	return nl;
