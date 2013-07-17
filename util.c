@@ -4,6 +4,26 @@
 #include <setjmp.h>
 #include "wannabe-lisp.h"
 
+void error_msg(char *s)
+{
+#ifdef JS_GUI
+	c_writeback("Error: ");
+	c_writeback_nl(s);
+#else
+	printf("Error: %s\n", s);
+#endif
+}
+
+void fatal_error_msg(char *s)
+{
+#ifdef JS_GUI
+	c_writeback("Fatal error: ");
+	c_writeback_nl(s);
+#else
+	printf("Fatal error: %s\n", s);
+#endif
+}
+
 int check_comment(char *s)
 {
 	while (*s && (*s == ' ' || *s == '\t' || *s == '\n'))
@@ -49,7 +69,7 @@ void *c_malloc(long size)
 {
 	void *ptr = malloc(size);
 	if (!ptr) {
-		printf("Fatal error: malloc(%ld) has failed\n", size);
+		fatal_error_msg("malloc() has failed");
 		exit(1);
 	}
 	add_ptr(ptr);

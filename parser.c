@@ -44,7 +44,7 @@ char* build(list_t* l, char *expr)
 		}
 
 		if (*p++ != ')') {
-			printf("\nError: ) expected\n");
+			error_msg("Error: ) expected");
 			code_error();
 		}
 	}
@@ -60,7 +60,7 @@ char* build(list_t* l, char *expr)
 		while (*p && isnum(*p)) {
 			*q++ = *p++;
 			if (++len >= 32) {
-				printf("Error: numeral too long\n");
+				error_msg("numeral too long");
 				code_error();
 			}
 		}
@@ -76,7 +76,7 @@ char* build(list_t* l, char *expr)
 		while (*p != '(' && *p != ')' && validname(*p)) {
 			*q++ = *p++;
 			if (++len >= 32) {
-				printf("Error: symbol name too long\n");
+				error_msg("symbol name too long");
 				code_error();
 			}
 		}

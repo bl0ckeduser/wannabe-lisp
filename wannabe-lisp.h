@@ -83,5 +83,7 @@ extern list_t *copy_list(list_t *l);
 extern int code_error();
 extern int do_read_file(char *buf, FILE *f, int silent);
 extern int check_comment(char *s);
+extern void error_msg(char *s);
+extern void fatal_error_msg(char *s);
 
 #endif

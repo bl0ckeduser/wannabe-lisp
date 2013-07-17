@@ -120,7 +120,7 @@ int do_read_file(char *buf, FILE *f, int silent)
 
 		/* no use going further on this kind of case */
 		if (bal < 0) {
-			printf("Error: terrible syntax\n");
+			error_msg("terrible syntax");
 			code_error();
 		}
 	}

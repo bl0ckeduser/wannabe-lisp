@@ -146,11 +146,13 @@ tco_iter:
 
 		/* Deal with special forms (lambda, define, ...) first */
 
+#ifdef JS_GUI
 		buf = malloc(1024);
 		*buf = 0;
 		sprintf(buf, "eval: %p; %d; %s; %d", l, l->cc, l->type == SYMBOL ? l->head : "-", l->val);
 		puts(buf);
 		free(buf);
+#endif
 
 		/* Don't ask why, but () => () */
 		if (l->type == LIST && l->cc == 0)
@@ -162,7 +164,7 @@ tco_iter:
 			for (i = 1; i < l->cc; ++i) {
 				ev = call_eval(l->c[i], env);
 				if (ev->type != BOOL) {
-					printf("Error: `and' expects boolean arguments\n");
+					error_msg("`and' expects boolean arguments");
 					code_error();
 				}
 				val &= ev->val;
@@ -178,7 +180,7 @@ tco_iter:
 			for (i = 1; i < l->cc; ++i) {
 				ev = call_eval(l->c[i], env);
 				if (ev->type != BOOL) {
-					printf("Error: `or' expects boolean arguments\n");
+					error_msg("`or' expects boolean arguments");
 					code_error();
 				}
 				val |= ev->val;
@@ -212,7 +214,7 @@ tco_iter:
 				if (ev->type == SYMBOL) {
 					TCO_eval(ev, env);
 				} else {
-					printf("Error: `leval' expects a symbol\n");
+					error_msg("`leval' expects a symbol");
 				}
 			}
 		}
@@ -300,7 +302,7 @@ tco_iter:
 			return ev;
 
 	bad_let:
-			printf("Error: improper use of `let' special form\n");
+			error_msg("improper use of `let' special form");
 			code_error();
 		}
 
@@ -332,7 +334,7 @@ tco_iter:
 				close_frame();
 				return nw;
 			} else {
-				printf("Error: improper use of `define' special form\n");
+				error_msg("improper use of `define' special form");
 				code_error();
 			}
 		}
@@ -341,7 +343,7 @@ tco_iter:
 		if (l->type == LIST && !strcmp(l->c[0]->head, "set!")) {
 			/* check arg count */
 			if (l->cc != 3) {
-				printf("Error: improper use of `set!' special form\n");
+				error_msg("improper use of `set!' special form");
 				code_error();
 			}
 
@@ -356,7 +358,7 @@ tco_iter:
 		if (l->type == LIST && !strcmp(l->c[0]->head, "if")) {
 			/* check arg count */
 			if (l->cc < 3) {
-				printf("Error: improper use of `if' special form\n");
+				error_msg("improper use of `if' special form");
 				code_error();
 			}
 		
@@ -364,7 +366,7 @@ tco_iter:
 			 * ensuring it is of proper type */
 			pred = call_eval(l->c[1], env);
 			if (pred->type != BOOL) {
-				printf("Error: boolean expected as 1st argument of `if'\n");
+				error_msg("boolean expected as 1st argument of `if'");
 				code_error();
 			}
 
@@ -390,8 +392,8 @@ tco_iter:
 
 			for (i = 1; i < l->cc; ++i) {
 				if (l->c[i]->cc < 2) {
-					printf("Error: arguments to `cond' should be"
-						   " lists of at least two elements\n");
+					error_msg("arguments to `cond' should be"
+						   " lists of at least two elements");
 					code_error();
 				}
 				/* deal with `else' special case */
@@ -402,7 +404,7 @@ tco_iter:
 				/* general case */
 				pred = call_eval(l->c[i]->c[0], env);
 				if (pred->type != BOOL) {
-					printf("Error: boolean expected in `cond'\n");
+					error_msg("boolean expected in `cond'");
 					code_error();
 				}
 				if (pred->val) {
@@ -472,7 +474,10 @@ tco_iter:
 			/* look up, climbing up environment chain */
 			er = lookup(env, l->head);
 			if (er.e == NULL) {
-				printf("Error: unbound variable `%s'\n", l->head);
+				buf = malloc(1024);
+				sprintf(buf, "unbound variable `%s'", l->head);
+				error_msg(buf);
+				free(buf);
 				code_error();
 			}
 		
@@ -501,7 +506,7 @@ tco_iter:
 		if (proc->type == CLOSURE) {
 			/* Check that parameter count matches */
 			if (proc->c[0]->cc != args->cc) {
-				printf("Error: arg count mismatch in closure application\n");
+				error_msg("arg count mismatch in closure application");
 				goto afail;
 			}
 
@@ -526,7 +531,7 @@ tco_iter:
 		}
 
 	afail:
-		printf("Error: `apply' has failed\n");
+		error_msg("`apply' has failed");
 
 		buf = malloc(1024);
 

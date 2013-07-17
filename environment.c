@@ -103,9 +103,13 @@ void env_add(env_t *e, char *sym, int ty, void *p)
 void env_set(env_t *e, char *sym, int ty, void *p)
 {
 	env_ref_t ref = lookup(e, sym);
+	char *tmp;
 
 	if (ref.e == NULL) {
-		printf("Error: unbound variable `%s'\n", sym);
+		tmp = malloc(1024);
+		sprintf(tmp, "unbound variable `%s'", sym);
+		error_msg(tmp);
+		free(tmp);
 		code_error();
 	}
 
