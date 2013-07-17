@@ -233,6 +233,12 @@
 					write_char(shft ? ":" : ";");
 				}
 
+				/* < > */
+				if (state[60]) {
+					state[60] = 0;
+					write_char(shft ? ">" : "<");
+				}
+
 				/* backspace delete */
 				if (state[8] || state[46]) {
 					backspace();
