@@ -1,0 +1,7 @@
+There's a new GUI. It uses JS and HTML. You need emscripten to build it.
+I'll probably going to make it into a xulrunner app.
+
+Note: the file gui/emcc-template.html is based on the file 
+"emscripten/src/shell.html" of the emscripten tree.
+
+

@@ -1,0 +1,346 @@
+<!doctype html>
+<!-- NOTE: the following templatefile is based on
+     the file "emscripten/src/shell.html" of the
+     emscripten tree.
+-->
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>wannabe-lisp GUI</title>
+    <style>
+      .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+      textarea.emscripten { font-family: monospace; width: 80%; }
+      div.emscripten { text-align: center; }
+      div.emscripten_border { border: 1px solid black; }
+      /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+      canvas.emscripten { border: 0px none; }
+    </style>
+  </head>
+  <body>
+    <div class="emscripten" id="status">Downloading...</div>
+    <div style="display: none;" class="emscripten">
+      <progress value="0" max="100" id="progress" hidden=1></progress>  
+    </div>
+    <div style="display: none;" class="emscripten_border">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    </div>
+    <div style="display: none;" class="emscripten">
+      <input type="checkbox" id="resize">Resize canvas
+      <input type="checkbox" id="pointerLock" checked>Lock/hide mouse pointer
+      <input type="button" value="Fullscreen" onclick="Module.requestFullScreen(document.getElementById('pointerLock').checked, 
+                                                                                document.getElementById('resize').checked)">
+    </div>
+    
+    <textarea class="emscripten" id="output" rows="8"></textarea>
+    <script type='text/javascript'>
+      // connect to canvas
+      var Module = {
+        preRun: [],
+        postRun: [],
+        print: (function() {
+          var element = document.getElementById('output');
+          element.value = ''; // clear browser cache
+          return function(text) {
+            text = Array.prototype.slice.call(arguments).join(' ');
+            // These replacements are necessary if you render to raw HTML
+            //text = text.replace(/&/g, "&amp;");
+            //text = text.replace(/</g, "&lt;");
+            //text = text.replace(/>/g, "&gt;");
+            //text = text.replace('\n', '<br>', 'g');
+            element.value += text + "\n";
+            element.scrollTop = 99999; // focus on bottom
+          };
+        })(),
+        printErr: function(text) {
+          text = Array.prototype.slice.call(arguments).join(' ');
+          if (0) { // XXX disabled for safety typeof dump == 'function') {
+            dump(text + '\n'); // fast, straight to the real console
+          } else {
+            console.log(text);
+          }
+        },
+        canvas: document.getElementById('canvas'),
+        setStatus: function(text) {
+          if (Module.setStatus.interval) clearInterval(Module.setStatus.interval);
+          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var statusElement = document.getElementById('status');
+          var progressElement = document.getElementById('progress');
+          if (m) {
+            text = m[1];
+            progressElement.value = parseInt(m[2])*100;
+            progressElement.max = parseInt(m[4])*100;
+            progressElement.hidden = false;
+          } else {
+            progressElement.value = null;
+            progressElement.max = null;
+            progressElement.hidden = true;
+          }
+          statusElement.innerHTML = text;
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+        }
+      };
+      Module.setStatus('Downloading...');
+    </script>      
+    <script type='text/javascript'>
+
+      {{{ SCRIPT_CODE }}}
+
+    </script>
+
+	<!-- JS/HTML terminal GUI code -->
+	<script type="text/javascript">
+		var capslock = 0;
+		var buflen = 0;
+		var buf = [];
+		var flsh = -1;
+		var line = [];
+
+		/* hook to the C code */
+		handle_gui_line = Module.cwrap('handle_gui_line', 'number', ['string']);
+		do_setup = Module.cwrap('do_setup', 'number', ['number']);
+
+		/* initialization */
+		var state = new Array(1000);
+		for (i = 0; i < 1000; ++i)
+			state[i] = 0;
+
+		/* C code initialization */
+		setTimeout("do_setup(0)", 1000);
+
+		/* hook events to handlers */
+		document.onkeydown = set_kd;
+		document.onkeyup = set_ku;
+
+		function process_line(lin)
+		{
+			try {
+				handle_gui_line(lin);
+			} catch(err) {
+				// the C code exited. it knows what it's doing,
+				// thank you very much for not interfering,
+				// Mr. Javascript.
+			}
+		}
+
+		var wbid = 0;
+		function writeback(str)
+		{
+			++wbid;
+			str = str.replace("<", "&lt;");
+			str = str.replace(">", "&gt;");
+ 			str = str.replace(" ", "&nbsp;"); // spaces are special in HTML >:(
+			document.getElementById('term').innerHTML += "<span id='wb" + wbid +"'>" + str + "</span>";
+			/* document.getElementById('wb' + wbid).style.color = '#00aa00'; */
+			parent.scroll2bottom();
+		}
+
+		function writeback_nl(str)
+		{
+			writeback(str);
+			document.getElementById('term').innerHTML += "<br>";
+		}
+
+		function set_kd(event)
+		{
+			state[event.keyCode] = 1;
+			iter_kb();
+
+			/* override for backspace, space */
+			if (event.keyCode == 8 
+				|| event.keyCode == 32
+				|| event.keyCode == 13
+				|| event.keyCode == 16)
+				return false;
+		}
+
+		function set_ku(event)
+		{
+			state[event.keyCode] = 0;
+			iter_kb();
+		}
+
+		function iter_kb()
+		{
+			parent.scroll2bottom();
+
+			if (state[20])
+				capslock = !capslock;
+
+			shft = state[16];
+			caps = shft ^ capslock;
+
+			/* check ctrl, alt are not down */
+			if (!state[17] && !state[18]) {
+				/* write numbers */
+				for (var i = 48; i <= 57; ++i)
+					if (state[i]) {
+						state[i] = 0;	/* kill repeats */
+						if (!shft)
+							write_char(String.fromCharCode(i));
+						else {
+							switch(i - 48) {
+								case 0: write_char(')'); break;
+								case 1: write_char('!'); break;
+								case 2: write_char('@'); break;
+								case 3: write_char('#'); break;
+								case 4: write_char('$'); break;
+								case 5: write_char('%'); break;
+								case 6: write_char('^'); break;
+								case 7: write_char('&'); break;
+								case 8: write_char('*'); break;
+								case 9: write_char('('); break;
+							} 
+						}
+					}
+
+				/* write letters */
+				for (var i = 65; i <= 90; ++i) {
+					if (state[i]) {
+						state[i] = 0;	/* kill repeats */
+						if (!caps)
+							write_char(String.fromCharCode(i - 65 + 97));
+						else
+							write_char(String.fromCharCode(i));
+					}
+				}
+
+				/* - _ */
+				if (state[173]) {
+					state[173] = 0;
+					write_char(shft ? "_" : "-");
+				}
+
+				/* = + */
+				if (state[61]) {
+					state[61] = 0;
+					write_char(shft ? "+" : "=");
+				}
+
+				/* , ' */
+				if (state[188]) {
+					state[188] = 0;
+					write_char(shft ? "'" : ",");
+				}
+
+				/* ; : */
+				if (state[59]) {
+					state[59] = 0;
+					write_char(shft ? ":" : ";");
+				}
+
+				/* backspace delete */
+				if (state[8] || state[46]) {
+					backspace();
+					state[8] = state[46] = 0;	/* kill repeats */
+				}
+
+				/* enter return */
+				if (state[13]) {
+					write_char('NEWLINE');
+					process_line(line.join(""));
+					line = [];
+					state[13] = 0;	/* kill repeats */
+				}
+
+				/* space */
+				if (state[32]) {
+					write_char(' ');
+					state[32] = 0;	/* kill repeats */
+				}
+			}
+		}
+
+		function write_char(c)
+		{
+			html_c = c;
+			if (c == ' ')
+				html_c = '&nbsp;'
+
+			if (c == 'NEWLINE') {
+				html_c = '<br>';
+			}
+
+			/* String.fromCharCode(event.keyCode) */
+			prev_len = document.getElementById('term').innerHTML.length;
+			document.getElementById('term').innerHTML 
+				+= "<span id='chr" + buflen + "'>" + html_c + "</span>";
+
+			/* flash parentheses */
+			if (c == ')') {
+				var nest = 0;
+				for (var i = 0; i < buflen; ++i) {
+					if (buf[i] == '(')
+						++nest;
+					if (buf[i] == ')')
+						--nest;
+				}
+			}
+			--nest;
+
+			var j = 0;
+			var fl = -1;
+			for (i = 0; i <= buflen; ++i) {
+				if (buf[i] == '(')
+					++j;
+				if (buf[i] == ')')
+					--j;
+				if (j == nest+1 && buf[i] == '(')
+					fl = i;
+			}
+
+			if (fl >= 0)
+				flash(fl);
+			++buflen;
+			buf.push(c);
+			if (c != 'NEWLINE')
+				line.push(c);
+		}
+
+		function flash(i)
+		{
+			document.getElementById('chr' + i).style.color = '#ff0000';
+			setTimeout("deflash(" + i + ")", 500);
+		}
+
+		function deflash(i)
+		{
+			document.getElementById('chr' + i).style.color = '#000000';
+		}
+
+		function backspace()
+		{
+			if (buflen == 0)
+				return;
+
+			orig = document.getElementById('term').innerHTML;
+			for (var stop = orig.length; stop >= 2 ; --stop)
+				if (String.substr(orig, stop, 2) == "<s")
+					break;
+			nw = String.substr(orig, 0, stop);
+			document.getElementById('term').innerHTML = nw;
+
+			buf.pop();
+			line.pop();
+			--buflen;
+		}
+
+		// &#x258A;
+	</script>
+
+	<div style="width:95%; height:95%; font-family: monospace; font-size:15px;">
+		<span id="term">
+
+		</span>
+		<span id="block">
+			<blink>_</blink>
+		</span>
+	</div>
+
+
+  </body>
+</html>

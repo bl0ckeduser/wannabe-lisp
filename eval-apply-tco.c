@@ -5,7 +5,7 @@
 
 /* Based on SICP's metacircular eval/apply tutorial */
 
-char buf[128];
+char *buf;
 
 /*
  * Evalute each member of a list, in-place
@@ -139,11 +139,18 @@ list_t* eval_apply_tco(
 
 	new_frame();
 
+
 tco_iter:
 
 	if (oper == 0) {
 
 		/* Deal with special forms (lambda, define, ...) first */
+
+		buf = malloc(1024);
+		*buf = 0;
+		sprintf(buf, "eval: %p; %d; %s; %d", l, l->cc, l->type == SYMBOL ? l->head : "-", l->val);
+		puts(buf);
+		free(buf);
 
 		/* Don't ask why, but () => () */
 		if (l->type == LIST && l->cc == 0)
@@ -521,6 +528,8 @@ tco_iter:
 	afail:
 		printf("Error: `apply' has failed\n");
 
+		buf = malloc(1024);
+
 		*buf = 0;
 		printout(proc, buf);
 		puts(buf);
@@ -528,6 +537,8 @@ tco_iter:
 		*buf = 0;
 		printout(args, buf);
 		puts(buf);
+
+		free(buf);
 
 		code_error();
 	}

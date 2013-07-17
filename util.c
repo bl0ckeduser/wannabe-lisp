@@ -13,6 +13,12 @@ int check_comment(char *s)
 
 int code_error()
 {
+
+#ifdef JS_GUI
+	extern void jsgui_error_handler();
+	jsgui_error_handler();
+#endif
+
 	if (interactive)
 		longjmp(repl_jmp, 1);
 	else {
