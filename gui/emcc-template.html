@@ -119,6 +119,16 @@
 		document.onkeydown = set_kd;
 		document.onkeyup = set_ku;
 
+		function clear_term()
+		{
+			document.getElementById('term').innerHTML = "";
+			buf = [];
+			line = [];
+			buflen = 0;
+			// new prompt
+			writeback("]=> ");	
+		}
+
 		function process_line(lin)
 		{
 			console.log(lin);

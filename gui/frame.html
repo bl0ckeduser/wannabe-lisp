@@ -7,12 +7,19 @@ function scroll2bottom()
 	document.getElementById("myiframe").contentWindow.scrollTo(0,document.getElementById	("myiframe").contentWindow.document.body.scrollHeight);
 }
 
-setTimeout("document.getElementById('myiframe').focus()", 1000);
+function do_focus()
+{
+	document.getElementById('myiframe').focus();
+}
+
+setTimeout("do_focus()", 1000);
 
 </script>
 
 <iframe id="myiframe" src="main.html" width="90%" height="90%"></iframe>
 <br>
+<input type="submit" onClick='document.getElementById("myiframe").contentWindow.clear_term(); do_focus();' value="Clear">
+
 <input type="submit" onClick='window.open("chrome://webapp/content/about.xul", "about", "chrome,width=780,height=370,centerscreen,resizable,dialog");' value="About this software">
 
 <input type="submit" onClick='window.close();' value="Quit">
