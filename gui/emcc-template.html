@@ -112,6 +112,8 @@
 
 		/* C code initialization */
 		setTimeout("do_setup(0)", 1000);
+		
+		setTimeout('document.getElementById("term").focus()', 100);
 
 		/* hook events to handlers */
 		document.onkeydown = set_kd;
