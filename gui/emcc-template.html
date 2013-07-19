@@ -119,6 +119,22 @@
 		document.onkeydown = set_kd;
 		document.onkeyup = set_ku;
 
+		function copy_buf_to_clipboard()
+		{
+			/* https://developer.mozilla.org/en/docs/Using_the_Clipboard */
+			const gClipboardHelper = Components.classes["@mozilla.org/widget/clipboardhelper;1"]
+						                       .getService(Components.interfaces.nsIClipboardHelper);
+			var str = "";
+			for (var i = 0; i < buf.length; ++i) {
+				if (buf[i] == "NEWLINE") {
+					str += "\n";
+				} else {
+					str += buf[i];
+				}
+			}
+			gClipboardHelper.copyString(str);
+		}
+
 		function clear_term()
 		{
 			document.getElementById('term').innerHTML = "";

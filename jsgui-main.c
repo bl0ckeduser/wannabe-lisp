@@ -45,6 +45,14 @@ void c_writeback_nl(char *str)
 	free(buf);
 }
 
+void c_write_char(char *str)
+{
+	char *buf = malloc(1024);
+	sprintf(buf, "write_char(\"%s\");", str);
+	emscripten_run_script(buf);
+	free(buf);
+}
+
 int jsgui_error_handler(int derp)
 {
 	/* I have to do this reallocation thing
@@ -130,7 +138,16 @@ int handle_gui_line(char *lin)
 		/* auto-indent */
 		if (bal > 0) {
 			for (ind = 0; ind < bal; ++ind) {
-				c_writeback("   ");
+				/* 
+				 * `writechar', as opposed to `writeback',
+				 * gets this included into the stuff
+				 * that gets sent back to the C core,
+				 * and also makes it to the clipboard
+				 * when requested
+				 */
+				c_write_char(" ");
+				c_write_char(" ");
+				c_write_char(" ");
 			}
 		}
 	}
