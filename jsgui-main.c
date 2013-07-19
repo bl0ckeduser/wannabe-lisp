@@ -100,6 +100,13 @@ int handle_gui_line(char *lin)
 			else if (*p == ')')
 				--bal;
 		}
+
+		/* deal with negative nest */
+		if (bal < 0) {
+			error_msg("Botched syntax");
+			code_error();
+		}
+
 		printf("pcheck => %d\n", bal);
 	}
 
