@@ -18,6 +18,9 @@ setTimeout("do_focus()", 1000);
 
 <iframe id="myiframe" src="main.html" width="90%" height="90%"></iframe>
 <br>
+
+<input type="submit" onClick='document.location.reload(true);' value="Reset">
+
 <input type="submit" onClick='document.getElementById("myiframe").contentWindow.clear_term(); do_focus();' value="Clear">
 
 <input type="submit" onClick='document.getElementById("myiframe").contentWindow.copy_buf_to_clipboard(); do_focus();' value="Copy code to clipboard">
