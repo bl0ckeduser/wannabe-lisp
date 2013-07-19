@@ -1,5 +1,8 @@
-There's a new GUI. It uses JS and HTML. You need emscripten to build it.
-I'll probably going to make it into a xulrunner app.
+There's a new GUI. It is XUL(runner)-based. 
+It is written in JS and HTML. You need emscripten to build it.
+
+The main reason I wrote it is to get parentheses flashing.
+There is room for improvements...
 
 NOTE: at the following URL is a compiled build of the JS/HTML GUI, 
 built on 19 July 2013:
