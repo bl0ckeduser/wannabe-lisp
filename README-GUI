@@ -1,6 +1,10 @@
 There's a new GUI. It uses JS and HTML. You need emscripten to build it.
 I'll probably going to make it into a xulrunner app.
 
+NOTE: at the following URL is a compiled build of the JS/HTML GUI, 
+built on 19 July 2013:
+https://sites.google.com/site/bl0ckeduserssoftware/wannabelisp-compiledgui-20130719.tar.gz
+
 As of writing, the GUI version is kind of slow, unfortunately.
 There might be a way to get it to be faster with "asm.js", but that thing
 needs lots of tweaking to get to work.. arghl
