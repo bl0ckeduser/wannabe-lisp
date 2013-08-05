@@ -5,7 +5,7 @@
 
 /* Based on SICP's metacircular eval/apply tutorial */
 
-char *buf;
+static char *buf;
 
 /*
  * Evalute each member of a list, in-place
@@ -534,6 +534,8 @@ tco_iter:
 		error_msg("`apply' has failed");
 
 		buf = malloc(1024);
+		if (!buf)
+			error_msg("malloc failed");
 
 		*buf = 0;
 		printout(proc, buf);
