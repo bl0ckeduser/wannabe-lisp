@@ -4,8 +4,12 @@
 (define doubler (multiply-by 2))
 (define tripler (multiply-by 3))
 
-(display (doubler 5))
-(display (tripler 5))
-(display (doubler (tripler 5)))
-(display (doubler 10))
-(display (tripler 10))
+(define (display-nl exp)
+  (display exp)
+  (newline))
+
+(display-nl (doubler 5))
+(display-nl (tripler 5))
+(display-nl (doubler (tripler 5)))
+(display-nl (doubler 10))
+(display-nl (tripler 10))

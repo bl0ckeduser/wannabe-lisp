@@ -1,15 +1,19 @@
+(define (display-nl exp)
+  (display exp)
+  (newline))
+
 ;; Display the maximum space used by the call
 ;;	(proc n)
 ;; for 1 <= n <= count
 (define (do-test proc-name count)
 	(begin
-		(display proc-name)
+		(display-nl proc-name)
 		(define proc (leval proc-name))
 		(define (do-loop n max)
 			(if (>= n max)
 				'nil
 				(begin
-					(display (max-space (proc n)))
+					(display-nl (max-space (proc n)))
 					(do-loop (+ n 1) max))))
 		(do-loop 1 count)))
 

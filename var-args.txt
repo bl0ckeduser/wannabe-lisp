@@ -4,6 +4,7 @@
         (if (pair? l)
 	   (begin
 		(display (car l))
+		(newline)
 		(iter (cdr l)))))
 	(iter list)))
 

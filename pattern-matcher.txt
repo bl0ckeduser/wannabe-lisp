@@ -96,8 +96,12 @@
 			(func (car list))
 			(iterate func (cdr list)))))
 
+(define (display-nl exp)
+  (display exp)
+  (newline))
+
 (iterate 
-	display
+	display-nl
 	(list
 		(match '((? x)) 'a)
 		(match '((? x) (? y)) '(a b))

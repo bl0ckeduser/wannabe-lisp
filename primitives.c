@@ -43,6 +43,7 @@ void install_primitives(env_t *env)
 	add_primop(env, "null?");
 
 	add_primop(env, "display");
+	add_primop(env, "newline");
 
 	add_primop(env, "pair?");
 	add_primop(env, "symbol?");
@@ -251,7 +252,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		buf = malloc(1024);
 		*buf = 0;
 		printout(args->c[0], buf);
-		puts(buf);
+		printf("%s", buf);
 		free(buf);
 		return args->c[0];
 	}
