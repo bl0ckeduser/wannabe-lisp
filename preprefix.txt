@@ -12,4 +12,14 @@
 (define stream-null? null?)
 (define the-empty-stream '())
 
+;; List stuff
+;; `length' - r6rs.pdf, page 48
+(define (length list)
+   (define (iter acc list)
+      (cond
+         ((null? list) acc)
+         ((pair? list)
+            (iter (+ acc 1) (cdr list)))
+         (else acc)))
+   (iter 0 list))
 
