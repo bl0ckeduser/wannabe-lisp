@@ -23,3 +23,36 @@
          (else acc)))
    (iter 0 list))
 
+;; `list-tail' - r6rs.pdf, page 48
+(define (list-tail list k)
+   (if (>= (length list) k)
+      (begin
+         (define (iter p c)
+            (if (= c 0)
+               p
+               (iter (cdr p) (- c 1))))
+         (iter list k))
+      '()))
+
+;; `append' - r6rs.pdf, page 48
+;; ]=> (append '(a b) 'c '(d e f) '(g h) 'i)
+;; (a b c d e f g h i)
+(define append
+   (begin
+      ;; 2-argument implementation
+      (define (append2 a b)
+         (cond
+            ((null? a) b)
+            ((pair? a)
+               (cons (car a) (append2 (cdr a) b)))
+            (else
+               (cons a (append2 '() b)))))
+
+      ;; do a right-fold of append2 on the args
+      (lambda args
+         (define (iter l)
+            (if (null? l)
+               '()
+	        (append2 (car l) (iter (cdr l)))))
+         (iter args))))
+
