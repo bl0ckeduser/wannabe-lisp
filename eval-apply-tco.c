@@ -555,7 +555,9 @@ tco_iter:
 				call_eval(proc->c[i], ne);
 
 			/* Return the evaluation of the last body */
-			TCO_eval(proc->c[i], ne);
+			for (j = i; j < proc->cc - 1; ++j)
+				call_eval(proc->c[j], ne);
+			TCO_eval(proc->c[proc->cc - 1], ne);
 		}
 
 	afail:
