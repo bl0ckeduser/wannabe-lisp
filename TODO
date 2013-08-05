@@ -1,6 +1,7 @@
 - implement let* (I don't even know what it does)
 - have `map' builtin, perhaps via the prefix file
 - parse the various "." notations
+	"." for rest in lambda/define is now supported
 
 - strings, floats ?
 

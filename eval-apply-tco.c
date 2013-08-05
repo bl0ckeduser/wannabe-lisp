@@ -505,10 +505,12 @@ tco_iter:
 		/* General case */
 		if (proc->type == CLOSURE) {
 			/* Check that parameter count matches */
-			if (proc->c[0]->cc != args->cc) {
+			/* FIXME: this interferes with `.' rest notation */
+			/*if (proc->c[0]->cc != args->cc) {
 				error_msg("arg count mismatch in closure application");
 				goto afail;
 			}
+			*/
 
 			/* Build a new environment */
 			ne = new_env();
@@ -516,9 +518,26 @@ tco_iter:
 
 			/* Bind the formal parameters 
 			 * in the new environment */
-			for (i = 0; i < proc->c[0]->cc; ++i)
-				env_add(ne, proc->c[0]->c[i]->head,
-					REF, args->c[i]);
+			for (i = 0; i < proc->c[0]->cc; ++i) {
+				/* special case: "." rest notation */
+				if (!strcmp(proc->c[0]->c[i]->head, ".")) {
+					if (i + 2 != proc->c[0]->cc) {
+						error_msg("improper use of `.' in `lambda'");
+						code_error();
+					}
+					nw = new_list();
+					nw->type = LIST;
+					for (j = i; j < args->cc; ++j)
+						add_child(nw, args->c[j]);
+					env_add(ne, proc->c[0]->c[i + 1]->head,
+						REF, makelist(nw));
+					break;
+				} else {
+					/* general case */
+					env_add(ne, proc->c[0]->c[i]->head,
+						REF, args->c[i]);
+				}
+			}
 	
 			/* Evaluate the bodies of the closure
 			 * in the new environment which includes
