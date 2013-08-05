@@ -11,3 +11,8 @@
 
 - vectors
 
+- call/cc would be a nice feature.
+  I've read about building scheme interpreters/compilers in the "PAIP" book
+  (http://norvig.com/paip.html) and IIRC it seems that the simplest way to get
+  call/cc working is to write a stack-based bytecode VM... Unfortunately
+  this project currently isn't a stack-based bytecode VM
