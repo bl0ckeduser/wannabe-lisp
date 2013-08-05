@@ -317,7 +317,7 @@ tco_iter:
 			/* 		(define (twice x) (+ x x))
 			 * =>	(define twice (lambda (x) (+ x x)))
 			 */ 
-			} else if (l->cc == 3 && l->c[1]->type == LIST
+			} else if (l->cc >= 3 && l->c[1]->type == LIST
 				&& l->c[1]->cc && l->c[1]->c[0]->type == SYMBOL) {
 				proc = l->c[1]->c[0];
 				argl = new_list();
@@ -328,7 +328,8 @@ tco_iter:
 				nw->type = CLOSURE;
 				nw->closure = env;
 				add_child(nw, argl);
-				add_child(nw, l->c[2]);
+				for (j = 2; j < l->cc; ++j)
+					add_child(nw, l->c[j]);
 				env_add(env, proc->head, REF,
 					nw);
 				close_frame();
