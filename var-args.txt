@@ -1,0 +1,10 @@
+(define print-members
+   (lambda list
+      (define (iter l)
+        (if (pair? l)
+	   (begin
+		(display (car l))
+		(iter (cdr l)))))
+	(iter list)))
+
+(print-members 1 2 3 4 5 6 7 '(derp haha (1 2 3)) 8 9)
