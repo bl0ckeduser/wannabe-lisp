@@ -13,6 +13,8 @@ cond, cons, cons-stream, define, delay, display, eq?, force, if, lambda,
 let, list, newline, not, null?, number?, or, pair?, remainder, set!,
 stream-car, stream-cdr, stream-null?, symbol?, the-empty-stream.
 
+(Some more obscure variations of some special forms may not yet be supported)
+
 Features include: tail-recursion optimization, noobish mark-sweep garbage 
 collection, support for quotation.
 
