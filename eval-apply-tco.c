@@ -519,7 +519,15 @@ tco_iter:
 
 			/* Bind the formal parameters 
 			 * in the new environment */
-			for (i = 0; i < proc->c[0]->cc; ++i) {
+			
+			/* special case: whole arglist as single variable,
+			 * as in (lambda x x) */
+			if (proc->c[0]->type == SYMBOL) {
+				env_add(ne, proc->c[0]->head,
+					REF, 
+					args->type == LIST ? makelist(args) : args);
+			}
+			else for (i = 0; i < proc->c[0]->cc; ++i) {
 				/* special case: "." rest notation */
 				if (!strcmp(proc->c[0]->c[i]->head, ".")) {
 					if (i + 2 != proc->c[0]->cc) {
