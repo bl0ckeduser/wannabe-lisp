@@ -1,0 +1,15 @@
+;; Boolean literals 
+(define true (= 1 1))
+(define false (= 1 0))
+(define #t true)
+(define #f false)
+
+;; Streams
+;; See mitpress.mit.edu/sicp/full-text/book/book-Z-H-24.html
+(define (force u) (u))
+(define stream-car car)
+(define (stream-cdr s) (force (cdr s)))
+(define stream-null? null?)
+(define the-empty-stream '())
+
+

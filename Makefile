@@ -5,6 +5,7 @@ lisp: prefix.txt cli.o environment.o list.o main.o parser.o primitives.o printou
 
 prefix.txt: gen-prefix.py
 	python gen-prefix.py >prefix.txt
+	cat preprefix.txt >>prefix.txt
 
 clean:
 	rm -f *.o prefix.txt lisp

@@ -309,34 +309,8 @@ list_t* do_prim_op(char *name, list_t *args)
 	}
 
 	if (!strcmp(name, "load")) {
-		if ((prefix = fopen(args->c[0]->head, "r"))) {
-			buf = malloc(1024 * 1024 * 2);
-			if (!buf) {
-				error_msg("load: malloc failed");
-				code_error();
-			}
-			while (1) {
-				*buf = 0;	
-				do_read_file(buf, prefix, 1);
-				if (!*buf || feof(prefix))
-					break;
-				if (*buf && !check_comment(buf)) {
-					expr = new_list();
-					build(expr, buf);
-					call_eval(expr, global);
-
-					/* clean up for the next iteration */
-					gc();
-					sprintf(buf, "");
-				}
-			}
-			fclose(prefix);
-			free(buf);
-		} else {
-			printf("Note: couldn't load `%s'\n", args->c[0]->head);
-			code_error();
-		}
-		return mksym("load-ok");
+		load_code_from_file(args->c[0]->head);
+		return mksym("HERP-DERP");
 	}
 
 	return NULL;

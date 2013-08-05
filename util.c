@@ -4,6 +4,42 @@
 #include <setjmp.h>
 #include "wannabe-lisp.h"
 
+void load_code_from_file(char *fil)
+{
+	FILE *prefix = NULL;
+	char *buf = NULL;
+	list_t* expr;
+
+	if ((prefix = fopen(fil, "r"))) {
+		buf = malloc(1024 * 1024 * 2);
+		if (!buf) {
+			error_msg("load: malloc failed");
+			code_error();
+		}
+		while (1) {
+			*buf = 0;	
+			do_read_file(buf, prefix, 1);
+			if (!*buf || feof(prefix))
+				break;
+			if (*buf && !check_comment(buf)) {
+				expr = new_list();
+				build(expr, buf);
+				call_eval(expr, global);
+
+				/* clean up for the next iteration */
+				gc();
+				sprintf(buf, "");
+			}
+		}
+		fclose(prefix);
+		free(buf);
+		printf("Loaded `%s'\n", fil);
+	} else {
+		printf("Note: couldn't load `%s'\n", fil);
+		code_error();
+	}
+}
+
 void error_msg(char *s)
 {
 #ifdef JS_GUI
