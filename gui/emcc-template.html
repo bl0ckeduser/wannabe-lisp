@@ -255,6 +255,12 @@
 					write_char(shft ? "'" : ",");
 				}
 
+				/* . */
+				if (state[190]) {
+					state[190] = 0;
+					write_char(".");
+				}
+
 				/* ; : */
 				if (state[59]) {
 					state[59] = 0;
