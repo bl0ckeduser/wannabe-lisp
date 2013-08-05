@@ -8,10 +8,11 @@ and also on the SICP text's examples
 (http://mitpress.mit.edu/sicp/)
 
 Currently supported Scheme procedures and special forms are:
-<, <=, =, >, >=, -, *, +, and, begin, car, cdr, caar, cdar, ..., caaaaar,
-cond, cons, cons-stream, define, delay, display, eq?, force, if, lambda,
-let, list, newline, not, null?, number?, or, pair?, remainder, set!,
-stream-car, stream-cdr, stream-null?, symbol?, the-empty-stream.
+<, <=, =, >, >=, -, *, +, and, append, begin, car, cdr, caar, cdar, ...,
+caaaaar, cond, cons, cons-stream, define, delay, display, eq?, force, if,
+lambda, length, let, list, list-tail, newline, not, null?, number?, or,
+pair?, remainder, set!, stream-car, stream-cdr, stream-null?, symbol?,
+the-emtpy-stream.
 
 (Some more obscure variations of some special forms may not yet be supported)
 
