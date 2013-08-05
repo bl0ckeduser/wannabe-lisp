@@ -56,3 +56,23 @@
 	        (append2 (car l) (iter (cdr l)))))
          (iter args))))
 
+;; `reverse' - r6rs.pdf, page 48
+(define (reverse list)
+   (cond
+      ((pair? list)
+         (append (reverse (cdr list)) (list (car list))))
+      (else
+         ;; meh
+         list)))
+
+;; `list-ref' - r6rs.pdf, page 48
+(define (list-ref list k)
+   (if (>= (length list) (+ k 1))
+      (begin
+         (define (iter count list)
+            (if (= count k)
+               (car list)
+               (iter (+ count 1) (cdr list))))
+         (iter 0 list))
+      '()))
+

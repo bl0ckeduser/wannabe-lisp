@@ -11,8 +11,8 @@ Currently supported Scheme procedures and special forms are:
 <, <=, =, >, >=, -, *, +, and, append, begin, car, cdr, caar, cdar, ...,
 caaaaar, cond, cons, cons-stream, define, delay, display, eq?, force, if,
 lambda, length, let, list, list-tail, newline, not, null?, number?, or,
-pair?, remainder, set!, stream-car, stream-cdr, stream-null?, symbol?,
-the-emtpy-stream.
+pair?, remainder, reverse, set!, stream-car, stream-cdr, stream-null?,
+symbol?, the-emtpy-stream.
 
 (Some more obscure variations of some special forms may not yet be supported)
 
