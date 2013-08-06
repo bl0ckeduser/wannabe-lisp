@@ -66,6 +66,7 @@
 ;; it would intefere with the symbol for the builtin procedure `list'
 (define (reverse l)
    (cond
+      ((null? l) '())
       ((pair? l)
          (append (reverse (cdr l)) (list (car l))))
       (else
