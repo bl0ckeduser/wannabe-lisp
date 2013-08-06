@@ -54,6 +54,8 @@ void install_primitives(env_t *env)
 	
 	add_primop(env, "save-to");
 	add_primop(env, "load");
+
+	add_primop(env, "cons2list");
 }
 
 /* 
@@ -311,6 +313,10 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "load")) {
 		load_code_from_file(args->c[0]->head);
 		return mksym("HERP-DERP");
+	}
+
+	if (!strcmp(name, "cons2list")) {
+		return cons2list(args->c[0]);
 	}
 
 	return NULL;

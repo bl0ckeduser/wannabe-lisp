@@ -4,6 +4,27 @@
 #include <setjmp.h>
 #include "wannabe-lisp.h"
 
+/*
+ * convert back from proper car/cdr 
+ * list form to internal representation
+ * (1 . (2 . (3 . NIL))) => (1 2 3)
+ */
+list_t *cons2list(list_t *c)
+{
+	list_t *curr = c;
+	list_t *nw;
+
+	nw = new_list();
+	nw->type = LIST;
+	if (curr->cc == 2) {
+		do {
+			add_child(nw, copy_list(curr->c[0]));
+			curr = curr->c[1];
+		} while (curr->cc == 2);
+	}
+	return nw;
+}
+
 void load_code_from_file(char *fil)
 {
 	FILE *prefix = NULL;
