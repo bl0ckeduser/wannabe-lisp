@@ -81,3 +81,22 @@
          (iter 0 list))
       '()))
 
+;; Misc. library routines...
+
+;; `odd?' -- see r6rs.pdf, page 42
+(define (odd? n)
+   (= (remainder n 2) 1))
+
+;; `fold-right' -- see r6rs-lib.pdf, pages 11-12
+(define (fold-right combine nil . lr)
+   (begin
+      ;; append the list args together
+      (define biglist (apply append lr))
+      ;; define a one-list foldr
+      (define (foldr1 c n l)
+         (if (null? l)
+            n
+            (c (car l) (foldr1 c n (cdr l)))))
+      ;; run the one-list foldr on the combined list
+      (foldr1 combine nil biglist)))
+
