@@ -90,6 +90,10 @@
 (define (odd? n)
    (= (remainder n 2) 1))
 
+;; `even?'
+(define even?
+   (lambda (u) (not (odd? u))))
+
 ;; `fold-right' -- see r6rs-lib.pdf, pages 11-12
 (define (fold-right combine nil . lr)
    (begin
@@ -102,4 +106,13 @@
             (c (car l) (foldr1 c n (cdr l)))))
       ;; run the one-list foldr on the combined list
       (foldr1 combine nil biglist)))
+
+;; `filter' -- see r6rs-lib.pdf, page 11
+(define (filter proc list)
+   (cond
+      ((null? list) '())
+      ((proc (car list))
+         (cons (car list) (filter proc (cdr list))))
+      (else
+         (filter proc (cdr list)))))
 
