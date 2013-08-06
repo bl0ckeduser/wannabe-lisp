@@ -110,9 +110,52 @@
 ;; `filter' -- see r6rs-lib.pdf, page 11
 (define (filter proc list)
    (cond
-      ((null? list) '())
-      ((proc (car list))
+      ((pair? list)
+	(if (proc (car list))
          (cons (car list) (filter proc (cdr list))))
+         (filter proc (cdr list)))
       (else
-         (filter proc (cdr list)))))
+	'())))
+
+;; `map' -- see r6rs.pdf, page 49
+(define (map proc . lr)
+   ;; first define a one-arg map for internal use
+   (define (map1 proc list)
+      (define (iter acc p l)
+         (if (null? l)
+            acc
+            (iter (cons (p (car l)) acc) p (cdr l))))
+      (reverse (iter '() proc list)))
+
+   ;; check that all list-args have same length
+   (define list-lengths (map1 length lr))
+   (define len1 (car list-lengths))
+   (define same-length
+      (= 0
+         (length (filter list-lengths
+            (lambda (n) (not (= n len1)))))))
+
+   ;; if they do, carry on...
+   (if same-length
+      (begin
+         ;; `result' holds the final result in reverse order
+         (define result '())
+         ;; `iter' is a loop that applies `proc' to a list containing
+         ;; member `n' of each arg-list, consing the result onto `result',
+         ;; for 0 <= `n' < `len1', where `len1' is the length of each
+         ;; argument-list
+         (define (iter n)
+            (if (not (= n len1))
+               (begin
+                  (set! result
+                     (cons
+                        (apply proc
+                           (map1 (lambda (u) (list-ref u n)) lr))
+                        result))
+                  (iter (+ n 1)))))
+         ;; run the loop
+         (iter 0)
+         ;; reverse `result' to get the final answer...
+         (reverse result))))
+
 

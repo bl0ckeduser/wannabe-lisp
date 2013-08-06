@@ -11,7 +11,7 @@ Currently supported Scheme procedures and special forms are:
 <, <=, =, >, >=, -, *, +, and, append, apply, begin, car, cdr, caar,
 cdar, ..., caaaaar, cond, cons, cons-stream, define, delay, display,
 eq?, even?, filter, fold-right, force, if, lambda, length, let, list,
-list-ref, list-tail, newline, not, null?, number?, odd?, or, pair?,
+list-ref, list-tail, map, newline, not, null?, number?, odd?, or, pair?,
 remainder, reverse, set!, stream-car, stream-cdr, stream-null?, symbol?,
 the-empty-stream.
 
