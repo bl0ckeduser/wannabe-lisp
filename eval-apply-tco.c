@@ -437,20 +437,6 @@ tco_iter:
 			return mksym("NIL");
 		}
 
-		/* (list X Y Z ... ) */
-		/* note that unlike for quoted lists, this involves evaluating
-		 * the arguments before building the list */
-		if (l->type == LIST && l->c[0]->type == SYMBOL
-			&& !strcmp(l->c[0]->head, "list")) {
-			ev = new_list();
-			ev->type = LIST;
-			for (i = 1; i < l->cc; ++i)
-				add_child(ev, l->c[i]);
-			eatco_evlist(ev, env);
-			close_frame();
-			return makelist(ev);	/* cons-ify */
-		}
-
 		/* quote */
 		if (l->type == LIST && l->cc == 2 && l->c[0]->type == SYMBOL
 			&& !strcmp(l->c[0]->head, "QUOTE")) {
