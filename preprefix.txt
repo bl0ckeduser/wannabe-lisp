@@ -111,11 +111,11 @@
 (define (filter proc list)
    (cond
       ((pair? list)
-	(if (proc (car list))
-         (cons (car list) (filter proc (cdr list))))
-         (filter proc (cdr list)))
+         (if (proc (car list))
+            (cons (car list) (filter proc (cdr list)))
+            (filter proc (cdr list))))
       (else
-	'())))
+         '())))
 
 ;; `map' -- see r6rs.pdf, page 49
 (define (map proc . lr)
