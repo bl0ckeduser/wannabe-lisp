@@ -158,6 +158,22 @@ tco_iter:
 		if (l->type == LIST && l->cc == 0)
 			return l;
 
+		/* (apply proc arg1 arg2 ... argN) */
+		if (l->type == LIST && !strcmp(l->c[0]->head, "apply")) {
+			/* see r6rs.pdf, page 53 */
+			/* arg1, arg2, ..., argN are evaluated and stored in `argl',
+			 * then `append' is applied on these, giving nw; finally
+			 * proc is applied on nw
+			 */
+			argl = new_list();
+			argl->type = LIST;
+			for (i = 2; i < l->cc; ++i)
+				add_child(argl, l->c[i]);
+			eatco_evlist(argl, env);
+			nw = cons2list(call_apply(call_eval(mksym("append"), env), argl));
+			TCO_apply(call_eval(l->c[1], env), nw);
+		}
+
 		/* (and ... ) with short-circuit */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "and")) {
 			val = 1;
