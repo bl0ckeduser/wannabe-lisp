@@ -4,6 +4,18 @@
 #include <ctype.h>
 #include "wannabe-lisp.h"
 
+/* table of shorthands for quotation, quasiquotation, etc */
+struct {
+	char *shorthand;
+	char *internal;
+} quotes[] = {
+	{"'", "QUOTE"},
+	/* see r6rs.pdf, page 55 */
+	{"`", "quasiquote"},
+	{",@", "unquote-splicing"},
+	{",", "unquote"},
+	{NULL, NULL}};
+
 char* build(list_t* l, char *expr)
 {
 	char *p, *q;
@@ -19,14 +31,18 @@ char* build(list_t* l, char *expr)
 	tok = malloc(32);
 	p = expr;
 
-	if (*p == '\'') {	/* quoting */
-		child = new_list();
-		p = build(child, p + 1);
-		add_child(l, mksym("QUOTE"));
-		add_child(l, child);
-		l->type = LIST;
+	for (i = 0; quotes[i].shorthand; ++i) {
+		if (!strncmp(quotes[i].shorthand, p, strlen(quotes[i].shorthand))) {
+			child = new_list();
+			p = build(child, p + strlen(quotes[i].shorthand));
+			add_child(l, mksym(quotes[i].internal));
+			add_child(l, child);
+			l->type = LIST;
+			goto final;
+		}
 	}
- 	else if (*p == '(') {	/* list */
+
+	if (*p == '(') {	/* list */
 		++p;
 		l->type = LIST;
 		l->cc = 0;
@@ -86,6 +102,7 @@ char* build(list_t* l, char *expr)
 		strcpy(l->head, tok);
 	}
 
+final:
 	free(tok);
 	return p;
 }
