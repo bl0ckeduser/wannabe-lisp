@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 	char *buf = malloc(1024 * 1024 * 2);
 	char out[1024];
 	char *p;
-	list_t *expr = new_list();
+	list_t *expr;
 	int i, c;
 	char *ptr, *old;
 	FILE *prefix;
@@ -51,6 +51,9 @@ int main(int argc, char **argv)
 		sprintf(buf, "");
 
 	while (1) {		
+		sprintf(buf, "");
+		expr = new_list();
+
 #ifdef GC_STRESS_TEST
 		sprintf(buf, "((lambda (x) x) (+ 1 2 3))");
 #else
@@ -92,8 +95,6 @@ int main(int argc, char **argv)
 
 		/* clean up for the next iteration */
 		gc();
-		sprintf(buf, "");
-		expr = new_list();
 	}
 
 	if (save_mode)
