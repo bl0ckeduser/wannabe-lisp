@@ -261,8 +261,13 @@ list_t* do_prim_op(char *name, list_t *args)
 	}
 
 	if (!strcmp(name, "pair?")) {
-		return makebool(args->cc == 1 
-			&& args->c[0]->type == CONS);
+		/* check for null first */
+		j = args->cc == 1 
+		&& (
+			(args->c[0]->type == SYMBOL && !strcmp(args->c[0]->head, "NIL")
+			|| (args->c[0]->type == CONS && args->c[0]->cc == 0)));
+		return makebool(!j  /* not null, then the rest */
+			&& args->cc == 1 && args->c[0]->type == CONS);
 	}
 
 	/* the following bit deals with (eq? A B) --
