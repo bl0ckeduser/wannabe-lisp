@@ -88,4 +88,11 @@ extern void fatal_error_msg(char *s);
 extern void load_code_from_file(char *fil);
 extern list_t* cons2list(list_t *);
 
+extern void stacktracer_reset();
+extern void stacktracer_init();
+extern void stacktracer_destroy();
+extern void stacktracer_push(char *s);
+extern void stacktracer_show(char *s);
+extern void stacktracer_barf();
+
 #endif

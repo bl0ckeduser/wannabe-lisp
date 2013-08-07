@@ -90,6 +90,7 @@ int check_comment(char *s)
 
 int code_error()
 {
+	stacktracer_barf();
 
 #ifdef JS_GUI
 	exit(0);

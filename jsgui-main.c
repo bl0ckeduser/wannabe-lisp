@@ -64,6 +64,8 @@ int jsgui_error_handler(int derp)
 
 	bal = -1;
 	gc();
+
+	stacktracer_reset();
 		
 	c_writeback("]=> ");
 	iter = 1;
@@ -166,6 +168,10 @@ int do_setup(int waste)
 {
 	c_writeback_nl("wannabe-lisp GUI mode has been started");
 
+	/* setup stacktracer */
+	c_writeback_nl("setting up debug tracer...");
+	stacktracer_init();
+
 	c_writeback_nl("allocating buffers...");
 	buf = malloc(1024 * 1024 * 2);
 	out = malloc(1024 * 1024 * 2);
@@ -201,6 +207,9 @@ int do_setup(int waste)
 
 	c_writeback("]=> ");
 	++iter;
+
+	/* clear debug goo from primitives/prefix installation */
+	stacktracer_reset();
 
 	return 0;
 }

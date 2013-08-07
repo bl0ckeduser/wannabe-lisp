@@ -144,6 +144,17 @@ tco_iter:
 
 	if (oper == 0) {
 
+		/* == printout current evaluation to stacktracer == */
+		/* if it's a list, anyway */
+		if (l->type == LIST || l->type == CONS) {
+			buf = malloc(1024);
+			*buf = 0;
+			printout(l, buf);
+			stacktracer_push(buf);
+			free(buf);
+		}
+		/* ================================================ */
+
 		/* Deal with special forms (lambda, define, ...) first */
 
 #ifdef JS_GUI

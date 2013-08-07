@@ -27,6 +27,9 @@ int main(int argc, char **argv)
 	char *ptr, *old;
 	FILE *prefix;
 
+	/* setup stacktracer */
+	stacktracer_init();
+
 	/* safety herp derp */
 	sprintf(buf, "");
 
@@ -49,6 +52,7 @@ int main(int argc, char **argv)
 	/* in interactive mode, code errors jump to here */
 	if (setjmp(repl_jmp))
 		sprintf(buf, "");
+	stacktracer_reset();
 
 	while (1) {		
 		sprintf(buf, "");
@@ -101,6 +105,7 @@ int main(int argc, char **argv)
 		fclose(save_file);
 	final_clean_up();
 	free(buf);
+	stacktracer_destroy();
 
 	return 0;
 }
