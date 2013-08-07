@@ -32,10 +32,7 @@ int ready = 0;
 int bal = -1;
 int iter = 0;
 
-/*
-	function writeback(str)	=> c_writeback(char *)
-	function writeback_nl(str) => c_writeback_nl(char *)
-*/
+/* ============= JavaScript hooks ============= */
 
 void c_writeback(char *str)
 {
@@ -69,6 +66,14 @@ void c_write_char(char *str)
 	free(buf);
 }
 
+/* ============================================ */
+
+/*
+ * JavaScript calls this when the C code
+ * crashes (segfaults) or does an exit(1),
+ * which it does when there are user code
+ * errors
+ */
 int jsgui_error_handler(int derp)
 {
 	/* I have to do this reallocation thing
@@ -89,6 +94,11 @@ int jsgui_error_handler(int derp)
 	return 0;
 }
 
+/*
+ * JavaScript calls this routine
+ * after the user types a line
+ * in the GUI terminal box.
+ */
 int handle_gui_line(char *lin)
 {
 	extern int do_setup(int waste);

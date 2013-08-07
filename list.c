@@ -14,6 +14,7 @@
  * of object we're dealing with.
  */
 
+/* Create a new list object */
 list_t *new_list(void)
 {
 	list_t* nl = c_malloc(sizeof(list_t));
@@ -27,6 +28,7 @@ list_t *new_list(void)
 	return nl;
 }
 
+/* Add a child to a list object */
 void add_child(list_t *parent, list_t* child)
 {
 	list_t **new;

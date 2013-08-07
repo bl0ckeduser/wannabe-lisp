@@ -4,7 +4,7 @@
 #include <setjmp.h>
 #include "wannabe-lisp.h"
 
-/* In this file: misc. utilities ... */
+/* In this file: misc. helper routines.. */
 
 /*
  * convert back from proper car/cdr 

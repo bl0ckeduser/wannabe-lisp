@@ -3,9 +3,23 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
+/*
+ * This file contains the heart of the interpreter:
+ * the routines "eval" and "apply". For reasons
+ * of efficiency, eval and apply are actually
+ * mishmashed into a single C function called
+ * "eval_apply_tco". This makes it possible to
+ * do tail-call optimization in a way that is
+ * guaranteed to work regardless of whether the
+ * C compiler used provides TCO itself: goto
+ * statements.
+ */
+
 /* Based on SICP's metacircular eval/apply tutorial */
 
 static char *buf;
+
+/* ====================================================== */
 
 /*
  * Evalute each member of a list, in-place
@@ -16,6 +30,8 @@ void eatco_evlist(list_t* l, env_t *env)
 	for (i = 0; i < l->cc; ++i)
 		l->c[i] = call_eval(l->c[i], env);
 }
+
+/* ====================================================== */
 
 /* 
  * (1 2 3 4)
@@ -65,6 +81,8 @@ list_t* makelist(list_t* argl)
 	return nw3;
 }
 
+/* ====================================================== */
+
 /* 
  * The frames stuff here is for use by the 
  * special procedure `max-space'; see
@@ -86,6 +104,8 @@ void close_frame()
 {
 	--frames;
 }
+
+/* ====================================================== */
 
 /*
  * The following are macros that emulate
@@ -110,6 +130,10 @@ void close_frame()
 		oper = 1;			\
 		goto tco_iter;			\
 	}					\
+
+/* ====================================================== */
+
+/* And now, at long last, the eval/apply combined routine */
 
 list_t* eval_apply_tco(
 	int oper, 				/* 0: eval, otherwise, apply */
@@ -139,15 +163,13 @@ list_t* eval_apply_tco(
 
 	new_frame();
 
-
 tco_iter:
 
 	if (oper == 0) {
 
-		/* EVAL */
+		/* ==================== EVAL =========================== */
 
-		/* == printout current evaluation to stacktracer == */
-		/* well, print lists at least */
+		/* == printout current evaluation to the debug tracer == */
 		if (l->type == LIST || l->type == CONS) {
 			buf = malloc(1024);
 			*buf = 0;
@@ -155,18 +177,24 @@ tco_iter:
 			stacktracer_push(buf);
 			free(buf);
 		}
-		/* and symbols get tracked lower down */
-		/* ================================================ */
-
-		/* Deal with special forms (lambda, define, ...) first */
+		/* note that symbols get debug-tracked lower down, in the 
+		 * part of the evaluator where symbols are evaluated */
+		/* ===================================================== */
 
 #ifdef JS_GUI
+		/* former debug crap that I won't remove for fear of it making
+		 * emscripten unhappy */
 		buf = malloc(1024);
 		*buf = 0;
 		sprintf(buf, "eval: %p; %d; %s; %d", l, l->cc, l->type == SYMBOL ? l->head : "-", l->val);
 		puts(buf);
 		free(buf);
 #endif
+
+		/*
+		 * Deal with special forms 
+		 * (lambda, define, ...) first 
+		 */
 
 		/* Don't ask why, but () => () */
 		if (l->type == LIST && l->cc == 0)
@@ -515,9 +543,7 @@ tco_iter:
 
 	} else {
 
-	/* APPLY */
-
-	/* ======================================================== */
+		/* ==================== APPLY =========================== */
 
 		env_t *ne;
 		list_t *last;
@@ -589,6 +615,7 @@ tco_iter:
 	afail:
 		error_msg("`apply' has failed");
 
+		/* FIXME: puts() is useless in JSGUI mode */
 		buf = malloc(1024);
 		if (!buf)
 			error_msg("malloc failed");
