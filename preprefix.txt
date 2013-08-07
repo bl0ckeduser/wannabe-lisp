@@ -108,14 +108,15 @@
       (foldr1 combine nil biglist)))
 
 ;; `filter' -- see r6rs-lib.pdf, page 11
+;; hopefully more efficient than the old one !
 (define (filter proc list)
-   (cond
-      ((pair? list)
-         (if (proc (car list))
-            (cons (car list) (filter proc (cdr list)))
-            (filter proc (cdr list))))
-      (else
-         '())))
+   (define (iter acc l)
+      (if (null? l)
+         acc
+         (if (proc (car l))
+            (iter (cons (car l) acc) (cdr l))
+            (iter acc (cdr l)))))
+   (reverse (iter '() list)))
 
 ;; `map' -- see r6rs.pdf, page 49
 (define (map proc . lr)
@@ -132,8 +133,9 @@
    (define len1 (car list-lengths))
    (define same-length
       (= 0
-         (length (filter list-lengths
-            (lambda (n) (not (= n len1)))))))
+         (length (filter 
+            (lambda (n) (not (= n len1)))
+	    list-lengths))))
 
    ;; if they do, carry on...
    (if same-length
