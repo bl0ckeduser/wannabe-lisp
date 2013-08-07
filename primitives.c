@@ -56,6 +56,7 @@ void install_primitives(env_t *env)
 	add_primop(env, "load");
 
 	add_primop(env, "cons2list");
+	add_primop(env, "debuglog");
 }
 
 /* 
@@ -317,6 +318,11 @@ list_t* do_prim_op(char *name, list_t *args)
 
 	if (!strcmp(name, "cons2list")) {
 		return cons2list(args->c[0]);
+	}
+
+	if (!strcmp(name, "debuglog")) {
+		stacktracer_barf();
+		return mksym("herp-derp");
 	}
 
 	return NULL;

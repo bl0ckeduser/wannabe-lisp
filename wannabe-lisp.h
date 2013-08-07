@@ -93,6 +93,8 @@ extern void stacktracer_init();
 extern void stacktracer_destroy();
 extern void stacktracer_push(char *s);
 extern void stacktracer_show(char *s);
+extern void stacktracer_prebarf();
 extern void stacktracer_barf();
+extern void stacktracer_push_sym(char *symb, char *prnt);
 
 #endif

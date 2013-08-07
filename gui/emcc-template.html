@@ -173,6 +173,11 @@
 			document.getElementById('term').innerHTML += "<br>";
 		}
 
+		function writedebug(str)
+		{
+			parent.debug_push(str);
+		}
+
 		function set_kd(event)
 		{
 			state[event.keyCode] = 1;

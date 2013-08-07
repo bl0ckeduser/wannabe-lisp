@@ -1,5 +1,7 @@
 <script type="text/javascript">
 
+var debug_visible = false;
+
 function scroll2bottom()
 {
 	// thank you "jerom"
@@ -12,11 +14,43 @@ function do_focus()
 	document.getElementById('myiframe').focus();
 }
 
+function show_debug()
+{
+	document.getElementById('myiframe').height = "70%";
+	debug_visible = true;
+	document.getElementById('debug').style.display = "block";
+}
+
+function hide_debug()
+{
+	document.getElementById('myiframe').height = "90%";
+	debug_visible = false;
+	document.getElementById('debug').style.display = "none";
+}
+
+function permut_debug()
+{
+	if (debug_visible) {
+		hide_debug();
+		document.getElementById('debugbut').value = "Show debugging log";
+	} else {
+		show_debug();
+		document.getElementById('debugbut').value = "Hide debugging log";
+	}
+}
+
+function debug_push(str)
+{
+	document.getElementById('debug').innerHTML += str;
+}
+
 setTimeout("do_focus()", 1000);
 
 </script>
 
 <iframe id="myiframe" src="main.html" width="90%" height="90%"></iframe>
+  <textarea style="display: none; width:100%;" id="debug" rows="8"></textarea>
+
 <br>
 
 <input type="submit" onClick='document.location.reload(true);' value="Reset">
@@ -26,6 +60,8 @@ setTimeout("do_focus()", 1000);
 <input type="submit" onClick='document.getElementById("myiframe").contentWindow.copy_buf_to_clipboard(); do_focus();' value="Copy code to clipboard">
 
 <input type="submit" onClick='window.open("chrome://webapp/content/about.xul", "about", "chrome,width=780,height=370,centerscreen,resizable,dialog"); do_focus();' value="About this software">
+
+<input type="submit" id="debugbut" onClick='permut_debug(); do_focus();' value="Show debugging log">
 
 <input type="submit" onClick='window.close();' value="Quit">
 

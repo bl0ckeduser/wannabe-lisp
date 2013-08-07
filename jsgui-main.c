@@ -45,6 +45,14 @@ void c_writeback_nl(char *str)
 	free(buf);
 }
 
+void c_writedebug(char *str)
+{
+	char *buf = malloc(1024 * 1024 * 2);
+	sprintf(buf, "writedebug(\"%s\");", str);
+	emscripten_run_script(buf);
+	free(buf);
+}
+
 void c_write_char(char *str)
 {
 	char *buf = malloc(1024);

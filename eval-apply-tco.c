@@ -145,7 +145,7 @@ tco_iter:
 	if (oper == 0) {
 
 		/* == printout current evaluation to stacktracer == */
-		/* if it's a list, anyway */
+		/* well, print lists at least */
 		if (l->type == LIST || l->type == CONS) {
 			buf = malloc(1024);
 			*buf = 0;
@@ -153,6 +153,7 @@ tco_iter:
 			stacktracer_push(buf);
 			free(buf);
 		}
+		/* and symbols get tracked lower down */
 		/* ================================================ */
 
 		/* Deal with special forms (lambda, define, ...) first */
@@ -494,7 +495,15 @@ tco_iter:
 				free(buf);
 				code_error();
 			}
-		
+
+			/* ==== push printout to debug ==== */
+			buf = malloc(1024);
+			*buf = 0;
+			printout(er.e->ptr[er.i], buf);
+			stacktracer_push_sym(l->head, buf);
+			free(buf);
+			/* ================================ */		
+
 			close_frame();
 			return er.e->ptr[er.i];
 		}
