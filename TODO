@@ -1,3 +1,14 @@
+Currently unsupported R6RS datatypes:
+complex numbers, (non-integer) real numbers, rational numbers,
+"exact non-negative integer object", "exact integer object",
+characters, vectors, strings, conditions, bytevectors.
+
+Library/package stuff is also completely unsupported as of writing.
+
+Some stuff I am more likely to (try to) add:
+
+- square parentheses [ ]
+
 - support for semiquotation and related escapes
   DA STANDARD is confusing
   r6rs.pdf, page 55...
