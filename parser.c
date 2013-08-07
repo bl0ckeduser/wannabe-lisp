@@ -4,16 +4,22 @@
 #include <ctype.h>
 #include "wannabe-lisp.h"
 
-/* table of shorthands for quotation, quasiquotation, etc */
+/* 
+ * Table of abbreviations, as shown in
+ * r6rs.pdf, section 4.3.5, page 17 
+ */
 struct {
 	char *shorthand;
 	char *internal;
-} quotes[] = {
+} abbrev[] = {
 	{"'", "QUOTE"},
-	/* see r6rs.pdf, page 55 */
 	{"`", "quasiquote"},
 	{",@", "unquote-splicing"},
 	{",", "unquote"},
+	{"#'", "syntax"},
+	{"#`", "quasisyntax"},
+	{"#,@", "unsyntax-splicing"},
+	{"#,", "unsyntax"},
 	{NULL, NULL}};
 
 char* build(list_t* l, char *expr)
@@ -31,11 +37,11 @@ char* build(list_t* l, char *expr)
 	tok = malloc(32);
 	p = expr;
 
-	for (i = 0; quotes[i].shorthand; ++i) {
-		if (!strncmp(quotes[i].shorthand, p, strlen(quotes[i].shorthand))) {
+	for (i = 0; abbrev[i].shorthand; ++i) {
+		if (!strncmp(abbrev[i].shorthand, p, strlen(abbrev[i].shorthand))) {
 			child = new_list();
-			p = build(child, p + strlen(quotes[i].shorthand));
-			add_child(l, mksym(quotes[i].internal));
+			p = build(child, p + strlen(abbrev[i].shorthand));
+			add_child(l, mksym(abbrev[i].internal));
 			add_child(l, child);
 			l->type = LIST;
 			goto final;
