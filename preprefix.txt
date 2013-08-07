@@ -40,6 +40,7 @@
       '()))
 
 ;; `append' - r6rs.pdf, page 48
+;; FIXME: naive recursive implementation, not iterative, explodes in space
 ;; ]=> (append '(a b) 'c '(d e f) '(g h) 'i)
 ;; (a b c d e f g h i)
 (define append
@@ -62,6 +63,7 @@
          (iter args))))
 
 ;; `reverse' - r6rs.pdf, page 48
+;; FIXME: naive recursive implementation, not iterative, explodes in space
 ;; must be careful not to name the argument `list' since
 ;; it would intefere with the symbol for the builtin procedure `list'
 (define (reverse l)
