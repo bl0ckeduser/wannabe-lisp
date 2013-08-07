@@ -223,7 +223,7 @@ tco_iter:
 		/* (leval ...) => hook to eval(..., env) */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "leval")) {
 			if (l->c[1]->type == LIST && l->c[1]->c[0]->type == SYMBOL
-				&& !strcmp(l->c[1]->c[0]->head, "QUOTE")) {
+				&& !strcmp(l->c[1]->c[0]->head, "quote")) {
 				TCO_eval(l->c[1]->c[1], env);
 			} else {
 				ev = call_eval(l->c[1], env);
@@ -439,7 +439,7 @@ tco_iter:
 
 		/* quote */
 		if (l->type == LIST && l->cc == 2 && l->c[0]->type == SYMBOL
-			&& !strcmp(l->c[0]->head, "QUOTE")) {
+			&& !strcmp(l->c[0]->head, "quote")) {
 			if (l->c[1]->type == SYMBOL) {
 				close_frame();
 				return l->c[1];

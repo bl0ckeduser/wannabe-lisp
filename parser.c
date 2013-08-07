@@ -12,7 +12,7 @@ struct {
 	char *shorthand;
 	char *internal;
 } abbrev[] = {
-	{"'", "QUOTE"},
+	{"'", "quote"},
 	{"`", "quasiquote"},
 	{",@", "unquote-splicing"},
 	{",", "unquote"},
