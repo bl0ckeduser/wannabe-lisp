@@ -121,7 +121,7 @@ void stacktracer_push_sym(char *symb, char *prnt)
 	int i;
 
 	/* replace existing */
-	for (i = 0; i < SYMLEN; ++i) {
+	for (i = 0; i < sym; ++i) {
 		if (!strcmp(sym_name[i], symb)) {
 			strcpy(sym_name[i], symb);
 			strcpy(sym_print[i], prnt);
