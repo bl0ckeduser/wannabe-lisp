@@ -1,0 +1,32 @@
+;; Program that prints perfect numbers
+
+;; It works, but but slowly, much slowly that in MIT/GNU scheme, 
+;; for example. Presumably the reason is that filter and/or related 
+;; functions are implemented inefficiently.
+
+;; (1 2 ... n)
+(define (numlist n)
+   (define (iter acc n)
+      (if (= n 0)
+         acc
+         (iter (cons n acc) (- n 1))))
+   (iter '() n))
+
+;; proper factors of n
+;; e.g. (proper-factors-of 10) => (1 2 5)
+(define (proper-factors-of n)
+   (filter
+      (lambda (x) (= 0 (remainder n x)))
+      (numlist (- n 1))))
+
+;; is n a perfect number ?
+(define (perfect? n)
+   (and
+      ;; proper sum requires multiple terms
+      (> (length (proper-factors-of n)) 1)
+      (= (apply + (proper-factors-of n)) n)))
+
+;; the stupid part of the program, yes yes
+(display
+   (filter perfect? 
+      (numlist 30)))

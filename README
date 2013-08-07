@@ -32,7 +32,8 @@ $ ./lisp <test.txt
 The file `TODO' lists features that I might eventually add.
 
 Example code files, available in the directory `test', are: 
-test.txt, closure.txt, tco-test.txt, pattern-matcher.txt, var-args.txt.
+test.txt, closure.txt, tco-test.txt, pattern-matcher.txt, var-args.txt,
+perfect.txt.
 
 -----------------------------------
 
