@@ -3,6 +3,12 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
+/*
+ * Old-school primitive naive basic unsophisticated
+ * mark-sweep garbage collector, coded based on the
+ * example and explanations in the SICP video series.
+ */
+
 void **ptrs;
 char* mark;
 int len = 0;

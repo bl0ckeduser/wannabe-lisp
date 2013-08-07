@@ -4,6 +4,14 @@
 #include <setjmp.h>
 #include "wannabe-lisp.h"
 
+/*
+ * Lots of ugly glue between the JS/HTML
+ * code and the C code. It's basically
+ * a mishmash of bits of `main.c' and
+ * `cli.c', with lots of hacks to prevent
+ * strange issues that occur with emscripten.
+ */
+
 int interactive = 1;
 env_t *global;		/* pointer to global environment */
 jmp_buf repl_jmp;	/* jump pointer to REPL used to 

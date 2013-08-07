@@ -3,6 +3,14 @@
 #include <string.h>
 #include "wannabe-lisp.h"
 
+/*
+ * This module (well, the `printout' routine),
+ * prints out the ASCII representation of a
+ * list structure or symbol or number or whatever
+ * to a char* buffer. Like the parser, it's ugly
+ * but well debugged.
+ */
+
 char *buf;
 
 void printout(list_t *l, char *s)

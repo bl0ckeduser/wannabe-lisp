@@ -2,6 +2,18 @@
 #include <stdlib.h>
 #include "wannabe-lisp.h"
 
+/*
+ * This file contains helper routines
+ * for the data structure `list_t',
+ * which is used for all the runtime
+ * objects in this interpreter,
+ * including things other than lists
+ * like numbers and symbols.
+ * 
+ * The `type' field shows what kind
+ * of object we're dealing with.
+ */
+
 list_t *new_list(void)
 {
 	list_t* nl = c_malloc(sizeof(list_t));

@@ -12,6 +12,11 @@
 
 /*
  * Add primitive operator name to environment
+ * This maps the symbol `sym' to a list
+ * (PRIM-OP sym), which is recognized as the
+ * evaluator as a special form which causes
+ * it to run the routine "do_prim_op()",
+ * which is defined lower down in this file.
  */
 void add_primop(env_t *e, char *sym)
 {

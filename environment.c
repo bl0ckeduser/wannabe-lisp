@@ -21,7 +21,9 @@ env_t* new_env(void)
 }
 
 /*
- * Look up a symbol in an environment-chain
+ * Look up a symbol in an environment-chain.
+ * Most local references for a same symbol 
+ * get returned first.
  */
 env_ref_t lookup(env_t *e, char *sym)
 {

@@ -22,6 +22,11 @@ struct {
 	{"#,", "unsyntax"},
 	{NULL, NULL}};
 
+/*
+ * This is the parsing routine. 
+ * It's recursive, and hand-written,
+ * and ugly. But it's been debugged.
+ */
 char* build(list_t* l, char *expr)
 {
 	char *p, *q;
@@ -37,6 +42,7 @@ char* build(list_t* l, char *expr)
 	tok = malloc(32);
 	p = expr;
 
+	/* Deal with abbreviations */
 	for (i = 0; abbrev[i].shorthand; ++i) {
 		if (!strncmp(abbrev[i].shorthand, p, strlen(abbrev[i].shorthand))) {
 			child = new_list();
@@ -48,7 +54,7 @@ char* build(list_t* l, char *expr)
 		}
 	}
 
-	if (*p == '(') {	/* list */
+	if (*p == '(') {	/* list: (... */
 		++p;
 		l->type = LIST;
 		l->cc = 0;
@@ -71,7 +77,8 @@ char* build(list_t* l, char *expr)
 			code_error();
 		}
 	}
-	else if (isnum(*p) || (*p == '-' && isalnum(*(p+1)))) {	/* number */
+	/* number */
+	else if (isnum(*p) || (*p == '-' && isalnum(*(p+1)))) {	
 		q = tok;
 		if (*p == '-') {
 			sgn = -1;
@@ -108,6 +115,13 @@ char* build(list_t* l, char *expr)
 		strcpy(l->head, tok);
 	}
 
+	/*
+	 * Before returning, I must make sure to free
+	 * a buffer. ``Why not use a stack-allocated
+	 * buffer'', you may ask. And to this I answer
+	 * that emscripten (see `README-GUI' file for details)
+	 * hates these and behaves unpredictably when I use them.
+	 */
 final:
 	free(tok);
 	return p;

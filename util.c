@@ -4,10 +4,14 @@
 #include <setjmp.h>
 #include "wannabe-lisp.h"
 
+/* In this file: misc. utilities ... */
+
 /*
  * convert back from proper car/cdr 
  * list form to internal representation
  * (1 . (2 . (3 . NIL))) => (1 2 3)
+ * 
+ * In other words, "linearize" a list
  */
 list_t *cons2list(list_t *c)
 {
@@ -81,6 +85,10 @@ void fatal_error_msg(char *s)
 #endif
 }
 
+/* 
+ * Determine whether a line of code
+ * is empty or is a comment 
+ */
 int check_comment(char *s)
 {
 	while (*s && (*s == ' ' || *s == '\t' || *s == '\n'))
@@ -96,6 +104,14 @@ int code_error()
 	exit(0);
 #endif
 
+	/*
+	 * In interactive mode,
+	 * user code errors lead
+	 * to a bunch of error messages,
+	 * but then the user gets a 
+	 * fresh prompt and can carry on.
+	 * `repl_jmp' is set in `main.c'
+	 */
 	if (interactive)
 		longjmp(repl_jmp, 1);
 	else {
@@ -111,6 +127,7 @@ list_t *copy_list(list_t *l)
 	return new;
 }
 
+/* Remove final newline from a string */
 void strip_nl(char *s)
 {
 	while (*s) {
@@ -122,6 +139,13 @@ void strip_nl(char *s)
 	}
 }
 
+/* 
+ * Do a malloc() and tell the
+ * garbage collector about it.
+ * If the malloc() fails,
+ * printout an error message
+ * and halt the program.
+ */
 void *c_malloc(long size)
 {
 	void *ptr = malloc(size);
@@ -133,6 +157,10 @@ void *c_malloc(long size)
 	return ptr;
 }
 
+/* 
+ * Make a new symbol object having
+ * `s' as its name-value
+ */
 list_t* mksym(char *s)
 {
 	list_t *sl = new_list();
@@ -141,6 +169,7 @@ list_t* mksym(char *s)
 	return sl;
 }
 
+/* Make a new boolean object ... */
 list_t* makebool(int cbool)
 {
 	list_t *b = new_list();

@@ -144,6 +144,8 @@ tco_iter:
 
 	if (oper == 0) {
 
+		/* EVAL */
+
 		/* == printout current evaluation to stacktracer == */
 		/* well, print lists at least */
 		if (l->type == LIST || l->type == CONS) {
@@ -512,6 +514,8 @@ tco_iter:
 		return l;
 
 	} else {
+
+	/* APPLY */
 
 	/* ======================================================== */
 
