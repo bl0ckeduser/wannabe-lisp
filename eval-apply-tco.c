@@ -13,9 +13,10 @@
  * guaranteed to work regardless of whether the
  * C compiler used provides TCO itself: goto
  * statements.
+ *
+ * This implementation is based on SICP's metacircular 
+ * evaluator eval/apply tutorial
  */
-
-/* Based on SICP's metacircular eval/apply tutorial */
 
 static char *buf;
 static char *buf2;
@@ -47,6 +48,10 @@ void eatco_evlist(list_t* l, env_t *env)
  * latter "car/cdr" form. So, 
  * before any list is actually used,
  * it gets transformed thusly.
+ *
+ * Note that the reverse routine
+ * `cons2list' is defined in 
+ * util.c
  */
 list_t* makelist(list_t* argl)
 {
@@ -85,9 +90,17 @@ list_t* makelist(list_t* argl)
 /* ====================================================== */
 
 /* 
- * The frames stuff here is for use by the 
- * special procedure `max-space'; see
- * in the evaluator below 
+ * The purpose of this code is to record the greatest
+ * evaluation depth, or number of nested eval calls,
+ * that occurs while evaluating a given expression.
+ *
+ * This functionality is made available through the 
+ * special function  "max-space", which is fully described 
+ * in the README file. The test file "tco-test.txt" demoes
+ * this functionality by applying "max-space" to a small
+ * variety of procedures, some of which should be TCOed.
+ *
+ * The purpose of all this is to test whether TCO is working.
  */
 
 int frames = 0;
@@ -170,7 +183,7 @@ tco_iter:
 
 		/* ==================== EVAL =========================== */
 
-		/* == printout current evaluation to the debug tracer == */
+		/* == printout current evaluation-step to the debugger = */
 		if (l->type == LIST || l->type == CONS) {
 			buf = malloc(1024);
 			*buf = 0;
@@ -193,11 +206,14 @@ tco_iter:
 #endif
 
 		/*
-		 * Deal with special forms 
-		 * (lambda, define, ...) first 
+		 * It is necessary to deal with special forms 
+		 * (lambda, define, ...) first. 
 		 */
 
-		/* Don't ask why, but () => () */
+		/* Don't ask why, but () => (), at least
+		 * according to both tinyscheme and MIT/GNU Scheme.
+		 * I'm not sure what DA STANDARD has to say...
+		 */
 		if (l->type == LIST && l->cc == 0)
 			return l;
 
@@ -217,7 +233,12 @@ tco_iter:
 			TCO_apply(call_eval(l->c[1], env), nw);
 		}
 
-		/* (and ... ) with short-circuit */
+		/* (and ... ) with short-circuit 
+		 * If it wasn't for the short-circuit, it wouldn't
+		 * need to be a special form -- this code kicks away 
+		 * the standard "eval all arguments, then apply"
+		 * behaviour
+		 */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "and")) {
 			val = 1;
 			for (i = 1; i < l->cc; ++i) {
@@ -250,7 +271,12 @@ tco_iter:
 		}
 
 		/* (max-space EXP) gives the maximum number of 
-		 * eval/apply stack frames used in the evaluation of EXP */
+		 * eval/apply stack frames used in the evaluation of EXP 
+		 * 
+		 * This is a custom extension not from the Scheme
+		 * standard. Its purpose was for me to see if TCO
+		 * worked. 
+		 */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "max-space")) {
 			frames_usage_max = 0;
 			frames = 0;
@@ -263,7 +289,14 @@ tco_iter:
 			return nw;
 		}
 
-		/* (leval ...) => hook to eval(..., env) */
+		/* (leval ...) => hook to eval(..., env)
+		 * i.e. evaluate an expression in the current
+		 * local environment.
+		 *
+		 * This is not part of the scheme standard,
+		 * it's a custom extension. I think scheme has
+		 * an `eval', though.
+		 */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "leval")) {
 			if (l->c[1]->type == LIST && l->c[1]->c[0]->type == SYMBOL
 				&& !strcmp(l->c[1]->c[0]->head, "quote")) {
@@ -360,7 +393,7 @@ tco_iter:
 			close_frame();
 			return ev;
 
-	bad_let:
+bad_let:
 			error_msg("improper use of `let' special form");
 			code_error();
 		}
@@ -480,7 +513,7 @@ tco_iter:
 			return mksym("NIL");
 		}
 
-		/* quote */
+		/* (quote foo) => foo */
 		if (l->type == LIST && l->cc == 2 && l->c[0]->type == SYMBOL
 			&& !strcmp(l->c[0]->head, "quote")) {
 			if (l->c[1]->type == SYMBOL) {
@@ -527,7 +560,9 @@ tco_iter:
 				code_error();
 			}
 
-			/* ==== push printout to debug ==== */
+			/* ================================
+			 * give the debugger's symbol table
+			 * a printout of the symbol's value */
 			buf = malloc(1024 * 2);
 			if (!buf) {
 				error_msg("malloc 2KB failed");
@@ -614,7 +649,7 @@ tco_iter:
 			TCO_eval(proc->c[proc->cc - 1], ne);
 		}
 
-	afail:
+afail:
 		error_msg("`apply' has failed");
 		code_error();
 	}
