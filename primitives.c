@@ -62,6 +62,8 @@ void install_primitives(env_t *env)
 
 	add_primop(env, "cons2list");
 	add_primop(env, "debuglog");
+
+	add_primop(env, "reverse");
 }
 
 /* 
@@ -75,6 +77,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	int i = 0;
 	int j;
 	int val;
+	list_t *l1, *l2, *l3;
 	list_t* nl = c_malloc(sizeof(list_t));
 	char *buf;
 	FILE *prefix;
@@ -333,6 +336,24 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "debuglog")) {
 		stacktracer_barf();
 		return mksym("herp-derp");
+	}
+
+	if (!strcmp(name, "reverse")) {
+		/* r6rs.pdf, page 48 */
+		if (args->c[0]->type == CONS)
+			l1 = cons2list(args->c[0]);
+		else if (args->c[0]->type == LIST)
+			l1 = args->c[0];
+		else return mksym("NIL");
+
+		if (l1->cc == 0)
+			return mksym("NIL");
+
+		nl = new_list();
+		nl->type = LIST;
+		for (i = l1->cc - 1; i >= 0; --i)
+			add_child(nl, l1->c[i]);
+		return makelist(nl);
 	}
 
 	return NULL;
