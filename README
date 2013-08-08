@@ -76,3 +76,52 @@ III. Auto-indent
 The REPL auto-indents
 
 
+				~~~~~~~~
+
+IV. Debugging facilities
+
+When user code crashes, it is possible to be presented, upon request,
+with a useful printout showing a trace of recently evaluated list 
+structures as well as the values of the symbols involved in these.
+
+The trace printout grows downwards from outermost, least-recently-evaluated
+list, up until the list structure that caused the error.
+
+[ The constant BUFLEN (by default 5) in stacktrace.c sets the maximum number of 
+  evaluation steps memorized by the debug-tracer, and the constant SYMLEN,
+  by default 8, sets the maximum number of symbols memorized. ]
+
+Below is an example session.
+
+	]=> (define (derp l n)
+	...    (if (= n 0)
+	...       (cadr l)
+	...       (derp l (- n 1))))
+
+	#<CLOSURE:0x109e630>
+	
+	]=> (derp 123 10)
+
+	Error: `cdr' expects a linked-list
+	A debug log has been prepared. Type (debuglog) to see it.
+
+	]=> (debuglog)
+	
+	===== DEBUGGING INFO  =====
+	Evaluation trace:
+	(if (= n 0) (cadr l) (derp l (- n 1)))
+	(= n 0)
+	(cadr l)
+	(car (cdr x))
+	(cdr x)
+	
+	Symbols: 
+	derp: #<CLOSURE:0x109e630>
+	n: 0
+	=: (PRIM-OP =)
+	l: 123
+	-: (PRIM-OP -)
+	cadr: #<CLOSURE:0x109e630>
+	x: 123
+	===========================
+
