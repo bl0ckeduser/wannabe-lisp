@@ -67,9 +67,12 @@ void env_add(env_t *e, char *sym, int ty, void *p)
 	int i;
 	env_ref_t ref;
 
-	/* check if it's already there */
+	/* 
+	 * Check if the symbol that wants to
+	 * be added has already been added 
+	 */
 	if ((lookup(e, sym)).e == e) {
-		/* yes; call env_set() instead */
+		/* Yes; call env_set() instead */
 		env_set(e, sym, ty, p);
 		return;
 	}

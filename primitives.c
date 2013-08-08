@@ -99,12 +99,14 @@ list_t* do_prim_op(char *name, list_t *args)
 
 	if (!strcmp(name, "-")) {
 		if (args->cc == 1) {
+			/* single argument: unary minus sign */
 			if (args->c[0]->type != NUMBER) {
 				error_msg("- expects numbers");
 				code_error();
 			}
 			val = -args->c[0]->val;
 		} else {
+			/* otherwise, standard N-ary subtraction */
 			for (i = 0; i < args->cc; ++i) {
 				if (args->c[i]->type != NUMBER) {
 					error_msg("- expects numbers");
@@ -161,7 +163,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		if (args->cc != 2
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
-			error_msg("= expects two numbers");
+			error_msg("> expects two numbers");
 			code_error();
 		}
 		return makebool(args->c[0]->val > args->c[1]->val);
@@ -171,7 +173,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		if (args->cc != 2
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
-			error_msg("= expects two numbers");
+			error_msg("< expects two numbers");
 			code_error();
 		}
 		return makebool(args->c[0]->val < args->c[1]->val);
@@ -181,7 +183,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		if (args->cc != 2
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
-			error_msg("= expects two numbers");
+			error_msg("<= expects two numbers");
 			code_error();
 		}
 		return makebool(args->c[0]->val <= args->c[1]->val);
@@ -191,7 +193,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		if (args->cc != 2
 		|| args->c[0]->type != NUMBER
 		|| args->c[1]->type != NUMBER) {
-			error_msg("= expects two numbers");
+			error_msg(">= expects two numbers");
 			code_error();
 		}
 		return makebool(args->c[0]->val >= args->c[1]->val);
