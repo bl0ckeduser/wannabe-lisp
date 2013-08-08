@@ -615,35 +615,7 @@ tco_iter:
 		}
 
 	afail:
-#ifdef JS_GUI
-	#define puts c_writeback_nl
-#endif
-		buf = malloc(1024);
-		buf2 = malloc(2 * 1024);
-		if (!buf || !buf2)
-			error_msg("malloc failed");
-
-		puts("Error: `apply' has failed");
-
-		*buf = 0;
-		printout(proc, buf);
-		strcpy(buf2, "Procedure: ");
-		strcat(buf2, buf);
-		puts(buf2);
-
-		*buf = 0;
-		strcpy(buf2, "Arguments: ");
-		printout(args, buf);
-		strcat(buf2, buf);
-		puts(buf2);
-
-#ifdef JS_GUI
-	#undef puts
-#endif
-
-		free(buf);
-		free(buf2);
-
+		error_msg("`apply' has failed");
 		code_error();
 	}
 
