@@ -129,6 +129,9 @@ int main(int argc, char **argv)
 
 		/* Clean up leftover goo */
 		gc();
+
+		/* Clear debug trace after every input line */
+		stacktracer_reset();
 	}
 
 	/* clean up lots of stuff */

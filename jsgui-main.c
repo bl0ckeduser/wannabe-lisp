@@ -186,6 +186,9 @@ int handle_gui_line(char *lin)
 			}
 		}
 	}
+
+	/* Clear debug trace after every input line */
+	stacktracer_reset();
 	
 	return 0;
 }

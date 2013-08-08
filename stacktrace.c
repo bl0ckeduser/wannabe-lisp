@@ -226,5 +226,7 @@ void stacktracer_prebarf()
 #else
 	stacktracer_print("A debug log has been prepared. Type (debuglog) to see it.");
 #endif
+
+	stacktracer_reset();
 }
 
