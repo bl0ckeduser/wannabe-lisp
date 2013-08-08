@@ -27,11 +27,13 @@ void add_ptr(void *p)
 {
 	int i;
 	/* prevent adding things twice */
+/*
 	for (i = 0; i < len; ++i)
 		if (ptrs[i] == p) {
 			mark[i] = 0;
 			return;
 		}
+*/	
 	
 	/* expand list if needed */
 	if (++len >= alloc) {

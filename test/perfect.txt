@@ -1,9 +1,5 @@
 ;; Program that prints perfect numbers
 
-;; It works, but but slowly, much slowly that in MIT/GNU scheme, 
-;; for example. Presumably the reason is that filter and/or related 
-;; functions are implemented inefficiently.
-
 ;; (1 2 ... n)
 (define (numlist n)
    (define (iter acc n)
