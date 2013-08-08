@@ -25,16 +25,6 @@ void gc_selfdestroy()
 
 void add_ptr(void *p)
 {
-	int i;
-	/* prevent adding things twice */
-/*
-	for (i = 0; i < len; ++i)
-		if (ptrs[i] == p) {
-			mark[i] = 0;
-			return;
-		}
-*/	
-	
 	/* expand list if needed */
 	if (++len >= alloc) {
 		alloc += 16;
@@ -66,11 +56,6 @@ void do_mark(void* p, int m)
 			return;
 		}
 	}
-
-	/* 
-	 * add_ptr(p);
-	 * do_mark(p, m);
-	 */
 }
 
 void gc()
@@ -81,34 +66,54 @@ void gc()
 	void **copy_ptr;
 	char *copy_mark;
 
-	/* mark */
+	/* mark - this is the crucial step where everything
+	 * still recursively visible starting from the
+	 * global environment gets marked as non-garbage.
+	 *
+	 * FIXME: a more sophisticated approach, perhaps
+	 * involving marking and unmarking things at runtime
+	 * and calling gc() more frequently, will be required
+	 * to avoid leaks such as in:
+	 *
+	 *	(define (loop n)
+	 *	  (if (= n 0)
+	 *	 		'derp
+	 *	 		(begin
+	 *			  (list 1 2 3 4 5 6 7 8 9 10)
+	 *			  (loop (- n 1)))))
+	 *
+	 */
 	marksweep(global);
 
-	/* sweep */
+	/* sweep - free what hasn't been marked */
 	for (i = 0; i < len; ++i)
 		if (ptrs[i] != NULL)
 			if (mark[i] == 0)
 				free(ptrs[i]);
 
-	/* make a copy of the object list */
+	/* subsequently, the garbage list is "compacted",
+	 * which is to say that the freed stuff is removed
+	 * from the object arrays */
+
+	/* make a copy of the object lists (ptr, mark) */
 	copy_ptr = malloc(len * sizeof(void *));
 	if (!copy_ptr) {
 		fatal_error_msg("marksweep: malloc failed");
 		exit(1);
 	}
 	memcpy(copy_ptr, ptrs, len * sizeof(void *));
-
+	
 	copy_mark = malloc(len);
 	memcpy(copy_mark, mark, len);
 
-	/* make a new list with the nonfreed stuff */
+	/* now rebuild the mark list with the nonfreed stuff */
 	orig = len;
 	len = 0;
 	for (i = 0; i < orig; ++i) 
 		if (copy_mark[i] != 0)
 			add_ptr(copy_ptr[i]);
 
-	/* erase temporary copies */
+	/* finally, erase the copies of the old list */
 	free(copy_ptr);
 	free(copy_mark);
 }
