@@ -1,3 +1,19 @@
+The GC has to be smarter...
+Consider this:
+
+(define (loop n)
+  (if (= n 0)
+	'derp
+	(begin
+	  (list 1 2 3 4 5 6 7 8 9 10)
+	  (loop (- n 1)))))
+
+Massive memory leakage occurs when this is run.
+
+Might have to run gc() more frequently, and mark/unmark stuff along the way
+
+----------------------------------------
+
 Currently unsupported R6RS datatypes:
 complex numbers, (non-integer) real numbers, rational numbers,
 "exact non-negative integer object", "exact integer object",
