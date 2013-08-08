@@ -120,6 +120,9 @@ void stacktracer_push_sym(char *symb, char *prnt)
 {
 	int i;
 
+	if (strlen(symb) > 1000 || strlen(prnt) > 1000)
+		return;
+
 	/* replace existing */
 	for (i = 0; i < sym; ++i) {
 		if (!strcmp(sym_name[i], symb)) {
@@ -131,9 +134,6 @@ void stacktracer_push_sym(char *symb, char *prnt)
 	
 	if (sym_ptr >= SYMLEN)
 		sym_ptr = 0;
-
-	if (strlen(symb) > 1000 || strlen(prnt) > 1000)
-		return;
 
 	strcpy(sym_name[sym_ptr], symb);
 	strcpy(sym_print[sym_ptr], prnt);

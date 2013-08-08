@@ -527,7 +527,11 @@ tco_iter:
 			}
 
 			/* ==== push printout to debug ==== */
-			buf = malloc(1024);
+			buf = malloc(1024 * 1024 * 2);
+			if (!buf) {
+				error_msg("malloc 2KB failed");
+				code_error();
+			}
 			*buf = 0;
 			printout(er.e->ptr[er.i], buf);
 			stacktracer_push_sym(l->head, buf);
