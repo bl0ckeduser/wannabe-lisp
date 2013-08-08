@@ -18,6 +18,7 @@
 /* Based on SICP's metacircular eval/apply tutorial */
 
 static char *buf;
+static char *buf2;
 
 /* ====================================================== */
 
@@ -561,14 +562,6 @@ tco_iter:
 
 		/* General case */
 		if (proc->type == CLOSURE) {
-			/* Check that parameter count matches */
-			/* FIXME: this interferes with `.' rest notation */
-			/*if (proc->c[0]->cc != args->cc) {
-				error_msg("arg count mismatch in closure application");
-				goto afail;
-			}
-			*/
-
 			/* Build a new environment */
 			ne = new_env();
 			ne->father = proc->closure;
@@ -599,6 +592,11 @@ tco_iter:
 					break;
 				} else {
 					/* general case */
+					
+					/* check for argcount mismatch */					
+					if (i >= args->cc || i >= proc->c[0]->cc)
+						goto afail;
+
 					env_add(ne, proc->c[0]->c[i]->head,
 						REF, args->c[i]);
 				}
@@ -617,22 +615,34 @@ tco_iter:
 		}
 
 	afail:
-		error_msg("`apply' has failed");
-
-		/* FIXME: puts() is useless in JSGUI mode */
+#ifdef JS_GUI
+	#define puts c_writeback_nl
+#endif
 		buf = malloc(1024);
-		if (!buf)
+		buf2 = malloc(2 * 1024);
+		if (!buf || !buf2)
 			error_msg("malloc failed");
+
+		puts("Error: `apply' has failed");
 
 		*buf = 0;
 		printout(proc, buf);
-		puts(buf);
+		strcpy(buf2, "Procedure: ");
+		strcat(buf2, buf);
+		puts(buf2);
 
 		*buf = 0;
+		strcpy(buf2, "Arguments: ");
 		printout(args, buf);
-		puts(buf);
+		strcat(buf2, buf);
+		puts(buf2);
+
+#ifdef JS_GUI
+	#undef puts
+#endif
 
 		free(buf);
+		free(buf2);
 
 		code_error();
 	}
