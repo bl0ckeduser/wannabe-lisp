@@ -5,8 +5,8 @@ The main reason I wrote it is to get parentheses flashing.
 There is room for improvements...
 
 NOTE: at the following URL is a compiled build of the JS/HTML GUI, 
-built on 19 July 2013:
-https://sites.google.com/site/bl0ckeduserssoftware/wannabelisp-compiledgui-20130719.tar.gz
+built on 8 August 2013:
+https://sites.google.com/site/bl0ckeduserssoftware/wannabelisp-compiledgui-20130808.tar.gz
 
 As of writing, the GUI version is kind of slow, unfortunately.
 There might be a way to get it to be faster with "asm.js", but that thing
