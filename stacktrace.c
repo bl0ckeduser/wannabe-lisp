@@ -4,27 +4,46 @@
 #include "wannabe-lisp.h"
 
 /*
- * It's a ring buffer of evaluation
- * step printout strings, to be barfed
- * out upon crashes for purposes of
- * debugging
+ * It's a ring buffer of evaluation step printout strings, to be
+ * barfed out upon crashes for purposes of debugging. For example,
+ * if the user types "(cadr cadr)", the error
+ * "`cdr' expects a linked-list" is given and the following log is
+ * made available:
+ *
+ * ===== DEBUGGING INFO  =====
+ * Evaluation trace:
+ * (cadr cadr)
+ * (car (cdr x))
+ * (cdr x)
+ * 
+ * Symbols: 
+ * cadr: #<CLOSURE:0x1046630>
+ * x: #<CLOSURE:0x1046630>
+ * cdr: (PRIM-OP cdr)
+ * ===========================
+ *
+ * Oh and it's also a symbol table, as the debuglog shows.
  */
 
-/* memory depth */
+/* memory depth (max number of traces kept) */
 #define BUFLEN 5
 
-/* symbol storage */
+/* symbol storage (max number of symbols kept) */
 #define SYMLEN 8
 
-static char **stacktraces;
-static int ptr;
-static int full;
+static char **stacktraces;		/* array of trace-strings */
+static int ptr;				/* ring buffer index */
+static int full;			/* ring buffer full ? */
 
+/* symbol table */
 static char **sym_name;
 static char **sym_print;
 static int sym;
 static int sym_ptr;
 
+/* storage for the final complete debug log
+ * (it gets stored because it is only printed
+ * upon request) */
 char *debug_buff;
 int debug_buff_written;
 
@@ -123,7 +142,7 @@ void stacktracer_push_sym(char *symb, char *prnt)
 	if (strlen(symb) > 1000 || strlen(prnt) > 1000)
 		return;
 
-	/* replace existing */
+	/* replace existing if possible */
 	for (i = 0; i < sym; ++i) {
 		if (!strcmp(sym_name[i], symb)) {
 			strcpy(sym_name[i], symb);

@@ -32,7 +32,13 @@ void printout_iter(list_t* l, int d, char *out)
 	} else if(l->type == SYMBOL) {
 		sprintf(buf, "%s", l->head);
 		strcat(out, buf);
-	} else if (l->type == LIST) { 
+	} else if (l->type == LIST) {
+		/* 
+	 	 * LIST is an internally-used linear array list.
+		 * User-built lists are of CONS type and
+		 * are built in the conventional car/cdr linked
+		 * list style.
+		 */
 		sprintf(buf, "(%s", l->head);
 		strcat(out, buf);
 		for (i = 0; i < l->cc; ++i) {
@@ -54,6 +60,16 @@ void printout_iter(list_t* l, int d, char *out)
 			sprintf(buf, "#f");
 		strcat(out, buf);
 	} else if (l->type == CONS) {
+		/*
+		 * CONS types are used for dotted pairs
+		 * and for user lists. The rules for how to
+		 * print them the expected way are confusing to me,
+		 * and there seem to be lots of special cases.
+		 * Maybe I just poorly designed some part of my code.
+		 *
+		 * This part of the code might need to be redone
+		 * or something. It's a mess.
+		 */
 		if (l->cc == 2
 			&& (l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL")
 				|| (l->c[1]->type == CONS && l->c[1]->cc == 0))) {
