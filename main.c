@@ -19,7 +19,7 @@ void final_clean_up()
 
 int main(int argc, char **argv)
 {
-	char *buf = malloc(1024 * 1024 * 2);
+	char *buf = malloc(1024 * 512);
 	char out[1024];
 	char *p;
 	list_t *expr;

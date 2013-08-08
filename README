@@ -37,6 +37,31 @@ perfect.txt.
 
 -----------------------------------
 
+Memory usage benchmarks (as of Aug 8, 2013)
+===========================================
+
+These tests were made using valgrind --tool=massif
+They show the approximate peak heap memory usage
+
+Test program	      WL  	 WL w/o ST 	ts
+-------------	      --         ---------	--
+pattern-matcher.txt   1.009 MB 	 0.986 MB	361.7 KB
+test.txt	      1.356 MB   1.333 MB	361.2 KB
+
+Legend
+------
+WL 				"wannabe-lisp" (i.e. this interpreter)
+WL w/o ST 			"wannabe-lisp" compiled without
+				  the debug tracer (DISABLE_STACKTRACER flag)
+ts				"tinyscheme" interpreter
+
+
+This footprint could be (further) reduced by using smaller buffers in 
+various places, and especially perhaps by implementing a more 
+sophisticated garbage collector.
+
+-----------------------------------
+
 Some notes on special features
 ==============================
 

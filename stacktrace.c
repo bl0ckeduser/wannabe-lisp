@@ -58,10 +58,18 @@ void stacktracer_reset()
 void stacktracer_init()
 {
 	int i;
+
+#ifdef DISABLE_STACKTRACER
+	return;
+#endif
 	
 	debug_buff_written = 0;
 
-	debug_buff = malloc(1024 * 1024 * 8);
+	/* two kilobytes should really suffice.
+	 * note that the example debuglog given in `README'
+	 * takes only about 283 bytes.
+	 */
+	debug_buff = malloc(1024 * 2);
 	if (!debug_buff)
 		goto fail;
 	*debug_buff = 0;
@@ -107,6 +115,10 @@ fail:
 void stacktracer_destroy()
 {
 	int i;
+
+#ifdef DISABLE_STACKTRACER
+	return;
+#endif
 	
 	for (i = 0; i < BUFLEN; ++i) {
 		free(stacktraces[i]);
@@ -125,6 +137,10 @@ void stacktracer_destroy()
 
 void stacktracer_push(char *s)
 {
+#ifdef DISABLE_STACKTRACER
+	return;
+#endif
+
 	if (strlen(s) > 1000)
 		return;
 	strcpy(stacktraces[ptr], s);
@@ -138,6 +154,10 @@ void stacktracer_push(char *s)
 void stacktracer_push_sym(char *symb, char *prnt)
 {
 	int i;
+
+#ifdef DISABLE_STACKTRACER
+	return;
+#endif
 
 	if (strlen(symb) > 1000 || strlen(prnt) > 1000)
 		return;
@@ -164,6 +184,10 @@ void stacktracer_push_sym(char *symb, char *prnt)
 
 void stacktracer_print(char *s)
 {
+#ifdef DISABLE_STACKTRACER
+	return;
+#endif
+
 #ifdef JS_GUI
 	;
 #else
@@ -173,6 +197,10 @@ void stacktracer_print(char *s)
 
 void stacktracer_barf()
 {
+#ifdef DISABLE_STACKTRACER
+	return;
+#endif
+
 	if (debug_buff_written)
 		stacktracer_print(debug_buff);
 	else
@@ -181,6 +209,10 @@ void stacktracer_barf()
 
 void stacktracer_pushbuf(char *s)
 {
+#ifdef DISABLE_STACKTRACER
+	return;
+#endif
+
 #ifdef JS_GUI
 	extern void c_writedebug(char *str);
 	c_writedebug(s);
@@ -195,6 +227,10 @@ void stacktracer_prebarf()
 {
 	int i;
 	char *buff;
+
+#ifdef DISABLE_STACKTRACER
+	return;
+#endif
 
 	*debug_buff = 0;
 	debug_buff_written = 1;
