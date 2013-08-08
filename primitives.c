@@ -265,7 +265,11 @@ list_t* do_prim_op(char *name, list_t *args)
 		buf = malloc(1024);
 		*buf = 0;
 		printout(args->c[0], buf);
+#ifdef JS_GUI
+		c_writeback(buf);
+#else
 		printf("%s", buf);
+#endif
 		free(buf);
 		return args->c[0];
 	}
@@ -309,7 +313,11 @@ list_t* do_prim_op(char *name, list_t *args)
 	}
 
 	if (!strcmp(name, "newline")) {
+#ifdef JS_GUI
+		c_writeback_nl("");
+#else
 		puts("");
+#endif
 		return mksym("NIL");
 	}
 
