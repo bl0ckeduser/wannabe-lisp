@@ -335,7 +335,10 @@ list_t* do_prim_op(char *name, list_t *args)
 	}
 
 	if (!strcmp(name, "load")) {
-		load_code_from_file(args->c[0]->head);
+		buf = malloc(strlen(args->c[0]->head) + 1);
+		strcpy(buf, args->c[0]->head);
+		load_code_from_file(buf);
+		free(buf);
 		return mksym("HERP-DERP");
 	}
 
