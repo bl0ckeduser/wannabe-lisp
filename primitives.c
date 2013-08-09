@@ -24,7 +24,7 @@ void add_primop(env_t *e, char *sym)
 	l->type = LIST;
 	add_child(l, mksym("PRIM-OP"));
 	add_child(l, mksym(sym));
-	env_add(e, sym, REF, l);
+	env_add(e, sym, l);
 }
 
 void install_primitives(env_t *env)

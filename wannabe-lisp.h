@@ -17,10 +17,6 @@ enum {
 	BOOL
 };
 
-enum {
-	REF = 0
-};
-
 typedef struct env_ref {
 	struct env* e;
 	int i;
@@ -30,7 +26,6 @@ typedef struct env {
 	int count;
 	int alloc;
 	char **sym;
-	char *ty;
 	void **ptr;
 	struct env *father;
 } env_t;
@@ -57,7 +52,7 @@ extern list_t* apply(list_t *proc, list_t *args);
 extern env_ref_t lookup(env_t *e, char *sym);
 extern void evlist(list_t* l, env_t *env);
 extern list_t* makebool(int cbool);
-extern void env_add(env_t *e, char *sym, int ty, void *p);
+extern void env_add(env_t *e, char *sym, void *p);
 extern void install_primitives(env_t *env);
 
 extern char* build(list_t* l, char *expr);
@@ -73,7 +68,7 @@ extern void add_ptr(void *p);
 extern void gc();
 extern void do_mark(void* p, int m);
 extern void gc_selfdestroy();
-extern void env_set(env_t *e, char *sym, int ty, void *p);
+extern void env_set(env_t *e, char *sym, void *p);
 extern list_t* eval_apply_tco(int oper, list_t *a_l, env_t *a_env, list_t *a_proc, list_t *a_args);
 
 #define call_eval(l, e) eval_apply_tco(0, l, e, NULL, NULL)

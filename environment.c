@@ -14,16 +14,14 @@ env_t* new_env(void)
 	e->father = NULL;	/* father environment */
 
 	/* 
-	 * e->sym, e->ty, e->ptr are dynamic arrays,
+	 * e->sym, e->ptr are dynamic arrays,
 	 * given an initial allocation of 8 elements
 	 *
 	 * e->sym:	symbol name
 	 * e->ptr:	pointer to the data bound to the symbol
-	 * e->ty:	useless
 	 */
 	e->alloc = 8;
 	e->sym = c_malloc(e->alloc * sizeof(char *));
-	e->ty = c_malloc(e->alloc * sizeof(char));
 	e->ptr = c_malloc(e->alloc * sizeof(void *));
 
 	return e;
@@ -68,7 +66,7 @@ env_ref_t lookup(env_t *e, char *sym)
 /*
  * Add a symbol to an environment
  */
-void env_add(env_t *e, char *sym, int ty, void *p)
+void env_add(env_t *e, char *sym, void *p)
 {
 	int c = e->count;
 	char **nsym;
@@ -83,13 +81,13 @@ void env_add(env_t *e, char *sym, int ty, void *p)
 	 */
 	if ((lookup(e, sym)).e == e) {
 		/* Yes; call env_set() instead */
-		env_set(e, sym, ty, p);
+		env_set(e, sym, p);
 		return;
 	}
 
 	/* 
 	 * Ugly run-of-the-mill dynamic list expansion,
-	 * (the environment structure is a bunch of arrays),
+	 * (the environment structure is a pair of arrays),
 	 * with the particularity that realloc is not
 	 * used because I can't figure out how to use
 	 * it properly in conjunction with the GC 
@@ -97,35 +95,29 @@ void env_add(env_t *e, char *sym, int ty, void *p)
 	if (++(e->count) >= e->alloc) {
 		e->alloc += 16;
 		nsym = c_malloc(e->alloc * sizeof(char *));
-		nty = c_malloc(e->alloc);
 		nptr = c_malloc(e->alloc * sizeof(void *));
 		
 		for (i = 0; i < e->alloc - 16; ++i) {
 			nsym[i] = e->sym[i];
-			nty[i] = e->ty[i];
 			nptr[i] = e->ptr[i];
 		}
 
 		e->sym = nsym;
-		e->ty = nty;
 		e->ptr = nptr;
 	}
 
-	/* Copy symbol string to the envrionment
-	 * structure */
+	/* Copy symbol string */
 	e->sym[c] = c_malloc(strlen(sym) + 1);
 	strcpy(e->sym[c], sym);
 
-	/* Write type, pointer data to the
-	 * environment structure */
-	e->ty[c] = ty;
+	/* Copy object pointer */
 	e->ptr[c] = p;
 }
 
 /*
  * Modify a symbol's value, as in set!
  */
-void env_set(env_t *e, char *sym, int ty, void *p)
+void env_set(env_t *e, char *sym, void *p)
 {
 	env_ref_t ref = lookup(e, sym);
 	char *tmp;
@@ -139,10 +131,10 @@ void env_set(env_t *e, char *sym, int ty, void *p)
 		code_error();
 	}
 
+	/* Copy symbol string */
 	(ref.e)->sym[ref.i] = c_malloc(strlen(sym) + 1);
 	strcpy((ref.e)->sym[ref.i], sym);
 
-	(ref.e)->ty[ref.i] = ty;
-
+	/* Copy object pointer */
 	(ref.e)->ptr[ref.i] = p;
 }

@@ -151,7 +151,6 @@ void marksweep(env_t *e)
 
 	do_mark(e, 1);
 	do_mark(e->sym, 1);
-	do_mark(e->ty, 1);
 	do_mark(e->ptr, 1);
 
 	for (i = 0; i < e->count; ++i)

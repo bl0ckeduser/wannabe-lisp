@@ -381,7 +381,6 @@ tco_iter:
 					goto bad_let;
 				env_add(ne, 
 					l->c[1]->c[i]->c[0]->head,
-					REF, 
 					call_eval(l->c[1]->c[i]->c[1], env));
 			}
 	
@@ -403,7 +402,7 @@ bad_let:
 		if (l->type == LIST && !strcmp(l->c[0]->head, "define")) {
 			/* (define SYMBOL EXP) */
 			if (l->cc == 3 && l->c[1]->type == SYMBOL) {
-				env_add(env, l->c[1]->head, REF,
+				env_add(env, l->c[1]->head,
 					(ev = call_eval(l->c[2], env)));
 				close_frame();
 				return ev;
@@ -423,7 +422,7 @@ bad_let:
 				add_child(nw, argl);
 				for (j = 2; j < l->cc; ++j)
 					add_child(nw, l->c[j]);
-				env_add(env, proc->head, REF,
+				env_add(env, proc->head,
 					nw);
 				close_frame();
 				return nw;
@@ -441,7 +440,7 @@ bad_let:
 				code_error();
 			}
 
-			env_set(env, l->c[1]->head, REF,
+			env_set(env, l->c[1]->head,
 				(ev = call_eval(l->c[2], env)));
 	
 			close_frame();
@@ -614,7 +613,6 @@ bad_let:
 			 * as in (lambda x x) */
 			if (proc->c[0]->type == SYMBOL) {
 				env_add(ne, proc->c[0]->head,
-					REF, 
 					args->type == LIST ? makelist(args) : args);
 			}
 			else for (i = 0; i < proc->c[0]->cc; ++i) {
@@ -629,7 +627,7 @@ bad_let:
 					for (j = i; j < args->cc; ++j)
 						add_child(nw, args->c[j]);
 					env_add(ne, proc->c[0]->c[i + 1]->head,
-						REF, makelist(nw));
+						makelist(nw));
 					break;
 				} else {
 					/* general case */
@@ -639,7 +637,7 @@ bad_let:
 						goto afail;
 
 					env_add(ne, proc->c[0]->c[i]->head,
-						REF, args->c[i]);
+						args->c[i]);
 				}
 			}
 	
