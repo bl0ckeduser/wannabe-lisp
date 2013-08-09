@@ -8,7 +8,7 @@
  * Lots of ugly glue between the JS/HTML
  * code and the C code. It's basically
  * a mishmash of bits of `main.c' and
- * `cli.c', with lots of hacks to prevent
+ * `linereader.c', with lots of hacks to prevent
  * strange issues that occur with emscripten.
  */
 

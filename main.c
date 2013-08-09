@@ -87,8 +87,8 @@ int main(int argc, char **argv)
 		if (save_mode)
 			fprintf(save_file, "\n");
 
-		/* Read a syntactic, i.e. parenthesis-complete
-		 * "line". do_read(), owned by `cli.c', waits
+		/* Read a syntactic/logical, i.e. parenthesis-complete
+		 * "line". do_read(), owned by `linereader.c', waits
 		 * for the user to close all parentheses even
 		 * if it takes several input-lines. */
 		if (!do_read(buf))
