@@ -3,11 +3,18 @@
 
 #include <setjmp.h>
 
+/* REPL stuff, see main.c */
 extern int interactive;
 extern jmp_buf repl_jmp;
+
+/* REPL logging */
 extern int save_mode;
 extern FILE *save_file;
 
+/*
+ * Types of objects. used by field `type'
+ * of `list_t'
+ */
 enum {
 	SYMBOL = 0,
 	NUMBER,
@@ -17,30 +24,50 @@ enum {
 	BOOL
 };
 
+/*
+ * Structure returned by lookup()
+ * routine in file environment.c
+ *
+ * Not sure why this isn't simply
+ * replaced by the pointer e + i
+ * aka &e[i]
+ */
 typedef struct env_ref {
 	struct env* e;
 	int i;
 } env_ref_t;
 
+/*
+ * Environment data structure
+ */
 typedef struct env {
-	int count;
-	int alloc;
-	char **sym;
-	void **ptr;
-	struct env *father;
+	int count;		/* number of symbols */
+	int alloc;		/* allocated space for symbols */
+	char **sym;		/* symbol names */
+	void **ptr;		/* symbol bound-object pointers */
+	struct env *father;	/* father environment */
 } env_t;
 
-typedef struct list {
-	char* head;
-	int type;
-	int val;
-	int cc;
-	int ca;
-	env_t *closure;
-	struct list **c;
-} list_t;
-
+/* 
+ * The global environment 
+ * (must be defined below env_t definition,
+ * at least with my compiler ... 
+ */
 extern env_t *global;
+
+/*
+ * List data structure
+ */
+typedef struct list {
+	char* head;		/* used for symbol names */
+	int type;		/* type; see enum at top of file */
+	int val;		/* used for bools (?) and ints */
+	env_t *closure;		/* closure environment (for procedures) */
+
+	int cc;			/* child count (for lists/conses) */
+	int ca;			/* child allocation */
+	struct list **c;	/* array of children */
+} list_t;
 
 extern list_t* eval(list_t *l, env_t *env);
 extern void add_child(list_t *parent, list_t* child);
