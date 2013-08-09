@@ -23,72 +23,6 @@ static char *buf2;
 
 /* ====================================================== */
 
-/*
- * Evalute each member of a list, in-place
- */
-void eatco_evlist(list_t* l, env_t *env)
-{
-	int i = 0;
-	for (i = 0; i < l->cc; ++i)
-		l->c[i] = call_eval(l->c[i], env);
-}
-
-/* ====================================================== */
-
-/* 
- * (1 2 3 4)
- * => (1 . (2 . (3 . (4 . NIL))))
- * 
- * The former form is strictly an
- * internal representation, which
- * is easier to build and to 
- * parse to. 
- *
- * Lisp is supposed to use the
- * latter "car/cdr" form. So, 
- * before any list is actually used,
- * it gets transformed thusly.
- *
- * Note that the reverse routine
- * `cons2list' is defined in 
- * util.c
- */
-list_t* makelist(list_t* argl)
-{
-	list_t *nw, *nw2, *nw3;
-	list_t *cons;
-	int i;	
-
-	nw3 = nw = new_list();
-	nw->type = CONS;
-	for (i = 0; i < argl->cc; ++i) {
-		/* Recursive application is necessary 
-	 	 * so as to ensure cases like:
-		 * 		]=> (caadr '(1 (1 2)))
-		 * 		1	
-		 */
-		if (argl->c[i]->type == LIST) {
-			cons = makelist(argl->c[i]);
-			add_child(nw, cons);
-		} else
-			add_child(nw, argl->c[i]);
-		if ((i + 1) < argl->cc) {
-			nw2 = new_list();
-			nw2->type = CONS;
-			add_child(nw, nw2);
-			nw = nw2;
-		} else {
-			/* put in a nil at the end;
-			 * it is understood as end-of-list
-			 * marker */
-			add_child(nw, mksym("NIL"));
-		}
-	}
-	return nw3;
-}
-
-/* ====================================================== */
-
 /* 
  * The purpose of this code is to record the greatest
  * evaluation depth, or number of nested eval calls,
@@ -228,7 +162,7 @@ tco_iter:
 			argl->type = LIST;
 			for (i = 2; i < l->cc; ++i)
 				add_child(argl, l->c[i]);
-			eatco_evlist(argl, env);
+			evlist(argl, env);
 			nw = cons2list(call_apply(call_eval(mksym("append"), env), argl));
 			TCO_apply(call_eval(l->c[1], env), nw);
 		}
@@ -542,7 +476,7 @@ bad_let:
 				add_child(argl, l->c[i]);
 
 			/* evaluate arguments */
-			eatco_evlist(argl, env);
+			evlist(argl, env);
 
 			/* evaluate procedure */
 			proc = call_eval(l->c[0], env);

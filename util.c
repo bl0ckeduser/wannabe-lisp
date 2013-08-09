@@ -6,6 +6,74 @@
 
 /* In this file: misc. helper routines.. */
 
+/* ====================================================== */
+
+/* 
+ * (1 2 3 4)
+ * => (1 . (2 . (3 . (4 . NIL))))
+ * 
+ * The former form is strictly an
+ * internal representation, which
+ * is easier to build and to 
+ * parse to. 
+ *
+ * Lisp is supposed to use the
+ * latter "car/cdr" form. So, 
+ * before any list is actually used,
+ * it gets transformed thusly.
+ *
+ * Note that the reverse routine
+ * `cons2list' is defined in 
+ * util.c
+ */
+list_t* makelist(list_t* argl)
+{
+	list_t *nw, *nw2, *nw3;
+	list_t *cons;
+	int i;	
+
+	nw3 = nw = new_list();
+	nw->type = CONS;
+	for (i = 0; i < argl->cc; ++i) {
+		/* Recursive application is necessary 
+	 	 * so as to ensure cases like:
+		 * 		]=> (caadr '(1 (1 2)))
+		 * 		1	
+		 */
+		if (argl->c[i]->type == LIST) {
+			cons = makelist(argl->c[i]);
+			add_child(nw, cons);
+		} else
+			add_child(nw, argl->c[i]);
+		if ((i + 1) < argl->cc) {
+			nw2 = new_list();
+			nw2->type = CONS;
+			add_child(nw, nw2);
+			nw = nw2;
+		} else {
+			/* put in a nil at the end;
+			 * it is understood as end-of-list
+			 * marker */
+			add_child(nw, mksym("NIL"));
+		}
+	}
+	return nw3;
+}
+
+/* ====================================================== */
+
+/*
+ * Evalute each member of a list, in-place
+ */
+void evlist(list_t* l, env_t *env)
+{
+	int i = 0;
+	for (i = 0; i < l->cc; ++i)
+		l->c[i] = call_eval(l->c[i], env);
+}
+
+/* ====================================================== */
+
 /*
  * convert back from proper car/cdr 
  * list form to internal representation
@@ -28,6 +96,8 @@ list_t *cons2list(list_t *c)
 	}
 	return nw;
 }
+
+/* ====================================================== */
 
 void load_code_from_file(char *fil)
 {
@@ -69,6 +139,8 @@ void load_code_from_file(char *fil)
 	}
 }
 
+/* ====================================================== */
+
 void error_msg(char *s)
 {
 #ifdef JS_GUI
@@ -78,6 +150,8 @@ void error_msg(char *s)
 	printf("Error: %s\n", s);
 #endif
 }
+
+/* ====================================================== */
 
 void fatal_error_msg(char *s)
 {
@@ -89,6 +163,8 @@ void fatal_error_msg(char *s)
 #endif
 }
 
+/* ====================================================== */
+
 /* 
  * Determine whether a line of code
  * is empty or is a comment 
@@ -99,6 +175,8 @@ int check_comment(char *s)
 		++s;
 	return *s == ';';
 }
+
+/* ====================================================== */
 
 int code_error()
 {
@@ -124,12 +202,16 @@ int code_error()
 	}
 }
 
+/* ====================================================== */
+
 list_t *copy_list(list_t *l)
 {
 	list_t *new = c_malloc(sizeof(list_t));
 	memcpy(new, l, sizeof(list_t));
 	return new;
 }
+
+/* ====================================================== */
 
 /* Remove final newline from a string */
 void strip_nl(char *s)
@@ -142,6 +224,8 @@ void strip_nl(char *s)
 		++s;
 	}
 }
+
+/* ====================================================== */
 
 /* 
  * Do a malloc() and tell the
@@ -161,6 +245,8 @@ void *c_malloc(long size)
 	return ptr;
 }
 
+/* ====================================================== */
+
 /* 
  * Make a new symbol object having
  * `s' as its name-value
@@ -173,6 +259,8 @@ list_t* mksym(char *s)
 	return sl;
 }
 
+/* ====================================================== */
+
 /* Make a new boolean object ... */
 list_t* makebool(int cbool)
 {
@@ -181,6 +269,8 @@ list_t* makebool(int cbool)
 	b->val = cbool;
 	return b;
 }
+
+/* ====================================================== */
 
 int validname(char c)
 {
@@ -192,7 +282,11 @@ int validname(char c)
 	&&	c != '\n';
 }
 
+/* ====================================================== */
+
 int isnum(char c)
 {
 	return c >= '0' && c <= '9';
 }
+
+/* ====================================================== */
