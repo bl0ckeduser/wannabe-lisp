@@ -99,16 +99,6 @@ tco_iter:
 		 * part of the evaluator where symbols are evaluated */
 		/* ===================================================== */
 
-#ifdef JS_GUI
-		/* former debug crap that I won't remove for fear of it making
-		 * emscripten unhappy */
-		buf = malloc(1024);
-		*buf = 0;
-		sprintf(buf, "eval: %p; %d; %s; %d", l, l->cc, l->type == SYMBOL ? l->head : "-", l->val);
-		puts(buf);
-		free(buf);
-#endif
-
 		/*
 		 * It is necessary to deal with special forms 
 		 * (lambda, define, ...) first. 

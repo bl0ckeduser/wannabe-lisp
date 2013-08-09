@@ -104,8 +104,6 @@ int handle_gui_line(char *lin)
 	extern int do_setup(int waste);
 	int ind;
 
-	printf("'%s'\n", lin);
-
 	/* initialize if necessary */
 	if (!ready)
 		do_setup(0);
@@ -116,10 +114,10 @@ int handle_gui_line(char *lin)
 			--iter;
 	}
 	else {
-		printf("strcat '%s' to '%s'\n", lin, buf);
+		/* add line to buffer */
 		strcat(buf, lin);
 		strcat(buf, " ");
-		printf("parencheck: '%s'\n", buf);
+
 		/* check paren balance */
 		bal = 0;
 		for (p = buf; *p; ++p) {
@@ -134,15 +132,12 @@ int handle_gui_line(char *lin)
 			error_msg("Botched syntax");
 			code_error();
 		}
-
-		printf("pcheck => %d\n", bal);
 	}
 
-	/* if expression is done, do eval-print */
+	/* if expression is done, do eval-print on buffer */
 	if (bal == 0 && strlen(buf) >= 1) {
 		/* parse input into a tree */
 		expr = new_list();
-		printf("build: '%s'\n", buf);
 		build(expr, buf);
 
 		/* eval and print */
