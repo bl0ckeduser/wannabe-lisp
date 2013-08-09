@@ -21,40 +21,6 @@
 static char *buf;
 static char *buf2;
 
-/* ====================================================== */
-
-/* 
- * The purpose of this code is to record the greatest
- * evaluation depth, or number of nested eval calls,
- * that occurs while evaluating a given expression.
- *
- * This functionality is made available through the 
- * special function  "max-space", which is fully described 
- * in the README file. The test file "tco-test.txt" demoes
- * this functionality by applying "max-space" to a small
- * variety of procedures, some of which should be TCOed.
- *
- * The purpose of all this is to test whether TCO is working.
- */
-
-int frames = 0;
-int frames_usage_max = 0;
-
-void new_frame()
-{
-	++frames;
-	if (frames > frames_usage_max) {
-		frames_usage_max = frames;
-	}
-}
-
-void close_frame()
-{
-	--frames;
-}
-
-/* ====================================================== */
-
 /*
  * The following are macros that emulate
  * the syntax of function calls but that
@@ -79,9 +45,7 @@ void close_frame()
 		goto tco_iter;			\
 	}					\
 
-/* ====================================================== */
-
-/* And now, at long last, the eval/apply combined routine */
+/* And now, the eval/apply combined routine */
 
 list_t* eval_apply_tco(
 	int oper, 				/* 0: eval, otherwise, apply */
@@ -102,6 +66,12 @@ list_t* eval_apply_tco(
 	env_t *env = a_env;
 	list_t *proc = a_proc;
 	list_t *args = a_args;
+
+	/* TCO debugging stuff; owned by `tco_debug.c' */
+	extern int frames;
+	extern int frames_usage_max;
+	extern void new_frame();
+	extern void close_frame();
 
 	/* 
 	 * FIXME: apparently the proper Scheme behaviour
@@ -595,5 +565,4 @@ afail:
 	close_frame();
 	return NULL;
 }
-
 
