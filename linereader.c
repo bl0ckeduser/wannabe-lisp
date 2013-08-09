@@ -4,7 +4,7 @@
 #include "wannabe-lisp.h"
 
 /* 
- * The routine `do_read_file(buf, f, silent)'
+ * The routine `do_read_file(buf, f, repl)'
  * reads one `logical line' from the file 
  * handle `f' and writes it to the buffer `buf'.
  * 
@@ -21,19 +21,13 @@
  * reader converts to a single logical line:
  * (define (display-nl x) (display x) (newline))
  *
- * If `silent' is set to 0, the reader acts
+ * If the `repl' parameter is set, the reader acts
  * in "friendly CLI" mode (Python-style),
  * printing prompts, performing auto-indentation,
  * etc.
  */
 
-/* do_read() uses stdin as the file... */
-int do_read(char *buf)
-{
-	return do_read_file(buf, stdin, 0);
-}
-
-int do_read_file(char *buf, FILE *f, int silent)
+int do_read_file(char *buf, FILE *f, int repl)
 {
 	int bal = -1;
 	char tmp[1024];
@@ -46,7 +40,7 @@ int do_read_file(char *buf, FILE *f, int silent)
 	 * are unclosed parentheses */
 	while (bal) {
 		/* Handle prompts/autoindent in interactive mode */
-		if (interactive && !silent) {
+		if (repl) {
 			/* If i = 0, print a new logical-line prompt */
 			if (!i++)
 				printf("]=> ");
@@ -80,7 +74,8 @@ int do_read_file(char *buf, FILE *f, int silent)
 		 */
 		if (!fgets(tmp, 1024, f)) {
 			printf("\n");
-			if (interactive && !silent) {
+			/* ???? */
+			if (repl) {
 				return 0;
 			}
 			else
@@ -92,7 +87,7 @@ int do_read_file(char *buf, FILE *f, int silent)
 		 * if logging and interactive (repl) mode 
 		 * are enabled 
 		 */
-		if (save_mode && !silent && *tmp != '\n') {
+		if (save_mode && repl && *tmp != '\n') {
 			fflush(save_file);
 			fprintf(save_file, "%s", tmp);
 		}
@@ -115,7 +110,7 @@ int do_read_file(char *buf, FILE *f, int silent)
 
 		/* Skip empty lines, parser hates them */
 		if (*tmp == '\n') {
-			if (interactive && !silent) {
+			if (repl) {
 				/*
 				 * An empty line given on a "]=>" prompt
 				 * leads to a new "]=>" prompt afterwards,

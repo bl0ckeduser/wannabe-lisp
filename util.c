@@ -47,7 +47,7 @@ void load_code_from_file(char *fil)
 		}
 		while (1) {
 			*buf = 0;	
-			do_read_file(buf, prefix, 1);
+			do_read_file(buf, prefix, 0 /* no REPL CLI */);
 			if (!*buf || feof(prefix))
 				break;
 			if (*buf && !check_comment(buf)) {

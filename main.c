@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 		 * "line". do_read(), owned by `linereader.c', waits
 		 * for the user to close all parentheses even
 		 * if it takes several input-lines. */
-		if (!do_read(buf))
+		if (!do_read_file(buf, stdin, interactive))
 			break;
 #endif
 
