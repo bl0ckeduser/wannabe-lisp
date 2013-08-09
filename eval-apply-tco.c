@@ -365,7 +365,8 @@ tco_iter:
 		/* (let ((v1 e1) (v2 e2) ... (vN eN)) exp1 exp2 ... expN) */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "let")) {
 			/* (quite similar to a lambda application,
-			 *  as in apply.c) */
+			 *  as in the `apply' routine at the bottom
+			 *  of this file) */
 
 			if (l->cc < 3)
 				goto bad_let;
@@ -463,7 +464,7 @@ bad_let:
 				code_error();
 			}
 
-			/* return A or B depending upon predicate */
+			/* evaluate and return A or B depending upon predicate */
 			if (pred->val) {
 				TCO_eval(l->c[2], env);
 			} else {
@@ -520,8 +521,11 @@ bad_let:
 				close_frame();
 				return l->c[1];
 			} else if (l->c[1]->type == LIST) {
-				/* cons-ify */
 				close_frame();
+				/* 
+				 * Convert from internal linear representation
+				 * to lisp car/cdr linked list form 
+				 */
 				return makelist(l->c[1]);
 			}
 		}
@@ -552,6 +556,8 @@ bad_let:
 		if (l->type == SYMBOL) {
 			/* look up, climbing up environment chain */
 			er = lookup(env, l->head);
+
+			/* lookup failed */
 			if (er.e == NULL) {
 				buf = malloc(1024);
 				sprintf(buf, "unbound variable `%s'", l->head);
