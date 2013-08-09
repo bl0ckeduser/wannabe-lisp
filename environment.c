@@ -10,12 +10,21 @@ env_t* new_env(void)
 {
 	env_t *e = c_malloc(sizeof(env_t));
 
-	e->count = 0;
+	e->count = 0;		/* number of symbols */
+	e->father = NULL;	/* father environment */
+
+	/* 
+	 * e->sym, e->ty, e->ptr are dynamic arrays,
+	 * given an initial allocation of 8 elements
+	 *
+	 * e->sym:	symbol name
+	 * e->ptr:	pointer to the data bound to the symbol
+	 * e->ty:	useless
+	 */
 	e->alloc = 8;
 	e->sym = c_malloc(e->alloc * sizeof(char *));
 	e->ty = c_malloc(e->alloc * sizeof(char));
 	e->ptr = c_malloc(e->alloc * sizeof(void *));
-	e->father = NULL;
 
 	return e;
 }
@@ -43,9 +52,10 @@ env_ref_t lookup(env_t *e, char *sym)
 	}
 
 	/* 
-	 * Otherwise try father env,
-	 * falling back on the default
-	 * error-value {0, NULL} 
+	 * Otherwise (recursively) try
+	 * the father environment, else
+	 * fall back on the default
+	 * error-value of {0, NULL} 
 	 */
 	ret.i = 0;
 	ret.e = NULL;
@@ -77,6 +87,13 @@ void env_add(env_t *e, char *sym, int ty, void *p)
 		return;
 	}
 
+	/* 
+	 * Ugly run-of-the-mill dynamic list expansion,
+	 * (the environment structure is a bunch of arrays),
+	 * with the particularity that realloc is not
+	 * used because I can't figure out how to use
+	 * it properly in conjunction with the GC 
+	 */
 	if (++(e->count) >= e->alloc) {
 		e->alloc += 16;
 		nsym = c_malloc(e->alloc * sizeof(char *));
@@ -94,11 +111,14 @@ void env_add(env_t *e, char *sym, int ty, void *p)
 		e->ptr = nptr;
 	}
 
+	/* Copy symbol string to the envrionment
+	 * structure */
 	e->sym[c] = c_malloc(strlen(sym) + 1);
 	strcpy(e->sym[c], sym);
 
+	/* Write type, pointer data to the
+	 * environment structure */
 	e->ty[c] = ty;
-
 	e->ptr[c] = p;
 }
 
@@ -110,6 +130,7 @@ void env_set(env_t *e, char *sym, int ty, void *p)
 	env_ref_t ref = lookup(e, sym);
 	char *tmp;
 
+	/* If the reference doesn't exist, abort */
 	if (ref.e == NULL) {
 		tmp = malloc(1024);
 		sprintf(tmp, "unbound variable `%s'", sym);
