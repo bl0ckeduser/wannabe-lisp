@@ -84,7 +84,6 @@ extern void install_primitives(env_t *env);
 
 extern char* build(list_t* l, char *expr);
 extern int isnum(char c);
-extern int validname(char c);
 extern list_t* mksym(char *s);
 extern void *c_malloc(long size);
 extern void *c_realloc(void *ptr, long size);
