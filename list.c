@@ -19,12 +19,22 @@ list_t *new_list(void)
 {
 	list_t* nl = c_malloc(sizeof(list_t));
 	nl->type = SYMBOL;	/* default, see others in `wannabe-lisp.h' */
+	
+	/* val: integer storage for numbers and bools */
 	nl->val = 0;
-	nl->ca = 0;
-	nl->cc = 0;
+
+	/* head: string used for symbol names
+	 * (initialized to "") */
 	nl->head = c_malloc(32);
 	nl->head[0] = 0;
+	
+	/* c: children array
+	 * ca: children array allocation count
+	 * cc: children array member count */
 	nl->c = NULL;
+	nl->ca = 0;	
+	nl->cc = 0;
+	
 	return nl;
 }
 
@@ -34,9 +44,12 @@ void add_child(list_t *parent, list_t* child)
 	list_t **new;
 	int i;
 
+	/* expand children array if necessary */
 	if (++(parent->cc) >= parent->ca) {
 		parent->ca += 16;
 	
+		/* realloc() is not used because i cannot figure
+		 * out how to make it work with the gc */
 		new = c_malloc(parent->ca * sizeof(list_t *));
 
 		for (i = 0; i < parent->ca - 16; ++i)

@@ -23,9 +23,8 @@ struct {
 	{NULL, NULL}};
 
 /*
- * This is the parsing routine. 
- * It's recursive, and hand-written,
- * and ugly. But it's been debugged.
+ * Parsing fuction
+ * (recursive)
  */
 char* build(list_t* l, char *expr)
 {
@@ -54,7 +53,8 @@ char* build(list_t* l, char *expr)
 		}
 	}
 
-	if (*p == '(') {	/* list: (... */
+	/* Parse a list: (... */
+	if (*p == '(') {
 		++p;
 		l->type = LIST;
 		l->cc = 0;
@@ -77,7 +77,7 @@ char* build(list_t* l, char *expr)
 			code_error();
 		}
 	}
-	/* number */
+	/* Parse a number: 123, -123 */
 	else if (isnum(*p) || (*p == '-' && isalnum(*(p+1)))) {	
 		q = tok;
 		if (*p == '-') {
@@ -98,7 +98,9 @@ char* build(list_t* l, char *expr)
 		l->type = NUMBER;
 		sscanf(tok, "%d", &(l->val));
 		l->val *= sgn;
-	} else {	/* symbol */
+	/* anything else is probably a symbol */
+	} else {
+		/* well maybe there's some whitespace first */
 		while (*p == ' ' || *p == '\t')
 			++p;
 		q = tok;
@@ -116,11 +118,9 @@ char* build(list_t* l, char *expr)
 	}
 
 	/*
-	 * Before returning, I must make sure to free
-	 * a buffer. ``Why not use a stack-allocated
-	 * buffer'', you may ask. And to this I answer
-	 * that emscripten (see `README-GUI' file for details)
-	 * hates these and behaves unpredictably when I use them.
+	 * "tok" is a heap buffer, so it must be freed.
+	 * i'm not using a stack one because emscripten
+	 * behaves erratically when these are used.
 	 */
 final:
 	free(tok);

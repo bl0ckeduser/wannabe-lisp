@@ -110,6 +110,9 @@ int handle_gui_line(char *lin)
 
 	/* ignore empty lines, comments */
 	if (!*lin || check_comment(lin)) {
+		/* ensure a new "]=>" prompt is given
+		 * after a comment is typed 
+		 * on a "]=>" prompt */
 		if (iter == 1)
 			--iter;
 	}
@@ -134,7 +137,8 @@ int handle_gui_line(char *lin)
 		}
 	}
 
-	/* if expression is done, do eval-print on buffer */
+	/* If all parentheses have been closed, 
+	 * do eval-print on buffer */
 	if (bal == 0 && strlen(buf) >= 1) {
 		/* parse input into a tree */
 		expr = new_list();
@@ -147,12 +151,16 @@ int handle_gui_line(char *lin)
 
 		/* clean up for the next iteration */
 		gc();
+
 		/* I have to do this reallocation thing
 		 * for some reason,
 		 * else the emscripten-ified code fucks up */
 		free(buf);
 		buf = malloc(1024 * 1024 * 2);
 		sprintf(buf, "");
+		
+		/* Reset prompt counter, parentheses 
+		 * balance register */
 		iter = 0;
 		bal = -1;
 	}
@@ -161,6 +169,7 @@ int handle_gui_line(char *lin)
 
 	/* Print prompt */
 	if (!iter++)
+		/* new logical line */
 		c_writeback("]=> ");
 	else {
 		/* new user line, missing parentheses */
@@ -188,6 +197,10 @@ int handle_gui_line(char *lin)
 	return 0;
 }
 
+/*
+ * Allocate heap memory,
+ * setup debugmodule, etc.
+ */
 int do_setup(int waste)
 {
 	c_writeback_nl("wannabe-lisp GUI mode has been started");
@@ -224,7 +237,6 @@ int do_setup(int waste)
 	load_code_from_file("prefix.txt");
 
 	c_writeback_nl("ready.");
-
 	ready = 1;
 
 	sprintf(buf, "");
@@ -232,7 +244,8 @@ int do_setup(int waste)
 	c_writeback("]=> ");
 	++iter;
 
-	/* clear debug goo from primitives/prefix installation */
+	/* clear debug goo originating 
+	 * from primitives/prefix installation */
 	stacktracer_reset();
 
 	return 0;

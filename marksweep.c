@@ -8,6 +8,20 @@
  * mark-sweep garbage collector, coded based on the
  * example and explanations in the SICP video series.
  */
+ 
+/* A more sophisticated approach, perhaps
+ * involving marking and unmarking things at runtime
+ * and calling gc() more frequently, will be required
+ * to avoid leaks such as in:
+ *
+ *	(define (loop n)
+ *	  (if (= n 0)
+ *	 		'derp
+ *	 		(begin
+ *			  (list 1 2 3 4 5 6 7 8 9 10)
+ *			  (loop (- n 1)))))
+ *
+ */
 
 void **ptrs;
 char* mark;
@@ -45,6 +59,7 @@ void do_mark(void* p, int m)
 {
 	int i;
 
+	/* Don't mark NULL */
 	if (!p)
 		return;
 
@@ -69,19 +84,6 @@ void gc()
 	/* mark - this is the crucial step where everything
 	 * still recursively visible starting from the
 	 * global environment gets marked as non-garbage.
-	 *
-	 * FIXME: a more sophisticated approach, perhaps
-	 * involving marking and unmarking things at runtime
-	 * and calling gc() more frequently, will be required
-	 * to avoid leaks such as in:
-	 *
-	 *	(define (loop n)
-	 *	  (if (= n 0)
-	 *	 		'derp
-	 *	 		(begin
-	 *			  (list 1 2 3 4 5 6 7 8 9 10)
-	 *			  (loop (- n 1)))))
-	 *
 	 */
 	marksweep(global);
 
@@ -119,46 +121,58 @@ void gc()
 }
 
 /*
- * Mark the struct fields of a list object,
- * (as well as the object itself),
- * and recurse onto its list and environment
- * (if it's a closure) children.
+ * Mark a list object and related
+ * children
  */
 void marksweep_list(list_t *l)
 {
 	int i;
 
+	/* mark the list itself */
 	do_mark(l, 1);
+	
+	/* mark the list_t struct-fields */
 	do_mark(l->c, 1);
 	do_mark(l->head, 1);
 
+	/* lists, closures, and conses have children;
+	 * recurse onto these */
 	if (l->type == LIST || l->type == CLOSURE || l->type == CONS)
 		for (i = 0; i < l->cc; ++i)
 			marksweep_list(l->c[i]);
 
+	/* closures are associated with environments */
 	if (l->type == CLOSURE && l->closure != global)
 		marksweep(l->closure);
 }
 
 /*
- * Mark an environment object as well as 
- * as its struct-fields. Recurse onto its list
- * and environment relations, if any.
+ * Mark an environment object and
+ * related children
  */
 void marksweep(env_t *e)
 {
 	int i;
 
+	/* mark environment itself */
 	do_mark(e, 1);
+	
+	/* mark env_t struct-fields */
 	do_mark(e->sym, 1);
 	do_mark(e->ptr, 1);
 
+	/* mark symbol names */
 	for (i = 0; i < e->count; ++i)
 		do_mark(e->sym[i], 1);
 
+	/* mark symbol objects */
 	for (i = 0; i < e->count; ++i)
 		marksweep_list(e->ptr[i]);
 
+	/* mark father environment, if any.
+	 * do not remark global environment
+	 * because it already gets marked
+	 * first when gc() is called */
 	if (e->father && e->father != global)
 		marksweep(e->father);
 }
