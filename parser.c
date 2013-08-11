@@ -37,7 +37,10 @@ int symbol_name_char(char c)
 /*
  * Recursive parsing function.
  * Returns pointer to last-parsed character
- * in `expr'.
+ * in `expr'. 
+ * 
+ * `l' has to be allocated prior
+ * to calling build()
  */
 char* build(list_t* l, char *expr)
 {
@@ -54,7 +57,10 @@ char* build(list_t* l, char *expr)
 	tok = malloc(32);
 	p = expr;
 
-	/* Deal with abbreviations */
+	/* Deal with abbreviations
+	 * e.g. 'x => (quote x)
+	 * using the `abbrev' entry {"'", "quote"}
+	 */
 	for (i = 0; abbrev[i].shorthand; ++i) {
 		if (!strncmp(abbrev[i].shorthand, p, strlen(abbrev[i].shorthand))) {
 			child = new_list();
