@@ -1,0 +1,6 @@
+To edit lisp code in vim:
+
+:set lisp
+:set autoindent
+:set showmatch
+
