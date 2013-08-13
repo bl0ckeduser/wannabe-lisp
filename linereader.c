@@ -133,7 +133,7 @@ int do_read_file(char *buf, FILE *f, int repl)
 						printf(")");
 						strcat(buf, ")");
 						if (save_file)
-							fprintf(save_file, ")", tmp);
+							fprintf(save_file, ")");
 					}
 					if (save_file) {
 						fflush(save_file);
