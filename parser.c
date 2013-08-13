@@ -129,6 +129,11 @@ char* build(list_t* l, char *expr)
 		/* ======================================= */
 		/* Make the number object */
 		l->type = NUMBER;
+		/* 
+		 * Don't worry about the sscanf, the code above
+		 * already ensures `tok' does not overflow
+		 * `SYMBOL_NAME_MAXLEN' characters
+		 */
 		sscanf(tok, "%d", &(l->val));
 		l->val *= sgn;
 	/* Anything else is probably a symbol */
