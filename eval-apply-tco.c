@@ -374,7 +374,7 @@ bad_let:
 		 * (cond (p1 e11 ... e1N) (p2 e21 ... e2N) ... (pN eN1 .. eNN)) 
 		 * the special predicate-symbol `else' always matches
 		 */
-		if (l->type == LIST & l->cc >= 2 && l->c[0]->type == SYMBOL
+		if (l->type == LIST && l->cc >= 2 && l->c[0]->type == SYMBOL
 			&& !strcmp(l->c[0]->head, "cond")) {
 
 			for (i = 1; i < l->cc; ++i) {
