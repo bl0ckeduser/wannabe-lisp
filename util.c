@@ -278,3 +278,17 @@ int isnum(char c)
 }
 
 /* ====================================================== */
+
+/*
+ * Pointers must be freed when
+ * realloc() fails
+ */ 
+void* better_realloc(void *ptr, long size)
+{
+	void *tmp;
+	if (!(tmp = realloc(ptr, size)))
+		free(ptr);
+	return tmp;
+}
+
+/* ====================================================== */

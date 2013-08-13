@@ -118,4 +118,6 @@ extern void stacktracer_prebarf();
 extern void stacktracer_barf();
 extern void stacktracer_push_sym(char *symb, char *prnt);
 
+extern void* better_realloc(void *ptr, long size);
+
 #endif
