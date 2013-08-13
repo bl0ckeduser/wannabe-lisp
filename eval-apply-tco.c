@@ -485,7 +485,6 @@ bad_let:
 		/* ==================== APPLY =========================== */
 
 		env_t *ne;
-		list_t *last;
 		int i;
 
 		/* Primitive operation */

@@ -70,10 +70,8 @@ void env_add(env_t *e, char *sym, void *p)
 {
 	int c = e->count;
 	char **nsym;
-	char *nty;
 	void **nptr;
 	int i;
-	env_ref_t ref;
 
 	/* 
 	 * Check if the symbol that wants to

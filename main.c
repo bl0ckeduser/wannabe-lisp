@@ -21,11 +21,7 @@ int main(int argc, char **argv)
 {
 	char *buf = malloc(1024 * 512);
 	char out[1024];
-	char *p;
 	list_t *expr;
-	int i, c;
-	char *ptr, *old;
-	FILE *prefix;
 
 	/* Setup the debug-output-log module.
 	 * Must make sure to run this before running

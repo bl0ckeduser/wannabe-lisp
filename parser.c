@@ -46,11 +46,9 @@ char* build(list_t* l, char *expr)
 {
 	char *p, *q;
 	char *old;
-	int lambda = 0;
 	char* tok;
 	int sgn;
 	list_t* child;
-	list_t* child2;
 	int len;
 	int i;
 
