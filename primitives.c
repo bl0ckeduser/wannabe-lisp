@@ -76,7 +76,7 @@ list_t* do_prim_op(char *name, list_t *args)
 {
 	int i = 0;
 	int j;
-	int val;
+	int val = 0;
 	list_t *l1;
 	list_t* nl = c_malloc(sizeof(list_t));
 	char *buf;
@@ -255,7 +255,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	if (!strcmp(name, "null?")) {
 		return makebool(args->cc == 1 
 			&& (
-				(args->c[0]->type == SYMBOL && !strcmp(args->c[0]->head, "NIL")
+				((args->c[0]->type == SYMBOL && !strcmp(args->c[0]->head, "NIL"))
 				|| (args->c[0]->type == CONS && args->c[0]->cc == 0))));
 	}
 
@@ -276,7 +276,7 @@ list_t* do_prim_op(char *name, list_t *args)
 		/* check for null first */
 		j = args->cc == 1 
 		&& (
-			(args->c[0]->type == SYMBOL && !strcmp(args->c[0]->head, "NIL")
+			((args->c[0]->type == SYMBOL && !strcmp(args->c[0]->head, "NIL"))
 			|| (args->c[0]->type == CONS && args->c[0]->cc == 0)));
 		return makebool(!j  /* not null, then the rest */
 			&& args->cc == 1 && args->c[0]->type == CONS);

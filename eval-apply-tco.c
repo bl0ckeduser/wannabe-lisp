@@ -19,7 +19,6 @@
  */
 
 static char *buf;
-static char *buf2;
 
 /*
  * The following are macros that emulate
@@ -55,7 +54,7 @@ list_t* eval_apply_tco(
 	extern list_t *new_list();
 	env_ref_t er;
 	list_t *argl;
-	list_t *ev;
+	list_t *ev = NULL;
 	list_t *nw, *nw2, *nw3;
 	list_t *pred;
 	env_t *ne;

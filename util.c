@@ -127,7 +127,7 @@ void load_code_from_file(char *fil)
 
 				/* clean up for the next iteration */
 				gc();
-				sprintf(buf, "");
+				*buf = 0;
 			}
 		}
 		fclose(prefix);

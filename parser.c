@@ -78,7 +78,7 @@ char* build(list_t* l, char *expr)
 		/* ======================================= */
 		while (*p != ')' && *p) {
 			/* consume whitespace */
-			while (*p && *p == ' ' || *p == '\t')
+			while (*p && (*p == ' ' || *p == '\t'))
 				++p;
 			/* stop if there's nothing left now */
 			if (!*p)

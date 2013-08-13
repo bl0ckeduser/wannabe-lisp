@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 
 	/* Always good to initialize strings, otherwise strange
 	 * random garbage appears when you least expect it. */
-	sprintf(buf, "");
+	*buf = 0;
 
 	/* Create the global environment */
 	global = new_env();
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	 * (and also makes debug logs etc. available upon
 	 * request) */
 	if (setjmp(repl_jmp))
-		sprintf(buf, "");
+		*buf = 0;
 	stacktracer_reset();
 
 	/* This `while' is the REPL */
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 		 * and clean up `expr', which is the structure
 		 * to which input gets parsed 
 		 */
-		sprintf(buf, "");
+		*buf = 0;
 		expr = new_list();
 
 		/* The flag GC_STRESS_TEST causes the program

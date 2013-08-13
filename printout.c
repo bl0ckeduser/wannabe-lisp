@@ -51,7 +51,7 @@ void printout_iter(list_t* l, int d, char *out)
 		sprintf(buf, ")");
 		strcat(out, buf);
 	} else if (l->type == CLOSURE) {
-		sprintf(buf, "#<CLOSURE:%p>", l->closure);
+		sprintf(buf, "#<CLOSURE:%p>", (void *)l->closure);
 		strcat(out, buf);
 	} else if (l->type == BOOL) {
 		if (l->val)
@@ -71,7 +71,7 @@ void printout_iter(list_t* l, int d, char *out)
 		 * or something. It's a mess.
 		 */
 		if (l->cc == 2
-			&& (l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL")
+			&& ((l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL"))
 				|| (l->c[1]->type == CONS && l->c[1]->cc == 0))) {
 			sprintf(buf, "(");
 			strcat(out, buf);
@@ -105,7 +105,7 @@ void printout_iter(list_t* l, int d, char *out)
 					l = l->c[1];
 				} else {
 					if (l->cc == 2
-						&& (l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL")
+						&& ((l->c[1]->type == SYMBOL && !strcmp(l->c[1]->head, "NIL"))
 						|| (l->c[1]->type == CONS && l->c[1]->cc == 0))) {
 						printout_iter(l->c[0], d + 1, out);
 					} else { 
