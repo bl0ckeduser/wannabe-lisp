@@ -125,6 +125,10 @@ void env_set(env_t *e, char *sym, void *p)
 	/* If the reference doesn't exist, abort */
 	if (ref.e == NULL) {
 		tmp = malloc(1024);
+		if (!tmp) {
+			error_msg("malloc failed");
+			code_error();
+		}
 		sprintf(tmp, "unbound variable `%s'", sym);
 		error_msg(tmp);
 		free(tmp);
