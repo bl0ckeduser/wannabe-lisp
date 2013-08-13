@@ -25,7 +25,7 @@ list_t *new_list(void)
 
 	/* head: string used for symbol names
 	 * (initialized to "") */
-	nl->head = c_malloc(32);
+	nl->head = c_malloc(SYMBOL_NAME_MAXLEN);
 	nl->head[0] = 0;
 	
 	/* c: children array
@@ -46,13 +46,13 @@ void add_child(list_t *parent, list_t* child)
 
 	/* expand children array if necessary */
 	if (++(parent->cc) >= parent->ca) {
-		parent->ca += 16;
+		parent->ca += ALLOC_EXPAND;
 	
 		/* realloc() is not used because i cannot figure
 		 * out how to make it work with the gc */
 		new = c_malloc(parent->ca * sizeof(list_t *));
 
-		for (i = 0; i < parent->ca - 16; ++i)
+		for (i = 0; i < parent->ca - ALLOC_EXPAND; ++i)
 			new[i] = parent->c[i];
 		
 		parent->c = new;

@@ -19,8 +19,8 @@ void final_clean_up()
 
 int main(int argc, char **argv)
 {
-	char *buf = malloc(1024 * 512);
-	char out[1024];
+	char *buf = malloc(LOGICAL_LINE_BUFSIZ);
+	char out[LINEBUFSIZ];
 	list_t *expr;
 
 	/* Setup the debug-output-log module.

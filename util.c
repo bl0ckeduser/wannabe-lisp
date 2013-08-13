@@ -106,11 +106,7 @@ void load_code_from_file(char *fil)
 	list_t* expr;
 
 	if ((prefix = fopen(fil, "r"))) {
-		/* one kilobyte per logical line is
-		 * sufficient except in the
-		 * most pathological crazy cases
-		 */ 
-		buf = malloc(1024);
+		buf = malloc(LOGICAL_LINE_BUFSIZ);
 		if (!buf) {
 			error_msg("load: malloc failed");
 			code_error();

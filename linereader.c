@@ -30,7 +30,7 @@
 int do_read_file(char *buf, FILE *f, int repl)
 {
 	int bal = -1;
-	char tmp[1024];
+	char tmp[LINEBUFSIZ];
 	char *p;
 	int i = 0;
 	int bl = 0;
@@ -72,7 +72,7 @@ int do_read_file(char *buf, FILE *f, int repl)
 		 * Read in a line of input. exit the routine
 		 * in various ways if this fails.
 		 */
-		if (!fgets(tmp, 1024, f)) {
+		if (!fgets(tmp, LINEBUFSIZ, f)) {
 			printf("\n");
 			/* ???? */
 			if (repl) {

@@ -14,13 +14,11 @@ env_t* new_env(void)
 	e->father = NULL;	/* father environment */
 
 	/* 
-	 * e->sym, e->ptr are dynamic arrays,
-	 * given an initial allocation of 8 elements
-	 *
+	 * Pair of dynamic arrays of same size:
 	 * e->sym:	symbol name
 	 * e->ptr:	pointer to the data bound to the symbol
 	 */
-	e->alloc = 8;
+	e->alloc = INITIAL_ENV_ALLOC;
 	e->sym = c_malloc(e->alloc * sizeof(char *));
 	e->ptr = c_malloc(e->alloc * sizeof(void *));
 
@@ -91,11 +89,11 @@ void env_add(env_t *e, char *sym, void *p)
 	 * it properly in conjunction with the GC 
 	 */
 	if (++(e->count) >= e->alloc) {
-		e->alloc += 16;
+		e->alloc += ALLOC_EXPAND;
 		nsym = c_malloc(e->alloc * sizeof(char *));
 		nptr = c_malloc(e->alloc * sizeof(void *));
 		
-		for (i = 0; i < e->alloc - 16; ++i) {
+		for (i = 0; i < e->alloc - ALLOC_EXPAND; ++i) {
 			nsym[i] = e->sym[i];
 			nptr[i] = e->ptr[i];
 		}
@@ -122,7 +120,7 @@ void env_set(env_t *e, char *sym, void *p)
 
 	/* If the reference doesn't exist, abort */
 	if (ref.e == NULL) {
-		tmp = malloc(1024);
+		tmp = malloc(SYMBOL_NAME_MAXLEN);
 		if (!tmp) {
 			error_msg("malloc failed");
 			code_error();

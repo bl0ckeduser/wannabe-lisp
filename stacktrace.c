@@ -64,12 +64,7 @@ void stacktracer_init()
 #endif
 	
 	debug_buff_written = 0;
-
-	/* two kilobytes should really suffice.
-	 * note that the example debuglog given in `README'
-	 * takes only about 283 bytes.
-	 */
-	debug_buff = malloc(1024 * 2);
+	debug_buff = malloc(ERROR_TEXT_BUFSIZ);
 	if (!debug_buff)
 		goto fail;
 	*debug_buff = 0;
@@ -88,17 +83,17 @@ void stacktracer_init()
 
 
 	for (i = 0; i < BUFLEN; ++i) {
-		stacktraces[i] = malloc(1024);
+		stacktraces[i] = malloc(ERROR_TEXT_BUFSIZ);
 		if (!(stacktraces[i]))
 			goto fail;
 	}
 
 	for (i = 0; i < SYMLEN; ++i) {
-		sym_name[i] = malloc(1024);
+		sym_name[i] = malloc(SYMBOL_NAME_MAXLEN);
 		if (!(sym_name[i]))
 			goto fail;
 
-		sym_print[i] = malloc(1024);
+		sym_print[i] = malloc(LINEBUFSIZ);
 		if (!(sym_print[i]))
 			goto fail;
 	}
@@ -141,7 +136,7 @@ void stacktracer_push(char *s)
 	return;
 #endif
 
-	if (strlen(s) > 1000)
+	if (strlen(s) > ERROR_TEXT_BUFSIZ)
 		return;
 	strcpy(stacktraces[ptr], s);
 	
@@ -159,7 +154,8 @@ void stacktracer_push_sym(char *symb, char *prnt)
 	return;
 #endif
 
-	if (strlen(symb) > 1000 || strlen(prnt) > 1000)
+	if (strlen(symb) > SYMBOL_NAME_MAXLEN 
+		|| strlen(prnt) > ERROR_TEXT_BUFSIZ)
 		return;
 
 	/* replace existing if possible */
@@ -266,7 +262,7 @@ void stacktracer_prebarf()
 
 	stacktracer_pushbuf("");
 	stacktracer_pushbuf("Symbols: ");
-	buff = malloc(4096);
+	buff = malloc(DEBUGLOG_BUFSIZ);
 	for (i = 0; i < sym; ++i) {
 		sprintf(buff, "%s: %s", sym_name[i], sym_print[i]);
 		stacktracer_pushbuf(buff);

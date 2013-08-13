@@ -52,7 +52,7 @@ char* build(list_t* l, char *expr)
 	int len;
 	int i;
 
-	tok = malloc(32);
+	tok = malloc(SYMBOL_NAME_MAXLEN);
 	p = expr;
 
 	/* Deal with abbreviations
@@ -114,7 +114,7 @@ char* build(list_t* l, char *expr)
 		len = 0;	/* used to check if symbolname is too long */
 		while (*p && isnum(*p)) {
 			*q++ = *p++;
-			if (++len >= 32) {
+			if (++len >= SYMBOL_NAME_MAXLEN) {
 				error_msg("numeral too long");
 				code_error();
 			}
@@ -136,7 +136,7 @@ char* build(list_t* l, char *expr)
 		len = 0;	/* used to check if symbolname is too long */
 		while (*p && symbol_name_char(*p)) {
 			*q++ = *p++;
-			if (++len >= 32) {
+			if (++len >= SYMBOL_NAME_MAXLEN) {
 				error_msg("symbol name too long");
 				code_error();
 			}

@@ -16,7 +16,7 @@ char *buf;
 void printout(list_t *l, char *s)
 {
 	extern void printout_iter(list_t* l, int d, char* s);
-	buf = malloc(128);
+	buf = malloc(LINEBUFSIZ);
 	printout_iter(l, 0, s);
 	free(buf);
 }

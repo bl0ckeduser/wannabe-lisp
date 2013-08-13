@@ -41,7 +41,7 @@ void add_ptr(void *p)
 {
 	/* expand list if needed */
 	if (++len >= alloc) {
-		alloc += 16;
+		alloc += ALLOC_EXPAND;
 		ptrs = better_realloc(ptrs, alloc * sizeof(void *));
 		mark = better_realloc(mark, alloc);
 		if (!ptrs || !mark) {

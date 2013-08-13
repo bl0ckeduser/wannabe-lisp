@@ -260,7 +260,7 @@ list_t* do_prim_op(char *name, list_t *args)
 	}
 
 	if (!strcmp(name, "display")) {
-		buf = malloc(1024);
+		buf = malloc(LINEBUFSIZ);
 		*buf = 0;
 		printout(args->c[0], buf);
 #ifdef JS_GUI

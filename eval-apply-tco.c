@@ -88,7 +88,7 @@ tco_iter:
 
 		/* == printout current evaluation-step to the debugger = */
 		if (l->type == LIST || l->type == CONS) {
-			buf = malloc(1024);
+			buf = malloc(ERROR_TEXT_BUFSIZ);
 			*buf = 0;
 			printout(l, buf);
 			stacktracer_push(buf);
@@ -451,7 +451,7 @@ bad_let:
 
 			/* lookup failed */
 			if (er.e == NULL) {
-				buf = malloc(1024);
+				buf = malloc(ERROR_TEXT_BUFSIZ);
 				sprintf(buf, "unbound variable `%s'", l->head);
 				error_msg(buf);
 				free(buf);
@@ -461,7 +461,7 @@ bad_let:
 			/* ================================
 			 * give the debugger's symbol table
 			 * a printout of the symbol's value */
-			buf = malloc(1024 * 2);
+			buf = malloc(ERROR_TEXT_BUFSIZ);
 			if (!buf) {
 				error_msg("malloc 2KB failed");
 				code_error();

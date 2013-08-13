@@ -3,6 +3,15 @@
 
 #include <setjmp.h>
 
+/* constants */
+#define INITIAL_ENV_ALLOC 	8
+#define ALLOC_EXPAND 		16
+#define SYMBOL_NAME_MAXLEN 	32
+#define ERROR_TEXT_BUFSIZ	1024 * 2
+#define LINEBUFSIZ			1024
+#define LOGICAL_LINE_BUFSIZ	1024 * 512
+#define DEBUGLOG_BUFSIZ		4096
+
 /* REPL stuff, see main.c */
 extern int interactive;
 extern jmp_buf repl_jmp;
