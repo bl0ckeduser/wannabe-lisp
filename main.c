@@ -22,6 +22,11 @@ int main(int argc, char **argv)
 	char *buf = malloc(LOGICAL_LINE_BUFSIZ);
 	char out[LINEBUFSIZ];
 	list_t *expr;
+	
+	if (!buf) {
+		printf("could not allocate a buffer\n");
+		exit(1);
+	}
 
 	/* Setup the debug-output-log module.
 	 * Must make sure to run this before running

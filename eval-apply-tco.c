@@ -89,6 +89,10 @@ tco_iter:
 		/* == printout current evaluation-step to the debugger = */
 		if (l->type == LIST || l->type == CONS) {
 			buf = malloc(ERROR_TEXT_BUFSIZ);
+			if (!buf) {
+				error_msg("malloc failed");
+				code_error();
+			}
 			*buf = 0;
 			printout(l, buf);
 			stacktracer_push(buf);
@@ -452,6 +456,10 @@ bad_let:
 			/* lookup failed */
 			if (er.e == NULL) {
 				buf = malloc(ERROR_TEXT_BUFSIZ);
+				if (!buf) {
+					error_msg("malloc() failed");
+					code_error();
+				}
 				sprintf(buf, "unbound variable `%s'", l->head);
 				error_msg(buf);
 				free(buf);

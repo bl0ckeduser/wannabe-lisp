@@ -17,6 +17,10 @@ void printout(list_t *l, char *s)
 {
 	extern void printout_iter(list_t* l, int d, char* s);
 	buf = malloc(LINEBUFSIZ);
+	if (!buf) {
+		error_msg("malloc failed");
+		code_error();
+	}
 	printout_iter(l, 0, s);
 	free(buf);
 }

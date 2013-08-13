@@ -261,6 +261,10 @@ list_t* do_prim_op(char *name, list_t *args)
 
 	if (!strcmp(name, "display")) {
 		buf = malloc(LINEBUFSIZ);
+		if (!buf) {
+			error_msg("malloc failed");
+			code_error();
+		}
 		*buf = 0;
 		printout(args->c[0], buf);
 #ifdef JS_GUI
@@ -334,6 +338,10 @@ list_t* do_prim_op(char *name, list_t *args)
 
 	if (!strcmp(name, "load")) {
 		buf = malloc(strlen(args->c[0]->head) + 1);
+		if (!buf) {
+			error_msg("malloc failed");
+			code_error();
+		}
 		strcpy(buf, args->c[0]->head);
 		load_code_from_file(buf);
 		free(buf);

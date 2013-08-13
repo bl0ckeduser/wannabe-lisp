@@ -37,6 +37,8 @@ int iter = 0;
 void c_writeback(char *str)
 {
 	char *buf = malloc(ERROR_TEXT_BUFSIZ);
+	if (!buf)
+		exit(1);
 	sprintf(buf, "writeback(\"%s\");", str);
 	emscripten_run_script(buf);
 	free(buf);
@@ -45,6 +47,8 @@ void c_writeback(char *str)
 void c_writeback_nl(char *str)
 {
 	char *buf = malloc(ERROR_TEXT_BUFSIZ);
+	if (!buf)
+		exit(1);
 	sprintf(buf, "writeback_nl(\"%s\");", str);
 	emscripten_run_script(buf);
 	free(buf);
@@ -53,6 +57,8 @@ void c_writeback_nl(char *str)
 void c_writedebug(char *str)
 {
 	char *buf = malloc(DEBUGLOG_BUFSIZ);
+	if (!buf)
+		exit(1);
 	sprintf(buf, "writedebug(\"%s\");", str);
 	emscripten_run_script(buf);
 	free(buf);
@@ -61,6 +67,8 @@ void c_writedebug(char *str)
 void c_write_char(char *str)
 {
 	char *buf = malloc(ERROR_TEXT_BUFSIZ);
+	if (!buf)
+		exit(1);
 	sprintf(buf, "write_char(\"%s\");", str);
 	emscripten_run_script(buf);
 	free(buf);
@@ -81,6 +89,8 @@ int jsgui_error_handler(int derp)
 	 * else the emscripten-ified code fucks up */
 	free(buf);
 	buf = malloc(LINEBUFSIZ);
+	if (!buf)
+		exit(1);
 	sprintf(buf, "");
 
 	bal = -1;

@@ -53,6 +53,12 @@ char* build(list_t* l, char *expr)
 	int i;
 
 	tok = malloc(SYMBOL_NAME_MAXLEN);
+	
+	if (!tok) {
+		error_msg("malloc failed");
+		code_error();
+	}
+	
 	p = expr;
 
 	/* Deal with abbreviations

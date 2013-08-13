@@ -263,6 +263,10 @@ void stacktracer_prebarf()
 	stacktracer_pushbuf("");
 	stacktracer_pushbuf("Symbols: ");
 	buff = malloc(DEBUGLOG_BUFSIZ);
+	if (!buff) {
+		error_msg("malloc failed");
+		code_error();
+	}
 	for (i = 0; i < sym; ++i) {
 		sprintf(buff, "%s: %s", sym_name[i], sym_print[i]);
 		stacktracer_pushbuf(buff);
