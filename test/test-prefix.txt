@@ -1,0 +1,29 @@
+(define (displayn EXP)
+   (begin
+      (display EXP)
+      (newline)))
+
+(displayn (list 1 2 3 4))
+
+(displayn (length (list 1 2 3)))
+
+(displayn (length '(1 2 3)))
+
+(displayn (list-tail '(1 2 3) 1))
+
+(displayn (append '(1 2) '(3 4) '(5 6)))
+
+(displayn (list-ref '(1 2 3 4 5) 3))
+
+(filter odd? '(1 2 3 4 5 6))
+
+(filter even? '(1 2 3 4 5 6))
+
+(fold-right (lambda (a b) (+ (* 2 a) b))
+   0
+   '(1 2 3 4 5))
+
+
+(displayn
+   (map odd? '(1 2 3 4 5)))
+
