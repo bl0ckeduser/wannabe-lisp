@@ -14,7 +14,7 @@
       dict
       (cons (cons key val) dict)))
 
-(define (lookup key)
+(define (lookup-in key dict)
    (begin
       (define (iter key list)
          (cond
@@ -57,10 +57,10 @@
 		(key (car tree)))
 
                ;; Check if variable already set
-               (if (not (null? (lookup val)))
+               (if (not (null? (lookup-in val dict)))
                   ;; Yes -- check if tree is same as earlier match
                   (and
-                     (match-iter (lookup val) key)
+                     (match-iter (lookup-in val dict) key)
                      (match-iter (cdr skel) (cdr tree)))
                   ;; No -- happily store match and carry on
                   (begin
@@ -111,3 +111,77 @@
 		(match '((? x) foo (? x)) '(a foo a))
 	)
 )
+
+
+;; Substitution
+(define (subst skel dict)
+   (cond
+      ;; leave nulls as-is
+      ((null? skel)
+         skel)
+
+      ;; distribute the subsitution on the members of a pair
+      ((pair? skel)
+         (cons
+            (subst (car skel) dict)
+            (subst (cdr skel) dict)))
+
+      ;; substitute symbols
+      ((symbol? skel)
+         (let
+            ((m (lookup-in skel dict)))
+            (if (not (null? m))
+               m
+               skel)))
+
+      ;; default case
+      (else
+          skel)))
+
+;; ---------- testing substitution --------------
+
+(newline)
+(map display-nl '(Substitution ============))
+
+
+(define (substitutor skel1 skel2)
+   (lambda (u)
+      (subst skel2
+         (match skel1 u))))
+
+(display-nl
+   ((substitutor '((? x)) '(x x x 123 x))
+      '(a)))
+
+;; In MIT/GNU Scheme the following does the same thing:
+;; (display
+;;    (lambda (x)
+;;       `(,@x ,@x ,@x 123 ,@x))
+;;    '(a))
+
+;; But my interpreter doesn't support semiquotes as of writing :(
+
+(display-nl
+   ((substitutor '((? x) (? y)) '(x y hahaha x y))
+      '(1 2)))
+
+;; However, the Scheme lambda syntax can't do checks
+;; for repeated variables like below:
+
+(display-nl
+   ((substitutor '((? x) (? x)) '(x is the same thing as x))
+      '(1 2)))
+
+(display-nl
+   ((substitutor '((? x) (? x)) '(x is the same thing as x))
+      '(1 1)))
+
+(display-nl
+   ((substitutor '((? x) (? x)) '(x is the same thing as x))
+      '(foo foo)))
+
+(display-nl
+   ((substitutor '((? x) (? x)) '(x is the same thing as x))
+      '(foo bar)))
+
+
