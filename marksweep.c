@@ -63,8 +63,10 @@ void do_mark(void* p, int m)
 	if (!p)
 		return;
 
-	/* Look for the pointer in the
-	 * list and mark it */
+	/* 
+	 * Look for the pointer in the
+	 * list and mark it
+	 */
 	for (i = 0; i < len; ++i) {
 		if (ptrs[i] == p) {
 			mark[i] = m;
@@ -172,7 +174,9 @@ void marksweep(env_t *e)
 	/* mark father environment, if any.
 	 * do not remark global environment
 	 * because it already gets marked
-	 * first when gc() is called */
+	 * first when gc() is called
+	 * (avoiding an infinite loop ?...) 
+	 */
 	if (e->father && e->father != global)
 		marksweep(e->father);
 }

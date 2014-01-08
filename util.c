@@ -200,6 +200,10 @@ int code_error()
 
 /* ====================================================== */
 
+/* 
+ * nonrecursively copy the contents of
+ * a list structure pointer to a new one
+ */
 list_t *copy_list(list_t *l)
 {
 	list_t *new = c_malloc(sizeof(list_t));

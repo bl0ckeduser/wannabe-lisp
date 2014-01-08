@@ -10,6 +10,8 @@
  * a mishmash of bits of `main.c' and
  * `linereader.c', with lots of hacks to prevent
  * strange issues that occur with emscripten.
+ * (IIRC it's very anal about stack-based buffers,
+ * or something like that)
  */
 
 int interactive = 1;
@@ -32,7 +34,7 @@ int ready = 0;
 int bal = -1;
 int iter = 0;
 
-/* ============= JavaScript hooks ============= */
+/* ============= C -> JavaScript hooks ============= */
 
 void c_writeback(char *str)
 {

@@ -28,9 +28,11 @@ list_t *new_list(void)
 	nl->head = c_malloc(SYMBOL_NAME_MAXLEN);
 	nl->head[0] = 0;
 	
-	/* c: children array
+	/* 
+	 * c: children array
 	 * ca: children array allocation count
-	 * cc: children array member count */
+	 * cc: children array member count 
+	 */
 	nl->c = NULL;
 	nl->ca = 0;	
 	nl->cc = 0;
@@ -44,12 +46,16 @@ void add_child(list_t *parent, list_t* child)
 	list_t **new;
 	int i;
 
-	/* expand children array if necessary */
+	/* 
+	 * Expand children array if necessary
+	 */
 	if (++(parent->cc) >= parent->ca) {
 		parent->ca += ALLOC_EXPAND;
 	
-		/* realloc() is not used because i cannot figure
-		 * out how to make it work with the gc */
+		/*
+		 * realloc() is not used because i cannot figure
+		 * out how to make it work with the GC
+		 */
 		new = c_malloc(parent->ca * sizeof(list_t *));
 
 		for (i = 0; i < parent->ca - ALLOC_EXPAND; ++i)

@@ -5,7 +5,9 @@
 
 /* 
  * This could maybe done in a more 
- * sophisticated way, but "oh well" 
+ * sophisticated way,
+ * (function pointers I guess)
+ * but "oh well" 
  *
  *
  */
@@ -27,6 +29,10 @@ void add_primop(env_t *e, char *sym)
 	env_add(e, sym, l);
 }
 
+/*
+ * Install all the symbols for the primitive
+ * operations into an environment
+ */
 void install_primitives(env_t *env)
 {
 	add_primop(env, "+");

@@ -22,7 +22,8 @@
  * cdr: (PRIM-OP cdr)
  * ===========================
  *
- * Oh and it's also a symbol table, as the debuglog shows.
+ * Oh and it's also a (string-representation) 
+ * symbol table, as the debuglog shows.
  */
 
 /* memory depth (max number of traces kept) */
@@ -55,6 +56,11 @@ void stacktracer_reset()
 	sym_ptr = 0;
 }
 
+/*
+ * boring allocation work.
+ * see the declarations above
+ * for what the variables are
+ */
 void stacktracer_init()
 {
 	int i;
@@ -107,6 +113,9 @@ fail:
 	exit(1);
 }
 
+/*
+ * banal de-allocation work
+ */
 void stacktracer_destroy()
 {
 	int i;
@@ -146,6 +155,10 @@ void stacktracer_push(char *s)
 	}
 }
 
+/*
+ * push the string representation
+ * of a symbol to the symbol table
+ */
 void stacktracer_push_sym(char *symb, char *prnt)
 {
 	int i;
@@ -191,6 +204,9 @@ void stacktracer_print(char *s)
 #endif
 }
 
+/*
+ * printout the debug log
+ */
 void stacktracer_barf()
 {
 #ifdef DISABLE_STACKTRACER
@@ -203,6 +219,9 @@ void stacktracer_barf()
 		stacktracer_print("no debug log available");
 }
 
+/*
+ * add a line to the debug log
+ */
 void stacktracer_pushbuf(char *s)
 {
 #ifdef DISABLE_STACKTRACER
@@ -219,6 +238,9 @@ void stacktracer_pushbuf(char *s)
 #endif
 }
 
+/*
+ * generate the debug log
+ */
 void stacktracer_prebarf()
 {
 	int i;

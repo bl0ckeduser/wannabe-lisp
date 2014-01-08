@@ -36,17 +36,28 @@ int do_read_file(char *buf, FILE *f, int repl)
 	int bl = 0;
 	int ind;
 
-	/* Loop as long as there 
-	 * are unclosed parentheses */
+	/* 
+	 * This loops as long as there 
+	 * are unclosed parentheses 
+	 */
 	while (bal) {
-		/* Handle prompts/autoindent in interactive mode */
+		/* 
+		 * If in interactive mode,
+		 * handle prompts/autoindent
+		 */
 		if (repl) {
-			/* If i = 0, print a new logical-line prompt */
+			/* 
+			 * If i = 0, print a new logical-line prompt
+			 * (This counts the number of UNIX lines
+			 * in this logical line, so far)
+			 */
 			if (!i++)
 				printf("]=> ");
 			else {
-				/* The logical-line is incomplete; print
-				 * a "..." prompt then auto-indent */
+				/* 
+				 * The logical-line is incomplete; print
+				 * a "..." prompt then auto-indent
+				 */
 				printf("... ");
 				if (bal > 0) {
 					for (ind = 0; ind < bal; ++ind) {

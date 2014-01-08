@@ -78,6 +78,10 @@ list_t* eval_apply_tco(
 	 * anything else => true
 	 */
 
+	/*
+	 * new_frame: recursion depth testing
+	 *  -- see tco_debug.c
+	 */
 	new_frame();
 
 tco_iter:
@@ -229,6 +233,10 @@ tco_iter:
 		}
 
 		/* (delay exp) => (lambda () exp) */
+		/* 
+		 * (it could probably have been done as a macro
+		 * but wannabelisp doens't have macros) 
+		 */
 		if (l->type == LIST && !strcmp(l->c[0]->head, "delay")) {
 			nw = new_list();
 			nw->type = CLOSURE;

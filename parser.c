@@ -22,8 +22,10 @@ struct {
 	{"#,", "unsyntax"},
 	{NULL, NULL}};
 
-/* Checks if a character can be reasonably
- * part of a symbol-name */
+/* 
+ * This checks if a character can be reasonably
+ * part of a symbol-name
+ */
 int symbol_name_char(char c)
 {
 	return
@@ -37,10 +39,9 @@ int symbol_name_char(char c)
 /*
  * Recursive parsing function.
  * Returns pointer to last-parsed character
- * in `expr'. 
- * 
- * `l' has to be allocated prior
- * to calling build()
+ * in `expr'. Builds parsed LISP structures 
+ * into the `l' list pointer, which has to 
+ * be allocated prior to calling build().
  */
 char* build(list_t* l, char *expr)
 {
