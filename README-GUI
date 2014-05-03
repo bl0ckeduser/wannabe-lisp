@@ -2,11 +2,18 @@ There's a new GUI. It is XUL(runner)-based.
 It is written in JS and HTML. You need emscripten to build it.
 
 The main reason I wrote it is to get parentheses flashing.
-There is room for improvements...
+It is a terrible hack. There is (massive) room for improvements...
+It assumes lots of things about your keyboard that might not be
+true if you don't have the same kind of keyboard as I do.
+Proper menus and a proper keyboard driver would be nice.
 
-NOTE: at the following URL is a compiled build of the JS/HTML GUI, 
-built on 8 August 2013:
-https://sites.google.com/site/bl0ckeduserssoftware/wannabelisp-compiledgui-20130808.tar.gz
+At the following URL is acompiled build of the JS/HTML GUI, built 
+on 25 August 2013: 
+  https://sites.google.com/site/bl0ckeduserssoftware/wlisp-win32-20130825.7z
+(Note that it has the Win32 xulrunner distributable preincluded)
+
+And here's a screenshot:
+ https://sites.google.com/site/bl0ckeduserssoftware/projects/wlispgui-win32.png
 
 As of writing, the GUI version is kind of slow, unfortunately.
 There might be a way to get it to be faster with "asm.js", but that thing
@@ -28,3 +35,22 @@ $ ./run-gui.sh
 Once the GUI is compiled it is fairly easy to make a distributable
 "standalone" package by packaging in the XUL runtime and writing a tiny
 script. XUL supports various platforms, etc.
+
+-------------------------------------------------------------------------
+
+
+		An additional note on emscripten
+		================================
+
+emscripten is a special beast.
+
+in fact you might not get it to compile this thing with its
+latest version. for reference, I use the following version:
+
+1.4.7 (commit a1eb425371aa310e074b06d80d56adf71d6f5383)
+
+which I downloaded around June 2013.
+
+
+
+
