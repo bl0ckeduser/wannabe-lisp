@@ -65,9 +65,9 @@ void stacktracer_init()
 {
 	int i;
 
-#ifdef DISABLE_STACKTRACER
-	return;
-#endif
+	#ifdef DISABLE_STACKTRACER
+		return;
+	#endif
 	
 	debug_buff_written = 0;
 	debug_buff = malloc(ERROR_TEXT_BUFSIZ);
@@ -120,9 +120,9 @@ void stacktracer_destroy()
 {
 	int i;
 
-#ifdef DISABLE_STACKTRACER
-	return;
-#endif
+	#ifdef DISABLE_STACKTRACER
+		return;
+	#endif
 	
 	for (i = 0; i < BUFLEN; ++i) {
 		free(stacktraces[i]);
@@ -141,9 +141,9 @@ void stacktracer_destroy()
 
 void stacktracer_push(char *s)
 {
-#ifdef DISABLE_STACKTRACER
-	return;
-#endif
+	#ifdef DISABLE_STACKTRACER
+		return;
+	#endif
 
 	if (strlen(s) > ERROR_TEXT_BUFSIZ)
 		return;
@@ -163,9 +163,9 @@ void stacktracer_push_sym(char *symb, char *prnt)
 {
 	int i;
 
-#ifdef DISABLE_STACKTRACER
-	return;
-#endif
+	#ifdef DISABLE_STACKTRACER
+		return;
+	#endif
 
 	if (strlen(symb) > SYMBOL_NAME_MAXLEN 
 		|| strlen(prnt) > ERROR_TEXT_BUFSIZ)
@@ -193,15 +193,15 @@ void stacktracer_push_sym(char *symb, char *prnt)
 
 void stacktracer_print(char *s)
 {
-#ifdef DISABLE_STACKTRACER
-	return;
-#endif
-
-#ifdef JS_GUI
-	;
-#else
-	printf("%s\n", s);
-#endif
+	#ifdef DISABLE_STACKTRACER
+		return;
+	#endif
+	
+	#ifdef JS_GUI
+		;
+	#else
+		printf("%s\n", s);
+	#endif
 }
 
 /*
@@ -209,9 +209,9 @@ void stacktracer_print(char *s)
  */
 void stacktracer_barf()
 {
-#ifdef DISABLE_STACKTRACER
-	return;
-#endif
+	#ifdef DISABLE_STACKTRACER
+		return;
+	#endif
 
 	if (debug_buff_written)
 		stacktracer_print(debug_buff);
@@ -224,18 +224,18 @@ void stacktracer_barf()
  */
 void stacktracer_pushbuf(char *s)
 {
-#ifdef DISABLE_STACKTRACER
-	return;
-#endif
+	#ifdef DISABLE_STACKTRACER
+		return;
+	#endif
 
-#ifdef JS_GUI
-	extern void c_writedebug(char *str);
-	c_writedebug(s);
-	c_writedebug("\\n");
-#else
-	strcat(debug_buff, s);
-	strcat(debug_buff, "\n");
-#endif
+	#ifdef JS_GUI
+		extern void c_writedebug(char *str);
+		c_writedebug(s);
+		c_writedebug("\\n");
+	#else
+		strcat(debug_buff, s);
+		strcat(debug_buff, "\n");
+	#endif
 }
 
 /*
@@ -246,9 +246,9 @@ void stacktracer_prebarf()
 	int i;
 	char *buff;
 
-#ifdef DISABLE_STACKTRACER
-	return;
-#endif
+	#ifdef DISABLE_STACKTRACER
+		return;
+	#endif
 
 	*debug_buff = 0;
 	debug_buff_written = 1;
@@ -297,12 +297,12 @@ void stacktracer_prebarf()
 	stacktracer_pushbuf("  ");
 	free(buff);
 
-#ifdef JS_GUI
-	extern void c_writeback_nl(char *);
-	c_writeback_nl("A debug log has been added to the debug log window.");
-#else
-	stacktracer_print("A debug log has been prepared. Type (debuglog) to see it.");
-#endif
+	#ifdef JS_GUI
+		extern void c_writeback_nl(char *);
+		c_writeback_nl("A debug log has been added to the debug log window.");
+	#else
+		stacktracer_print("A debug log has been prepared. Type (debuglog) to see it.");
+	#endif
 
 	stacktracer_reset();
 }

@@ -12,6 +12,11 @@
  * strange issues that occur with emscripten.
  * (IIRC it's very anal about stack-based buffers,
  * or something like that)
+ *
+ * Special warning:
+ *  THE GUI IS A MASSIVE HACK
+ *  THE GUI IS A MASSIVE HACK
+ *  THE GUI IS A MASSIVE HACK
  */
 
 int interactive = 1;

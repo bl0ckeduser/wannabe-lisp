@@ -62,7 +62,8 @@ char* build(list_t* l, char *expr)
 	
 	p = expr;
 
-	/* Deal with abbreviations
+	/* 
+	 * Deal with abbreviations
 	 * e.g. 'x => (quote x)
 	 * using the `abbrev' entry {"'", "quote"}
 	 */
@@ -84,19 +85,23 @@ char* build(list_t* l, char *expr)
 		l->cc = 0;		/* initialize child count */
 		/* ======================================= */
 		while (*p != ')' && *p) {
-			/* consume whitespace */
+			/* Consume whitespace */
 			while (*p && (*p == ' ' || *p == '\t'))
 				++p;
-			/* stop if there's nothing left now */
+
+			/* Stop if there's nothing left now */
 			if (!*p)
 				break;
-			/* try to parse a list-child */
+
+			/* Try to parse a list-child */
 			child = new_list();
 			old = p;
 			p = build(child, p);
-			/* check if list-child-parsing failed */
+
+			/* Check if list-child-parsing failed */
 			if (p == old)
 				break;	/* yes; stop */
+
 			/* no; add child to the list, and continue */
 			add_child(l, child);
 		}
@@ -106,16 +111,20 @@ char* build(list_t* l, char *expr)
 			code_error();
 		}
 	}
+
 	/* Parse a number: 123, -123 */
-	else if (isnum(*p) || (*p == '-' && isalnum(*(p+1)))) {	
-		/* Eat up the sign if there is one, and set
-		 * `sgn' accordingly' */
+	else if (isnum(*p) || (*p == '-' && isalnum(*(p+1)))) {
+		/* 
+		 * Eat up the sign if there is one, and set
+		 * `sgn' accordingly'
+		 */
 		if (*p == '-') {
 			sgn = -1;
 			++p;
 		} else {
 			sgn = 1;
 		}
+
 		/* ======================================= */
 		q = tok;	/* use `tok' heapbuffer as copy dest */
 		len = 0;	/* used to check if symbolname is too long */
@@ -128,8 +137,10 @@ char* build(list_t* l, char *expr)
 		}
 		*q = 0;		/* null-terminate the string */
 		/* ======================================= */
+
 		/* Make the number object */
 		l->type = NUMBER;
+
 		/* 
 		 * Don't worry about the sscanf, the code above
 		 * already ensures `tok' does not overflow
@@ -137,12 +148,16 @@ char* build(list_t* l, char *expr)
 		 */
 		sscanf(tok, "%d", &(l->val));
 		l->val *= sgn;
+
 	/* Anything else is probably a symbol */
 	} else {
-		/* Well, maybe there's some whitespace first,
-		 * eat that up first */
+		/* 
+		 * Well, maybe there's some whitespace first,
+		 * eat that up first
+		 */
 		while (*p == ' ' || *p == '\t')
 			++p;
+
 		/* ======================================= */
 		q = tok;	/* use `tok' heapbuffer as copy dest */
 		len = 0;	/* used to check if symbolname is too long */
@@ -155,6 +170,7 @@ char* build(list_t* l, char *expr)
 		}
 		*q = 0;		/* null-terminate the string */
 		/* ======================================= */
+
 		/* Make the symbol object */
 		l->type = SYMBOL;
 		strcpy(l->head, tok);
