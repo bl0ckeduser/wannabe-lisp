@@ -7,7 +7,7 @@
 int interactive;	/* interactive (repl) mode flag */
 env_t *global;		/* pointer to global environment */
 jmp_buf repl_jmp;	/* jump pointer to REPL used to 
-					 * recover from in-code errors */
+			 * recover from in-code errors */
 int save_mode = 0;	/* logging-to-file mode flag */
 FILE *save_file;	/* log file handle */
 
