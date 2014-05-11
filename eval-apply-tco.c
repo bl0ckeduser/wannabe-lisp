@@ -134,7 +134,8 @@ tco_iter:
 			TCO_apply(call_eval(l->c[1], env), nw);
 		}
 
-		/* (and ... ) with short-circuit 
+		/*
+		 * (and ... ) with short-circuit 
 		 * If it wasn't for the short-circuit, it wouldn't
 		 * need to be a special form -- this code kicks away 
 		 * the standard "eval all arguments, then apply"
@@ -171,7 +172,8 @@ tco_iter:
 			return makebool(val);
 		}
 
-		/* (max-space EXP) gives the maximum number of 
+		/*
+		 * (max-space EXP) gives the maximum number of 
 		 * eval/apply stack frames used in the evaluation of EXP 
 		 * 
 		 * This is a custom extension not from the Scheme
@@ -190,7 +192,8 @@ tco_iter:
 			return nw;
 		}
 
-		/* (leval ...) => hook to eval(..., env)
+		/*
+		 * (leval ...) => hook to eval(..., env)
 		 * i.e. evaluate an expression in the current
 		 * local environment.
 		 *
@@ -289,9 +292,11 @@ tco_iter:
 					call_eval(l->c[1]->c[i]->c[1], env));
 			}
 	
-			/* Evaluate bodies in new environment;
+			/*
+			 * Evaluate bodies in new environment;
 			 * return the result of evaluating the
-			 * last one */
+			 * last one 
+			 */
 			for (i = 2; i < l->cc; ++i)
 				ev = call_eval(l->c[i], ne);
 
@@ -381,7 +386,8 @@ bad_let:
 			}
 		}
 
-		/* cond special form --
+		/*
+		 * cond special form --
 		 * (cond (p1 e11 ... e1N) (p2 e21 ... e2N) ... (pN eN1 .. eNN)) 
 		 * the special predicate-symbol `else' always matches
 		 */
@@ -412,8 +418,10 @@ bad_let:
 				}
 			}
 
-			/* not sure what to return when nothing matches,
-			 * I guess `nil' is reasonable ... */
+			/*
+			 * Not sure what to return when nothing matches,
+			 * I guess `nil' is reasonable ... 
+			 */
 			close_frame();
 			return mksym("NIL");
 		}
@@ -474,9 +482,12 @@ bad_let:
 				code_error();
 			}
 
-			/* ================================
-			 * give the debugger's symbol table
-			 * a printout of the symbol's value */
+			/* ================================== */
+
+			/*
+			 * Give the debugger's symbol table
+			 * a printout of the symbol's value
+			 */
 			buf = malloc(ERROR_TEXT_BUFSIZ);
 			if (!buf) {
 				error_msg("malloc 2KB failed");
@@ -486,7 +497,8 @@ bad_let:
 			printout(er.e->ptr[er.i], buf);
 			stacktracer_push_sym(l->head, buf);
 			free(buf);
-			/* ================================ */		
+
+			/* ================================ */
 
 			close_frame();
 			return er.e->ptr[er.i];
@@ -514,11 +526,15 @@ bad_let:
 			ne = new_env();
 			ne->father = proc->closure;
 
-			/* Bind the formal parameters 
-			 * in the new environment */
+			/*
+			 * Bind the formal parameters 
+			 * in the new environment 
+			 */
 			
-			/* special case: whole arglist as single variable,
-			 * as in (lambda x x) */
+			/* 
+			 * Special case: whole arglist as single variable,
+			 * as in (lambda x x) 
+			 */
 			if (proc->c[0]->type == SYMBOL) {
 				env_add(ne, proc->c[0]->head,
 					args->type == LIST ? makelist(args) : args);
@@ -549,9 +565,11 @@ bad_let:
 				}
 			}
 	
-			/* Evaluate the bodies of the closure
+			/*
+			 * Evaluate the bodies of the closure
 			 * in the new environment which includes
-			 * the bound parameters	*/
+			 * the bound parameters
+		 	 */
 			for (i = 1; i < proc->cc - 1; ++i)
 				call_eval(proc->c[i], ne);
 

@@ -4,6 +4,10 @@
 #include "wannabe-lisp.h"
 
 /*
+ * ugliest .c file ever
+ */
+
+/*
  * It's a ring buffer of evaluation step printout strings, to be
  * barfed out upon crashes for purposes of debugging. For example,
  * if the user types "(cadr cadr)", the error

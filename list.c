@@ -23,8 +23,10 @@ list_t *new_list(void)
 	/* val: integer storage for numbers and bools */
 	nl->val = 0;
 
-	/* head: string used for symbol names
-	 * (initialized to "") */
+	/*
+	 * head: string used for symbol names
+	 * (initialized to "") 
+	 */
 	nl->head = c_malloc(SYMBOL_NAME_MAXLEN);
 	nl->head[0] = 0;
 	

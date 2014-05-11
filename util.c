@@ -35,7 +35,8 @@ list_t* makelist(list_t* argl)
 	nw3 = nw = new_list();
 	nw->type = CONS;
 	for (i = 0; i < argl->cc; ++i) {
-		/* Recursive application is necessary 
+		/*
+		 * Recursive application is necessary 
 	 	 * so as to ensure cases like:
 		 * 		]=> (caadr '(1 (1 2)))
 		 * 		1	
@@ -51,9 +52,11 @@ list_t* makelist(list_t* argl)
 			add_child(nw, nw2);
 			nw = nw2;
 		} else {
-			/* put in a nil at the end;
+			/*
+			 * Put in a nil at the end;
 			 * it is understood as end-of-list
-			 * marker */
+			 * marker.
+			 */
 			add_child(nw, mksym("NIL"));
 		}
 	}
@@ -139,24 +142,24 @@ void load_code_from_file(char *fil)
 
 void error_msg(char *s)
 {
-#ifdef JS_GUI
-	c_writeback("Error: ");
-	c_writeback_nl(s);
-#else
-	printf("Error: %s\n", s);
-#endif
+	#ifdef JS_GUI
+		c_writeback("Error: ");
+		c_writeback_nl(s);
+	#else
+		printf("Error: %s\n", s);
+	#endif
 }
 
 /* ====================================================== */
 
 void fatal_error_msg(char *s)
 {
-#ifdef JS_GUI
-	c_writeback("Fatal error: ");
-	c_writeback_nl(s);
-#else
-	printf("Fatal error: %s\n", s);
-#endif
+	#ifdef JS_GUI
+		c_writeback("Fatal error: ");
+		c_writeback_nl(s);
+	#else
+		printf("Fatal error: %s\n", s);
+	#endif
 }
 
 /* ====================================================== */
@@ -178,9 +181,9 @@ int code_error()
 {
 	stacktracer_prebarf();
 
-#ifdef JS_GUI
-	exit(0);
-#endif
+	#ifdef JS_GUI
+		exit(0);
+	#endif
 
 	/*
 	 * In interactive mode,
