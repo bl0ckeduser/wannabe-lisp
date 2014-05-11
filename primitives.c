@@ -9,6 +9,12 @@
  * (function pointers I guess)
  * but "oh well" 
  *
+ * Yes, I know about hash tables and pointers even
+ * fancier things.  No, I don't feel like using them
+ * to make the code here fancier than a chain of
+ * strcmp's. Yes, I wanted to learn about Scheme when
+ * I wrote this project. No, I don't want to make
+ * this a professional-quality ultrafast interpreter.
  *
  */
 
