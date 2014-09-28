@@ -1,0 +1,24 @@
+;; Someone posted this on IRC a while back (nov 17 2013)
+;; it didn't use to work in wannabe-lisp 'til i plugged
+;; a little bug, sep 28 2014. (i have other things to
+;; do in life than debug hobby projects overnight hahaha)
+;; I also changed the display to display and newline
+
+(define (displayn expr)
+	(begin
+		(display expr)
+		(newline)))
+
+(define (halve-helper xs ys)
+	(cond
+		((null? ys) xs)
+		((eq? (cdr ys) '()) xs)
+		(else 
+			(halve-helper
+				(cdr xs)
+				(cddr ys)))))
+
+(define (halve xs) (halve-helper xs xs))
+(displayn (halve '(1 2 3 4 5 6 7 8)))
+(displayn (halve '(1 2 3 4 5 6 7)))
+
