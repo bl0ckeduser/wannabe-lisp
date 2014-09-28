@@ -311,6 +311,12 @@ list_t* do_prim_op(char *name, list_t *args)
 			|| (args->c[0]->type == SYMBOL 
 				&& args->c[1]->type == SYMBOL
 				&& !strcmp(args->c[0]->head, args->c[1]->head))
+			/* (eq? 'NIL '()) => #t */
+			|| (args->c[0]->type == SYMBOL && !strcmp(args->c[0]->head, "NIL")
+			    && args->c[1]->type == CONS && args->c[1]->cc == 0)
+			/* (eq? '() 'NIL) => #t */
+			|| (args->c[1]->type == SYMBOL && !strcmp(args->c[1]->head, "NIL")
+			    && args->c[0]->type == CONS && args->c[0]->cc == 0)
 			/* (eq? '() '()) => #t */
 			|| (args->c[0]->type == CONS && args->c[0]->cc == 0
 			    && args->c[1]->type == CONS && args->c[1]->cc == 0));
