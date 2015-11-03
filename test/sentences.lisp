@@ -1,6 +1,8 @@
 ;; meme sentence generator
 ;; (C) 2015 electric certified clown laboratories inc. (PhD) (MSc.)
 ;; (C) 2015 (C) (TM) (R) (C) 2001 (C) (TM)
+;; to be fair PAIP by peter norvig has a very similar example
+;; with "the man hit the table" etc.
 
 (define sentences
 	(list
