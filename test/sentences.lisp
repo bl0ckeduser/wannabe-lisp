@@ -16,7 +16,7 @@
 		(list
 			'(that's (? x) with (? y))
 			(list
-				'(business dot net)
+				'(business '(dot net))
 			)
 		)
 	)
