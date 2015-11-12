@@ -8,7 +8,11 @@
 	(list
 		(list	
 			'(the (? x) was (? y))
-			(list
+			(list	
+				'(doctor '(an analyst))
+				'(everything ephemeral)
+				'(attachment deleted)
+				'(proof '(in the pudding))
 				'(president '(an analyst))
 				'(clown '(an athlete))
 				'(cake '(a lie))
@@ -19,6 +23,9 @@
 			'(that's (? x) with (? y))
 			(list
 				'(business '(dot net))
+				'(cooking cookbook)
+				'(trolling panache)
+				'(repetition parrot)
 			)
 		)
 	)
@@ -85,7 +92,7 @@
 				subs
 			)
 
-			(display '===========================)
+			(display '============================)
 			(newline)
 			)
 		)
