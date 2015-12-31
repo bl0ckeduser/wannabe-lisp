@@ -1,6 +1,11 @@
 ;; meme sentence generator
 ;; (C) 2015 electric certified clown laboratories inc. (PhD) (MSc.)
 ;; (C) 2015 (C) (TM) (R) (C) 2001 (C) (TM)
+;; (C) 2016 Gabriel et al.
+;; That's salad with pride
+;; It won't cost you a penny no, no. You can feel it
+;; Feel it through the park wowowoow
+;; Copyright Inc. All Rights Reserved. Inc. Incorporated. Inc.
 ;; to be fair PAIP by peter norvig has a very similar example
 ;; with "the man hit the table" etc.
 
@@ -22,9 +27,9 @@
 		(list
 			'(that's (? x) with (? y))
 			(list
-				'(business '(dot net))
-				'(cooking cookbook)
-				'(trolling panache)
+				'(business '(the .NET framework))
+				'(cooking '(a cookbook))
+				'(trolling '(tremendous skill and panache))
 				'(repetition parrot)
 			)
 		)
