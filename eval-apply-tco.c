@@ -429,7 +429,7 @@ bad_let:
 		/* (quote foo) => foo */
 		if (l->type == LIST && l->cc == 2 && l->c[0]->type == SYMBOL
 			&& !strcmp(l->c[0]->head, "quote")) {
-			if (l->c[1]->type == SYMBOL) {
+			if (l->c[1]->type == SYMBOL ||l->c[1]->type == NUMBER) {
 				close_frame();
 				return l->c[1];
 			} else if (l->c[1]->type == LIST) {

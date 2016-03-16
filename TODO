@@ -39,6 +39,7 @@ Some stuff I am more likely to (try to) add:
 - syntax modification macros !!11!
 
 - '23 should evaluate to 23 (r6rs.pdf, section 1.10, page 8)
+   done
 
 - vectors
 
